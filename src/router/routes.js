@@ -1,0 +1,34 @@
+
+const routes = [
+  {
+    path: '/postauth',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/IndexPage.vue') }
+    ]
+  },
+  {
+    path: '/auth',
+    component: () => import('layouts/AuthLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/Login.vue') },
+      { path: 'register', component: () => import('pages/Register.vue') },
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/SplashLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/SpashScreen.vue') },
+    ]
+  },
+
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue')
+  }
+]
+
+export default routes
