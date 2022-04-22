@@ -22,6 +22,26 @@ const routes = [
       { path: '', component: () => import('pages/SpashScreen.vue') },
     ]
   },
+  {
+    path: '/admin',
+    component: () => import('layouts/AdminLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/AdminPage.vue') },
+      { path: 'users', component: () => import('pages/AdminUsers.vue')},
+
+      { path: 'users/add', component: () => import('pages/AdminAddUser.vue')},
+
+
+
+      { path: 'cursos', component: () => import('pages/AdminCurso.vue') },
+
+      { path: 'cursos/add', component: () => import('pages/AdminAddCurso.vue') },
+      { path: 'matricula', component: () => import('pages/AdminUsers.vue') },
+      { path: 'profesor', component: () => import('pages/AdminUsers.vue') },
+
+
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
