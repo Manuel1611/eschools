@@ -12,7 +12,12 @@
             </div>
             <div>
               <label for="">Contraseña</label>
-              <input type="password" name="pass" v-model="login.pass" />
+              <input
+                type="password"
+                maxlength="8"
+                name="pass"
+                v-model="login.pass"
+              />
             </div>
             <div>
               <input
@@ -100,6 +105,9 @@ export default defineComponent({
     goRegister() {
       this.$router.push("/auth/register");
     },
+  },
+  mounted() {
+    console.log("aaaaaaaaaaaa " + this.$route.params.gotRegistered);
   },
 });
 </script>
