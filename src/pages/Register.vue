@@ -128,7 +128,7 @@ export default defineComponent({
                 .post("/auth/register", data)
                 .then((response) => {
                   this.$router.push({
-                    name: "/auth",
+                    name: "/login",
                     params: { gotRegistered: true },
                   });
                 })
