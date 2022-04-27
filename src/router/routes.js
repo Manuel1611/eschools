@@ -18,26 +18,37 @@ const routes = [
     children: [{ path: "", component: () => import("pages/SpashScreen.vue") }],
   },
   {
-    path: '/admin',
-    component: () => import('layouts/AdminLayout.vue'),
+    path: "/admin",
+    component: () => import("layouts/AdminLayout.vue"),
     children: [
-      { path: '', component: () => import('pages/AdminPage.vue') },
-      { path: 'users', component: () => import('pages/AdminUsers.vue')},
-      { path: 'users/add', component: () => import('pages/AdminAddUser.vue')},
+      { path: "", component: () => import("pages/AdminPage.vue") },
+      { path: "users", component: () => import("pages/AdminUsers.vue") },
+      { path: "users/add", component: () => import("pages/AdminAddUser.vue") },
 
+      { path: "cursos", component: () => import("pages/AdminCurso.vue") },
+      {
+        path: "cursos/add",
+        component: () => import("pages/AdminAddCurso.vue"),
+      },
 
+      {
+        path: "matricula",
+        component: () => import("pages/AdminMatricula.vue"),
+      },
+      {
+        path: "matricula/add",
+        component: () => import("pages/AdminAddMatricula.vue"),
+      },
 
-      { path: 'cursos', component: () => import('pages/AdminCurso.vue') },
-      { path: 'cursos/add', component: () => import('pages/AdminAddCurso.vue') },
-
-      { path: 'matricula', component: () => import('pages/AdminMatricula.vue') },
-      { path: 'matricula/add', component: () => import('pages/AdminAddMatricula.vue') },
-
-      { path: 'profesor', component: () => import('pages/AdminProfesorCurso.vue') },
-      { path: 'profesor/add', component: () => import('pages/AdminAddProfesorCurso.vue') },
-
-
-    ]
+      {
+        path: "profesor",
+        component: () => import("pages/AdminProfesorCurso.vue"),
+      },
+      {
+        path: "profesor/add",
+        component: () => import("pages/AdminAddProfesorCurso.vue"),
+      },
+    ],
   },
 
   // Always leave this as last one,
