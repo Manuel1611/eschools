@@ -4,7 +4,7 @@
     <h4>Un gran poder conlleva una gran responsabilidad</h4>
     <q-list>
       <h3>Lista </h3>
-      <q-card flat bordered v-for="(item, index) in users" :key="index">
+      <q-card flat bordered v-for="(item, index) in users" :key="index" @click="goUser(index)">
         <q-card-section v-html="item.nombre + ' '+ item.apellidos" />
 
         <q-card-section v-html="item.email + ' ' + item.rol" />
@@ -92,40 +92,14 @@ export default defineComponent({
             */
         })
     },
-
-
-
-
-
-    submitForm() {
-      if (
-        this.register.name != "" &&
-        this.register.surname != "" &&
-        this.register.email != "" &&
-        this.register.pass != "" &&
-        this.register.retypedPass != ""
-      ) {
-        let data = {
-          nombre: this.register.name,
-          apellidos: this.register.surname,
-          email: this.register.email,
-          password: this.register.pass,
-        };
-        api
-          .post("/auth/register", data)
-          .then((response) => {
-            this.$router.push("/auth");
-          })
-          .catch(() => {
-            this.registerError("No se ha podido registrar");
-          });
-      } else {
-        this.registerError("Todos los campos son obligatorios");
-      }
-    },
     goAddUser() {
       this.$router.push("/admin/users/add");
     },
+
+    goUser(index){
+      console.log('asdf ' + index)
+      this.$router.push("/admin/users/"+ index);
+    }
   },
 
   mounted(){
