@@ -20,13 +20,19 @@
             </div>
             <div>
               <label for="">Contraseña</label>
-              <input type="password" name="pass" v-model="register.pass" />
+              <input
+                type="password"
+                maxlength="8"
+                name="pass"
+                v-model="register.pass"
+              />
             </div>
             <div>
               <label for="">Repetir contraseña</label>
               <input
                 type="password"
                 name="retypedPass"
+                maxlength="8"
                 v-model="register.retypedPass"
               />
             </div>
@@ -106,22 +112,47 @@ export default defineComponent({
         this.register.pass != "" &&
         this.register.retypedPass != ""
       ) {
-        let data = {
-          nombre: this.register.name,
-          apellidos: this.register.surname,
-          email: this.register.email,
-          password: this.register.pass,
-        };
-        api
-          .post("/auth/register", data)
-          .then((response) => {
-            this.$router.push("/auth");
-          })
-          .catch(() => {
-            this.registerError("No se ha podido registrar");
-          });
+        if (this.validateEmail(this.register.email)) {
+          if (
+            this.register.pass.length >= 3 &&
+            this.register.pass.length <= 8
+          ) {
+            if (this.register.pass == this.register.retypedPass) {
+              let data = {
+                nombre: this.register.name,
+                apellidos: this.register.surname,
+                email: this.register.email,
+                password: this.register.pass,
+              };
+              api
+                .post("/auth/register", data)
+                .then((response) => {
+                  this.$router.push({
+                    name: "/login",
+                    params: { gotRegistered: true },
+                  });
+                })
+                .catch(() => {
+                  this.registerError("No se ha podido crear la cuenta");
+                });
+            } else {
+              this.registerError("Las contraseñas no coinciden");
+            }
+          } else {
+            this.registerError("La contraseña no es válida");
+          }
+        } else {
+          this.registerError("El correo introducido no es válido");
+        }
       } else {
         this.registerError("Todos los campos son obligatorios");
+      }
+    },
+    validateEmail(email) {
+      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        return true;
+      } else {
+        return false;
       }
     },
     goLogin() {

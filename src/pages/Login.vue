@@ -1,5 +1,13 @@
 <template>
   <q-page class="auth-container">
+    <div class="login-success-register-container" v-if="login.iamregistered">
+      <div class="login-success-register">
+        <div>¡Tu cuenta se ha creado correctamente!</div>
+        <div class="registered-btn-ext" @click="closeRegisterModal">
+          Aceptar
+        </div>
+      </div>
+    </div>
     <div class="form-container">
       <div>
         <div class="title">Inicia sesión</div>
@@ -12,7 +20,12 @@
             </div>
             <div>
               <label for="">Contraseña</label>
-              <input type="password" name="pass" v-model="login.pass" />
+              <input
+                type="password"
+                maxlength="8"
+                name="pass"
+                v-model="login.pass"
+              />
             </div>
             <div>
               <input
@@ -56,6 +69,7 @@ export default defineComponent({
       login: {
         email: "",
         pass: "",
+        iamregistered: false,
       },
     };
   },
@@ -97,9 +111,17 @@ export default defineComponent({
         this.loginError("Todos los campos son obligatorios");
       }
     },
+    closeRegisterModal() {
+      this.login.iamregistered = false;
+    },
     goRegister() {
       this.$router.push("/auth/register");
     },
+  },
+  mounted() {
+    if (this.$route.params.gotRegistered) {
+      this.login.iamregistered = true;
+    }
   },
 });
 </script>
@@ -113,6 +135,7 @@ export default defineComponent({
   display: flex;
   font-family: sans-serif;
   font-size: 1.1em;
+  position: relative;
 }
 
 .form-container,
@@ -231,5 +254,44 @@ input[type="button"]:hover {
 .goRegisterClass:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.login-success-register-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 9999;
+}
+
+.login-success-register {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  min-width: 300px;
+  height: 175px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.registered-btn-ext {
+  width: 175px;
+  margin-top: 25px;
+  background-color: #004011;
+  color: white;
+  cursor: pointer;
+  padding: 5px 10px;
+  outline: none;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

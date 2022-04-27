@@ -12,7 +12,7 @@
 export default {
   name: "SplashScreenPage",
   mounted() {
-    setTimeout(() => this.$router.push("/auth"), 2000);
+    setTimeout(() => this.$router.push({ name: "/login" }), 2000);
   },
 };
 </script>
