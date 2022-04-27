@@ -24,12 +24,7 @@ const routes = [
       { path: "", component: () => import("pages/AdminPage.vue") },
       { path: "users", component: () => import("pages/AdminUsers.vue") },
       { path: "users/add", component: () => import("pages/AdminAddUser.vue") },
-
-      { path: "cursos", component: () => import("pages/AdminCurso.vue") },
-      {
-        path: "cursos/add",
-        component: () => import("pages/AdminAddCurso.vue"),
-      },
+      { path: "users/:id", component: () => import("pages/AdminShowUser.vue") },
 
       {
         path: "matricula",
