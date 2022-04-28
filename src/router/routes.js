@@ -44,10 +44,6 @@ const routes = [
         component: () => import("pages/AdminProfesorCurso.vue"),
       },
       {
-        path: "profesor/:id",
-        component: () => import("pages/AdminShowProfesor.vue"),
-      },
-      {
         path: "profesor/add",
         component: () => import("pages/AdminAddProfesorCurso.vue"),
       },

@@ -3,12 +3,7 @@
     <h3>Show Users</h3>
     <div>
       <div>
-        <input
-          type="text"
-          class="isShow"
-          :value="this.user.email"
-          :disabled="this.isDisabled"
-        />
+        <input type="text" class="isShow" :value="this.user.email" disabled />
       </div>
       <div>
         <input
@@ -64,9 +59,11 @@
           @click="updateUser"
           >Guardar</span
         >
-        <br><br>
+        <br /><br />
         <span
-          class="display-block cancelbtn"
+          :class="
+            !this.show ? 'cancelbtn display-none' : 'cancelbtn display-block'
+          "
           @click="resetPass"
           >Resetear contraseña</span
         >
@@ -172,25 +169,27 @@ export default defineComponent({
       this.$router.push("/admin/users/");
     },
 
-    resetPass(){
-      console.log('reseteando contraseña')
+    resetPass() {
+      console.log("reseteando contraseña");
       let data = {
-        email : this.user.email,
-        userid : this.id
-      }
-      api.post('/user/resetPassword', data).then((response) => {
+        email: this.user.email,
+        userid: this.id,
+      };
+      api
+        .post("/user/resetPassword", data)
+        .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
-            console.log(response)
-            this.emailSent(response.data.message)
+            console.log(response);
+            this.emailSent(response.data.message);
           }
         })
         .catch((e) => {
           console.log("error de conexion");
           console.log(e);
-          this.emailError(response.data.message)
+          this.emailError(response.data.message);
         });
-    }
+    },
   },
 
   mounted() {

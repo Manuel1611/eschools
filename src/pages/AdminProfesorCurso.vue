@@ -191,7 +191,7 @@ export default defineComponent({
 
     goUser(index) {
       console.log("asdf " + index);
-      this.$router.push("/admin/profesor/" + index);
+      this.$router.push("/admin/users/" + index);
     },
 
     enableUser(id, email) {
