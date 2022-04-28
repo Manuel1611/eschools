@@ -105,7 +105,14 @@ export default defineComponent({
           color: "green",
           badgeStyle: "opacity: 0",
         });
-      }
+      },
+      emailError(msg) {
+        $q.notify({
+          message: msg,
+          color: "red",
+          badgeStyle: "opacity: 0",
+        });
+      },
     };
   },
   methods: {
@@ -181,6 +188,7 @@ export default defineComponent({
         .catch((e) => {
           console.log("error de conexion");
           console.log(e);
+          this.emailError(response.data.message)
         });
     }
   },
