@@ -51,7 +51,81 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
 
-    return {};
+    return {
+      confirmEnableUser(id, email) {
+        $q.dialog({
+          title: "Confirmar habilitar usuario",
+          message: "¿Quieres habilitar a " + email + "?",
+          cancel: true,
+          persistent: true,
+        })
+          .onOk(() => {
+            console.log(">>>> OK");
+            console.log("enableUser: " + id);
+            let data = {
+              userid: id,
+            };
+
+            api
+              .post("/user/enableUser", data)
+              .then((response) => {
+                console.log("conexion correcta");
+                if (response.status == 200) {
+                  //console.log('conexion correcta2')
+                  //console.log(response)
+                  this.loadUsers();
+                }
+              })
+              .catch((e) => {
+                console.log("error de conexion");
+                console.log(e);
+              });
+          })
+          .onCancel(() => {
+            console.log(">>>> Cancel");
+          })
+          .onDismiss(() => {
+            console.log("I am triggered on both OK and Cancel");
+          });
+      },
+      confirmDisableUser(id, email) {
+        $q.dialog({
+          title: "Confirmar deshabilitar usuario",
+          message: "¿Quieres deshabilitar a " + email + "?",
+          cancel: true,
+          persistent: true,
+        })
+          .onOk(() => {
+            console.log(">>>> OK");
+
+            console.log("disableUser: " + id);
+            let data = {
+              userid: id,
+            };
+
+            api
+              .post("/user/disableUser", data)
+              .then((response) => {
+                console.log("conexion correcta");
+                if (response.status == 200) {
+                  //console.log('conexion correcta2')
+                  //console.log(response)
+                  this.loadUsers();
+                }
+              })
+              .catch((e) => {
+                console.log("error de conexion");
+                console.log(e);
+              });
+          })
+          .onCancel(() => {
+            console.log(">>>> Cancel");
+          })
+          .onDismiss(() => {
+            console.log("I am triggered on both OK and Cancel");
+          });
+      },
+    };
   },
   methods: {
     loadUsers() {
@@ -76,6 +150,30 @@ export default defineComponent({
           console.log("error de conexion");
           console.log(e);
           /*$q.notify({
+
+    loadUsers () {
+      let users
+      api.get('/user/profesores')
+        .then((response) => {
+          console.log('conexion correcta')
+          if (response.status == 200){
+            console.log('conexion correcta2')
+            console.log(response.data.usuarios)
+            console.log('aaa'+ users)
+            users = response.data.usuarios
+
+            console.log('bbb'+ users)
+
+            this.users = users
+            console.log(this.users)
+
+          }
+
+        })
+        .catch((e) => {
+          console.log('error de conexion')
+          console.log(e)
+           /*$q.notify({
               color: 'negative',
               position: 'top',
               message: 'Loading failed',
@@ -84,15 +182,21 @@ export default defineComponent({
             */
         });
     },
-    goAddUser() {
-      this.$router.push("/admin/users/add");
-    },
-    goAddCourseToTeacher() {
+    goAddProfesorCurso() {
       this.$router.push("/admin/profesor/add");
     },
+
     goUser(index) {
       console.log("asdf " + index);
-      this.$router.push("/admin/profesor/" + index);
+      this.$router.push("/admin/users/" + index);
+    },
+
+    enableUser(id, email) {
+      this.confirmEnableUser(id, email);
+    },
+
+    disableUser(id, email) {
+      this.confirmDisableUser(id, email);
     },
   },
 
