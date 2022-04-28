@@ -9,11 +9,11 @@
         bordered
         v-for="(item, index) in users"
         :key="index"
-        @click="goUser(index)"
+        @click="goUser(item[0])"
       >
-        <q-card-section v-html="item.nombre + ' ' + item.apellidos" />
+        <q-card-section v-html="item[1].nombre + ' ' + item[1].apellidos" />
 
-        <q-card-section v-html="item.email + ' ' + item.rol" />
+        <q-card-section v-html="item[1].email + ' ' + item[1].rol" />
       </q-card>
     </q-list>
 
@@ -54,7 +54,7 @@ export default defineComponent({
     loadUsers() {
       let users;
       api
-        .get("/user/index")
+        .get("/user/alumnos")
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -80,9 +80,6 @@ export default defineComponent({
             })
             */
         });
-    },
-    goEditUser(id) {
-      this.$router.push("users/" + id);
     },
     goAddUser() {
       this.$router.push("/admin/users/add");

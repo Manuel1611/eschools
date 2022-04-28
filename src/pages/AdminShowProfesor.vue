@@ -1,6 +1,6 @@
 <template>
   <q-page class="auth-container">
-    <h3>Show Users</h3>
+    <h3>Show Profesor</h3>
     {{ this.user }}
   </q-page>
 </template>
