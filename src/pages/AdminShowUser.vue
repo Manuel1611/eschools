@@ -64,6 +64,12 @@
           @click="updateUser"
           >Guardar</span
         >
+        <br><br>
+        <span
+          class="display-block cancelbtn"
+          @click="resetPass"
+          >Resetear contraseña</span
+        >
       </div>
     </div>
   </q-page>
@@ -150,6 +156,25 @@ export default defineComponent({
       console.log("asdf " + index);
       this.$router.push("/admin/users/");
     },
+
+    resetPass(){
+      console.log('reseteando contraseña')
+      let data = {
+        email : this.user.email,
+        userid : this.id
+      }
+      api.post('/user/resetPassword', data).then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e); 
+        });
+    }
   },
 
   mounted() {
