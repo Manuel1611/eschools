@@ -20,7 +20,7 @@
     <div>
       <span class="goRegisterClass" @click="goAddUser"> Añadir profesor </span>
     </div>
-    <div class="goRegisterClass" @click="goAddCourseToTeacher">
+    <div class="goRegisterClass" @click="goAddProfesorCurso">
       Añadir curso a profesor
     </div>
   </q-page>
@@ -182,13 +182,16 @@ export default defineComponent({
             */
         });
     },
+    goAddUser() {
+      this.$router.push("/admin/users/add");
+    },
     goAddProfesorCurso() {
       this.$router.push("/admin/profesor/add");
     },
 
     goUser(index) {
       console.log("asdf " + index);
-      this.$router.push("/admin/users/" + index);
+      this.$router.push("/admin/profesor/" + index);
     },
 
     enableUser(id, email) {
