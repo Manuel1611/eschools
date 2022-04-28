@@ -98,7 +98,15 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
 
-    return {};
+    return {
+      emailSent(msg) {
+        $q.notify({
+          message: msg,
+          color: "green",
+          badgeStyle: "opacity: 0",
+        });
+      }
+    };
   },
   methods: {
     changeEditStyles() {
@@ -166,13 +174,13 @@ export default defineComponent({
       api.post('/user/resetPassword', data).then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
+            console.log(response)
+            this.emailSent(response.data.message)
           }
         })
         .catch((e) => {
           console.log("error de conexion");
-          console.log(e); 
+          console.log(e);
         });
     }
   },
