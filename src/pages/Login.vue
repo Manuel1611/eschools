@@ -90,6 +90,10 @@ export default defineComponent({
           badgeStyle: "opacity: 0",
         });
       },
+
+      saveLocalStorage(key, value){
+        $q.localStorage.set(key, value)
+      }
     };
   },
   methods: {
@@ -102,9 +106,18 @@ export default defineComponent({
         api
           .post("/auth/login", data)
           .then((response) => {
-            this.loginOk(response.data.message);
+
+            if(response.status == 200){
+              this.loginOk(response.data.message);
+              console.log(response.data.token)
+              this.saveLocalStorage('eschoolssessiontoken', response.data.token)
+            } else {
+              this.loginError(response.data.message);
+            }
+
           })
-          .catch(() => {
+          .catch((error) => {
+            console.log(error)
             this.loginError("El correo o la contraseña son incorrectos");
           });
       } else {

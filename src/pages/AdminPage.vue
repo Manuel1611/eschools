@@ -36,7 +36,6 @@ export default defineComponent({
             console.log(response.data.usuarios)
             data = response
           }
-
         })
         .catch(() => {
           console.log('error de conexion')
@@ -48,6 +47,36 @@ export default defineComponent({
             })
             */
         })
+
+
+
+
+/*
+        let token = $q.localStorage.getItem('eschoolssessiontoken')
+
+
+        let data2 = {
+          sessiontoken: token
+        }
+
+
+        api.post('/user/checktoken', data2)
+          .then((response) => {
+            console.log('conexion correcta')
+            if (response.status == 200){
+              console.log('conexion correcta2')
+              console.log(response)
+              //data = response
+            }
+          })
+          .catch(() => {
+            console.log('error de conexion')
+          })
+
+
+        //console.log('token')
+        //console.log(token)
+*/
       }
     loadData()
     return {
