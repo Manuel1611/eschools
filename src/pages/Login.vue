@@ -148,12 +148,13 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: white;
 }
 
 .bar {
   width: 100px;
   height: 2px;
-  background-color: #004011;
+  background-color: black;
   margin-bottom: 100px;
 }
 
@@ -173,7 +174,7 @@ export default defineComponent({
   font-size: 4em;
   width: 60%;
   margin-bottom: 75px;
-  color: #004011;
+  color: black;
 }
 
 .login-img {
@@ -186,15 +187,15 @@ export default defineComponent({
 .auth-img-container {
   width: 500px;
   height: 400px;
-  border-top: 2px solid #004011;
-  border-right: 2px solid #004011;
+  border-top: 2px solid black;
+  border-right: 2px solid black;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .form-container {
-  background-color: #f2fff2;
+  background-color: #5f9bc9;
 }
 
 .title {
@@ -218,7 +219,7 @@ label::before {
   content: "\25BA";
   position: absolute;
   left: -25px;
-  color: #004011;
+  color: white;
 }
 
 input {
@@ -227,14 +228,14 @@ input {
   border: 0;
   border-radius: 3px;
   padding: 5px 10px;
-  border: 1px solid #004011;
+  border: 1px solid #226294;
 }
 
 input[type="button"] {
   width: 50%;
-  border: 2px solid #004011;
+  border: 2px solid #226294;
   margin-top: 50px;
-  background-color: #004011;
+  background-color: #226294;
   color: white;
   transition: 0.1s ease;
 }
@@ -242,7 +243,6 @@ input[type="button"] {
 input[type="button"]:hover {
   cursor: pointer;
   background-color: transparent;
-  color: black;
 }
 
 .no-acc {
@@ -284,7 +284,7 @@ input[type="button"]:hover {
 .registered-btn-ext {
   width: 175px;
   margin-top: 25px;
-  background-color: #004011;
+  background-color: #226294;
   color: white;
   cursor: pointer;
   padding: 5px 10px;
