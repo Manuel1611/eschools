@@ -43,10 +43,6 @@ const routes = [
         path: "profesor",
         component: () => import("pages/AdminProfesorCurso.vue"),
       },
-      {
-        path: "profesor/add",
-        component: () => import("pages/AdminAddProfesorCurso.vue"),
-      },
     ],
   },
 

@@ -20,7 +20,9 @@
           class="bg-white text-teal logoutModal-margins"
         >
           <div class="logout-btn-no" v-close-popup>Cancelar</div>
-          <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+          <div class="logout-btn-yes" v-close-popup @click="logout">
+            Aceptar
+          </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -35,7 +37,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> E-Schools </q-toolbar-title>
+        <q-toolbar-title> E-Schools · Academia Online </q-toolbar-title>
         <q-icon
           @click="openLogoutDialog = true"
           class="icon-drawer icon-logout"
@@ -96,6 +98,8 @@
           <q-item-section class="color-white">Profesores</q-item-section>
         </q-item>
 
+        <div class="top-logout"></div>
+        <div class="top-logout-two"></div>
         <q-item
           class="q-item-logout"
           clickable
@@ -150,7 +154,6 @@ export default defineComponent({
     goUsers() {
       this.$router.push("/admin/users");
     },
-
     goCursos() {
       this.$router.push("/admin/cursos");
     },
@@ -159,6 +162,9 @@ export default defineComponent({
     },
     goProfesores() {
       this.$router.push("/admin/profesor");
+    },
+    logout() {
+      console.log("logout");
     },
   },
 });
@@ -203,7 +209,7 @@ export default defineComponent({
   transition: 0.1s ease;
 }
 
-.q-item:hover {
+.q-item:not(:last-child):hover {
   background-color: #226294;
 }
 
@@ -215,6 +221,29 @@ export default defineComponent({
   position: absolute;
   bottom: 0;
   width: 100%;
+  background-color: #2c6591;
+}
+
+.q-item-logout:hover {
+  background-color: #5f9bc9;
+}
+
+.top-logout {
+  position: absolute;
+  bottom: 64px;
+  width: 100%;
+  height: 20px;
+  left: 0;
+  background-color: #407ba8;
+}
+
+.top-logout-two {
+  position: absolute;
+  bottom: 84px;
+  width: 100%;
+  height: 20px;
+  left: 0;
+  background-color: #4f8ab8;
 }
 
 .icon-logout {
@@ -245,9 +274,19 @@ export default defineComponent({
 
 .logout-btn-no {
   background-color: #d42c2c;
+  transition: 0.2s ease;
 }
 
 .logout-btn-yes {
-  background-color: #7c7d7c;
+  background-color: #21ba45;
+  transition: 0.2s ease;
+}
+
+.logout-btn-no:hover {
+  background-color: #f24141;
+}
+
+.logout-btn-yes:hover {
+  background-color: #30c954;
 }
 </style>

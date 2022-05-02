@@ -1,28 +1,201 @@
 <template>
   <q-page class="auth-container">
-    <h3>Profesores Zone</h3>
-    <h4>Un gran poder conlleva una gran responsabilidad 2</h4>
-    <q-list>
-      <h3>Lista</h3>
-      <q-card
-        flat
-        bordered
-        v-for="(item, index) in users"
-        :key="index"
-        @click="goUser(item[0])"
-      >
-        <q-card-section v-html="item[1].nombre + ' ' + item[1].apellidos" />
+    <q-dialog
+      v-model="openBajaDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">¿Quieres dar de baja a...?</div>
+        </q-card-section>
 
-        <q-card-section v-html="item[1].email + ' ' + item[1].rol" />
+        <q-card-section style="font-size: 1.1em" class="q-pt-none">
+          {{ correoBajaAlta }}
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+          <div
+            class="logout-btn-yes"
+            v-close-popup
+            @click="darBaja(idBajaAlta)"
+          >
+            Aceptar
+          </div>
+        </q-card-actions>
       </q-card>
-    </q-list>
+    </q-dialog>
+    <q-dialog
+      v-model="openAltaDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">¿Quieres dar de alta a...?</div>
+        </q-card-section>
 
-    <div>
-      <span class="goRegisterClass" @click="goAddUser"> Añadir profesor </span>
+        <q-card-section style="font-size: 1.1em" class="q-pt-none">
+          {{ correoBajaAlta }}
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+          <div
+            class="logout-btn-yes"
+            v-close-popup
+            @click="darAlta(idBajaAlta)"
+          >
+            Aceptar
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog
+      v-model="openAddCursoProfesor"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Asigna un curso a...</div>
+        </q-card-section>
+
+        <q-card-section style="font-size: 1.1em" class="q-pt-none">
+          {{ nombreParaCurso }}<br />
+          {{ correoParaCurso }}
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <select
+            class="selectCurso"
+            required
+            v-model="matricula.curso"
+            name="curso"
+          >
+            <option value="" selected disabled></option>
+            <option
+              v-for="(item, index) in courses"
+              :key="index"
+              :value="index"
+            >
+              {{ item.nombre }}
+            </option>
+          </select>
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div
+            class="logout-btn-no"
+            v-close-popup
+            @click="cancelAddCursoDialog"
+          >
+            Cancelar
+          </div>
+          <div
+            :class="
+              matricula.curso == ''
+                ? 'logout-btn-yes-disabled'
+                : 'logout-btn-yes'
+            "
+            @click="sendAddCursoProfesor(idProfesorParaCurso)"
+          >
+            Asignar
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <div class="title">
+      <q-icon
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-angle-right"
+      />
+      <div>Profesores en E-Schools</div>
     </div>
-    <div class="goRegisterClass" @click="goAddProfesorCurso">
-      Añadir curso a profesor
-    </div>
+    <div class="btn-addnew" @click="goAddUser">Añadir nuevo</div>
+    <q-list>
+      <q-item class="each-item" v-for="(item, index) in users" :key="index">
+        <q-item-section avatar top>
+          <q-avatar
+            style="cursor: pointer"
+            v-if="item[1].activo"
+            @click="
+              openBajaDialog = true;
+              correoBajaAlta = item[1].email;
+              idBajaAlta = item[0];
+            "
+            icon="fa-solid fa-arrow-down"
+            color="negative"
+            text-color="white"
+          />
+          <q-avatar
+            style="cursor: pointer"
+            v-else
+            @click="
+              openAltaDialog = true;
+              correoBajaAlta = item[1].email;
+              idBajaAlta = item[0];
+            "
+            icon="fa-solid fa-arrow-up"
+            color="positive"
+            text-color="white"
+          />
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label lines="1" style="font-size: 1.1em">{{
+            item[1].nombre + " " + item[1].apellidos
+          }}</q-item-label>
+          <q-item-label style="font-size: 1em" caption>{{
+            item[1].email
+          }}</q-item-label>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-icon class="activate-bubble" name="info" color="green" />
+          <div v-if="item[1].activo" class="bubble">Activo</div>
+          <div v-else class="bubble">Inactivo</div>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-avatar
+            style="cursor: pointer"
+            icon="fa-solid fa-folder-plus"
+            color="info"
+            @click="
+              openAddCursoProfesor = true;
+              correoParaCurso = item[1].email;
+              nombreParaCurso = item[1].nombre + ' ' + item[1].apellidos;
+              idProfesorParaCurso = item[0];
+            "
+            text-color="white"
+          />
+        </q-item-section>
+        <q-item-section side>
+          <q-avatar
+            style="cursor: pointer"
+            @click="goUser(item[0])"
+            icon="fa-solid fa-pencil"
+            color="primary"
+            text-color="white"
+          />
+        </q-item-section>
+      </q-item>
+    </q-list>
   </q-page>
 </template>
 
@@ -35,97 +208,25 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      register: {
-        name: "",
-        surname: "",
-        email: "s",
-        pass: "",
-        retypedPass: "",
-      },
-
-      datos: [{ info: "adios" }, { info: "caracosa" }],
-
+      openBajaDialog: false,
+      openAltaDialog: false,
+      correoBajaAlta: "",
+      idBajaAlta: "",
+      openAddCursoProfesor: false,
+      correoParaCurso: "",
+      nombreParaCurso: "",
+      idProfesorParaCurso: "",
       users: {},
+      matricula: {
+        curso: "",
+      },
+      courses: {},
     };
   },
   setup() {
     const $q = useQuasar();
 
-    return {
-      confirmEnableUser(id, email) {
-        $q.dialog({
-          title: "Confirmar habilitar usuario",
-          message: "¿Quieres habilitar a " + email + "?",
-          cancel: true,
-          persistent: true,
-        })
-          .onOk(() => {
-            console.log(">>>> OK");
-            console.log("enableUser: " + id);
-            let data = {
-              userid: id,
-            };
-
-            api
-              .post("/user/enableUser", data)
-              .then((response) => {
-                console.log("conexion correcta");
-                if (response.status == 200) {
-                  //console.log('conexion correcta2')
-                  //console.log(response)
-                  this.loadUsers();
-                }
-              })
-              .catch((e) => {
-                console.log("error de conexion");
-                console.log(e);
-              });
-          })
-          .onCancel(() => {
-            console.log(">>>> Cancel");
-          })
-          .onDismiss(() => {
-            console.log("I am triggered on both OK and Cancel");
-          });
-      },
-      confirmDisableUser(id, email) {
-        $q.dialog({
-          title: "Confirmar deshabilitar usuario",
-          message: "¿Quieres deshabilitar a " + email + "?",
-          cancel: true,
-          persistent: true,
-        })
-          .onOk(() => {
-            console.log(">>>> OK");
-
-            console.log("disableUser: " + id);
-            let data = {
-              userid: id,
-            };
-
-            api
-              .post("/user/disableUser", data)
-              .then((response) => {
-                console.log("conexion correcta");
-                if (response.status == 200) {
-                  //console.log('conexion correcta2')
-                  //console.log(response)
-                  this.loadUsers();
-                }
-              })
-              .catch((e) => {
-                console.log("error de conexion");
-                console.log(e);
-              });
-          })
-          .onCancel(() => {
-            console.log(">>>> Cancel");
-          })
-          .onDismiss(() => {
-            console.log("I am triggered on both OK and Cancel");
-          });
-      },
-    };
+    return {};
   },
   methods: {
     loadUsers() {
@@ -149,44 +250,84 @@ export default defineComponent({
         .catch((e) => {
           console.log("error de conexion");
           console.log(e);
-          /*$q.notify({
-
-    loadUsers () {
-      let users
-      api.get('/user/profesores')
+        });
+    },
+    loadCourses() {
+      let cursos;
+      api
+        .get("/curso/index")
         .then((response) => {
-          console.log('conexion correcta')
-          if (response.status == 200){
-            console.log('conexion correcta2')
-            console.log(response.data.usuarios)
-            console.log('aaa'+ users)
-            users = response.data.usuarios
-
-            console.log('bbb'+ users)
-
-            this.users = users
-            console.log(this.users)
-
+          console.log("conexion correcta cursos");
+          if (response.status == 200) {
+            cursos = response.data.cursos;
+            this.courses = cursos;
           }
-
         })
         .catch((e) => {
-          console.log('error de conexion')
+          console.log("error de conexion");
+          console.log(e);
+        });
+    },
+    cancelAddCursoDialog() {
+      this.matricula.curso = "";
+    },
+    sendAddCursoProfesor(idprofesor) {
+      if (this.matricula.curso == "") {
+        this.openAddCursoProfesor = true;
+      } else {
+        this.openAddCursoProfesor = false;
+        let data = {
+          idprof: idprofesor,
+          idcurso: this.matricula.curso,
+        };
+        /*  api.post('/matricula/store', data)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((e) => {
           console.log(e)
-           /*$q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Loading failed',
-              icon: 'report_problem'
-            })
-            */
+        })
+        */
+        this.matricula.curso = "";
+      }
+    },
+    darBaja(id) {
+      let data = {
+        userid: id,
+      };
+
+      api
+        .post("/user/disableUser", data)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            this.loadUsers();
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
+    },
+    darAlta(id) {
+      let data = {
+        userid: id,
+      };
+      api
+        .post("/user/enableUser", data)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            this.loadUsers();
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
         });
     },
     goAddUser() {
       this.$router.push("/admin/users/add");
-    },
-    goAddProfesorCurso() {
-      this.$router.push("/admin/profesor/add");
     },
 
     goUser(index) {
@@ -202,12 +343,147 @@ export default defineComponent({
       this.confirmDisableUser(id, email);
     },
   },
-
   mounted() {
-    console.log("mounted");
     this.loadUsers();
+    this.loadCourses();
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-page {
+  padding: 20px;
+}
+
+.title {
+  margin-top: 20px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.icon-drawer {
+  margin: 15px 0;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.btn-addnew {
+  background-color: #21ba45;
+  display: inline-block;
+  padding: 5px 10px;
+  color: white;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+}
+
+.btn-addnew:hover {
+  background-color: #30c954;
+}
+
+.each-item {
+  margin: 25px 0;
+  padding: 16px 0;
+  border-bottom: 1px solid #ebebeb;
+  padding-bottom: 40px;
+}
+
+.background-myblue {
+  background-color: #226294;
+}
+
+.logoutModal-margins {
+  margin: 20px 0;
+  border-radius: 0 !important;
+  padding: 0;
+}
+
+.logout-btn-no,
+.logout-btn-yes {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
+.logout-btn-no {
+  background-color: #d42c2c;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes {
+  background-color: #21ba45;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes-disabled {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
+  color: white;
+  background-color: #7bba8a;
+  padding: 10px 0;
+  font-size: 1.1em;
+  cursor: not-allowed;
+}
+
+.logout-btn-no:hover {
+  background-color: #f24141;
+}
+
+.logout-btn-yes:hover {
+  background-color: #30c954;
+}
+
+.selectCurso {
+  outline: none;
+  width: 100%;
+  padding: 10px 5px;
+}
+
+.bubble {
+  position: absolute;
+  top: -15px;
+  width: 100px;
+  height: 25px;
+  background-color: #d6d6d6;
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.2s ease;
+  font-size: 1.1em;
+  color: black;
+}
+
+.bubble::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 78%;
+  widows: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top-color: #d6d6d6;
+  border-bottom: 0;
+  border-right: 0;
+  margin-left: 0;
+  margin-bottom: -10px;
+}
+
+.activate-bubble {
+  cursor: pointer;
+}
+
+.activate-bubble:hover ~ .bubble {
+  opacity: 1;
+}
+</style>
