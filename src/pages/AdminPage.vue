@@ -47,38 +47,37 @@ export default defineComponent({
             })
             */
         })
-
-
-
-
-/*
-        let token = $q.localStorage.getItem('eschoolssessiontoken')
-
-
-        let data2 = {
-          sessiontoken: token
-        }
-
-
-        api.post('/user/checktoken', data2)
-          .then((response) => {
-            console.log('conexion correcta')
-            if (response.status == 200){
-              console.log('conexion correcta2')
-              console.log(response)
-              //data = response
-            }
-          })
-          .catch(() => {
-            console.log('error de conexion')
-          })
-
-
-        //console.log('token')
-        //console.log(token)
-*/
       }
     loadData()
+
+
+
+
+    let token = $q.localStorage.getItem('eschoolssessiontoken')
+    let data2 = {
+      sessiontoken: token
+    }
+    api.post('/auth/checksessiontoken', data2)
+      .then((response) => {
+        console.log('conexion correcta token')
+        if (response.status == 200){
+          console.log('conexion correcta token 2')
+          console.log(response)
+
+        } else {
+          //this.$router.push("/auth");
+        }
+      })
+      .catch(() => {
+        //this.$router.push("/auth");
+        console.log('error de conexion')
+      })
+    console.log('token')
+    console.log(token)
+
+
+
+
     return {
       registerError(msg) {
         $q.notify({
@@ -97,6 +96,8 @@ export default defineComponent({
       data,
       loadData
     };
+
+
   },
   methods: {
     submitForm() {
@@ -128,7 +129,10 @@ export default defineComponent({
     goLogin() {
       this.$router.push("/auth");
     },
+
+
   },
+
 });
 </script>
 
