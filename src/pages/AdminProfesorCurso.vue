@@ -126,9 +126,29 @@
       />
       <div>Profesores en E-Schools</div>
     </div>
-    <div class="btn-addnew" @click="goAddUser">Añadir nuevo</div>
+
+    <div class="top-info">
+      <div class="query-found">
+        <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
+        <div>{{ this.users.length }} resultados</div>
+      </div>
+      <div class="btn-addnew" @click="goAddUser">Añadir nuevo</div>
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          v-model="search"
+          placeholder="Buscar..."
+        />
+      </div>
+    </div>
+
     <q-list>
-      <q-item class="each-item" v-for="(item, index) in users" :key="index">
+      <q-item
+        class="each-item"
+        v-for="(item, index) in filteredUsers"
+        :key="index"
+      >
         <q-item-section avatar top>
           <q-avatar
             style="cursor: pointer"
@@ -196,6 +216,18 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination
+        v-if="users.length > 8"
+        v-model="page"
+        :min="currentPage"
+        :max="Math.ceil(users.length / totalPages)"
+        :max-pages="3"
+        boundary-numbers
+        direction-links
+      >
+      </q-pagination>
+    </div>
   </q-page>
 </template>
 
@@ -221,6 +253,11 @@ export default defineComponent({
         curso: "",
       },
       courses: {},
+      search: "",
+      page: 1,
+      currentPage: 1,
+      nextPage: null,
+      totalPages: 8,
     };
   },
   setup() {
@@ -295,7 +332,6 @@ export default defineComponent({
       let data = {
         userid: id,
       };
-
       api
         .post("/user/disableUser", data)
         .then((response) => {
@@ -347,6 +383,25 @@ export default defineComponent({
     this.loadUsers();
     this.loadCourses();
   },
+  computed: {
+    filteredUsers: function () {
+      return Object.values(this.users)
+        .filter(
+          (user) =>
+            String(user[1].nombre)
+              .toLowerCase()
+              .match(this.search.toLowerCase()) ||
+            String(user[1].apellidos)
+              .toLowerCase()
+              .match(this.search.toLowerCase()) ||
+            String(user[1].email).toLowerCase().match(this.search.toLowerCase())
+        )
+        .slice(
+          (this.page - 1) * this.totalPages,
+          (this.page - 1) * this.totalPages + this.totalPages
+        );
+    },
+  },
 });
 </script>
 
@@ -371,13 +426,14 @@ export default defineComponent({
 .btn-addnew {
   background-color: #21ba45;
   display: inline-block;
-  padding: 5px 10px;
+  padding: 10px;
   color: white;
   margin: 25px 0;
   cursor: pointer;
   border-radius: 3px;
   font-size: 1.1em;
   transition: 0.2s ease;
+  margin-right: 10px;
 }
 
 .btn-addnew:hover {
@@ -485,5 +541,35 @@ export default defineComponent({
 
 .activate-bubble:hover ~ .bubble {
   opacity: 1;
+}
+
+.top-info {
+  background-color: #525252;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.query-found {
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  font-size: 1.1em;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  margin-right: 20px;
+  padding: 10px 5px;
+  width: 250px;
+  outline: none;
+  border: 0;
+  font-size: 1.1em;
+  border-radius: 3px;
 }
 </style>
