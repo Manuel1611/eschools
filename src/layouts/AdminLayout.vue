@@ -144,6 +144,11 @@ export default defineComponent({
   components: {
     //EssentialLink
   },
+  data() {
+    return {
+      openLogoutDialog: false,
+    };
+  },
   setup () {
     const $q = useQuasar();
     const leftDrawerOpen = ref(false)

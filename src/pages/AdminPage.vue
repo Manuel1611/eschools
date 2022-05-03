@@ -4,7 +4,8 @@
 
 <script>
 import { defineComponent } from "vue";
-
+import { api } from "boot/axios";
+import { useQuasar } from "quasar";
 export default defineComponent({
 
   name: "RegisterPage",
