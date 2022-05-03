@@ -25,11 +25,17 @@ const routes = [
       { path: "users", component: () => import("pages/AdminUsers.vue") },
       { path: "users/add", component: () => import("pages/AdminAddUser.vue") },
       { path: "users/:id", component: () => import("pages/AdminShowUser.vue") },
+
       { path: "cursos", component: () => import("pages/AdminCurso.vue") },
       {
         path: "cursos/add",
         component: () => import("pages/AdminAddCurso.vue"),
       },
+      {
+        path: "cursos/:id",
+        component: () => import("pages/AdminShowCurso.vue"),
+      },
+
       {
         path: "matricula",
         component: () => import("pages/AdminMatricula.vue"),
@@ -37,6 +43,10 @@ const routes = [
       {
         path: "matricula/add",
         component: () => import("pages/AdminAddMatricula.vue"),
+      },
+      {
+        path: "matricula/:id",
+        component: () => import("pages/AdminShowMatricula.vue"),
       },
 
       {
