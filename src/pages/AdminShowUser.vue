@@ -170,7 +170,12 @@ export default defineComponent({
     },
 
     goBack() {
-      this.$router.push("/admin/users/");
+      if (this.user.rol == 'alumno'){
+        this.$router.push("/admin/users/");
+      } else {
+        this.$router.push("/admin/profesor/");
+      }
+
     },
 
     resetPass() {
