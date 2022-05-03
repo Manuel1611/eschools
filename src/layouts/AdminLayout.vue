@@ -117,16 +117,25 @@
           <q-item-section class="color-white">Cerrar sesión</q-item-section>
         </q-item>
       </q-list>
+      <div>
+        <p>Nombre apellidos</p>
+        <p>Email</p>
+        <p @click="logout">Cerrar sesión</p>
+      </div>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
   </q-layout>
+
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue'
+import { api } from "boot/axios";
+
 import { useQuasar } from "quasar";
 
 export default defineComponent({
@@ -135,20 +144,22 @@ export default defineComponent({
   components: {
     //EssentialLink
   },
-  data() {
-    return {
-      openLogoutDialog: false,
-    };
-  },
-  setup() {
+  setup () {
     const $q = useQuasar();
-    const leftDrawerOpen = ref(false);
+    const leftDrawerOpen = ref(false)
+
     return {
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
-    };
+
+      saveLocalStorage(key, value){
+        $q.localStorage.set(key, value)
+      }
+
+    }
+
   },
   methods: {
     goUsers() {
@@ -163,9 +174,31 @@ export default defineComponent({
     goProfesores() {
       this.$router.push("/admin/profesor");
     },
-    logout() {
-      console.log("logout");
-    },
+    logout(){
+      console.log('logout')
+      api.post('/auth/logout')
+        .then((response) => {
+          console.log('conexion correcta logout')
+          if (response.status == 200){
+            console.log('conexion correcta2 logout')
+            console.log(response)
+            this.saveLocalStorage('eschoolssessiontoken', '')
+            this.$router.push("/auth");
+          }
+        })
+        .catch(() => {
+          console.log('error de conexion logout')
+           /*$q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Loading failed',
+              icon: 'report_problem'
+            })
+            */
+        })
+
+    }
+
   },
 });
 </script>
