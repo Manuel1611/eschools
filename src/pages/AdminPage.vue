@@ -1,16 +1,12 @@
 <template>
-  <q-page class="auth-container">
-    <h3>Admin Zone</h3>
-    <h4>Un gran poder conlleva una gran responsabilidad</h4>
-  </q-page>
+  <q-page class="auth-container"> </q-page>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import { api } from "boot/axios";
-import { useQuasar } from "quasar";
 
 export default defineComponent({
+
   name: "RegisterPage",
   data() {
     return {
@@ -129,12 +125,9 @@ export default defineComponent({
     goLogin() {
       this.$router.push("/auth");
     },
-
-
   },
 
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
