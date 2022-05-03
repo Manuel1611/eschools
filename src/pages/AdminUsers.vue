@@ -146,7 +146,7 @@
     </q-list>
     <div class="q-pa-lg flex flex-center">
       <q-pagination
-        v-if="users.length > 8"
+        v-if="users.length >= 8"
         v-model="page"
         :min="currentPage"
         :max="Math.ceil(users.length / totalPages)"
@@ -236,6 +236,10 @@ export default defineComponent({
           console.log(e);
         });
     },
+    goFirstPage() {
+      console.log("aaaaaaaa");
+      this.currentPage = 1;
+    },
     goAddUser() {
       this.$router.push("/admin/users/add");
     },
@@ -273,6 +277,11 @@ export default defineComponent({
           (this.page - 1) * this.totalPages,
           (this.page - 1) * this.totalPages + this.totalPages
         );
+    },
+  },
+  watch: {
+    search: function () {
+      this.page = 1;
     },
   },
 });
