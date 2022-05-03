@@ -11,7 +11,7 @@
     <div class="top-info">
       <div class="query-found">
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
-        <div>{{ cursos.length }} resultados</div>
+        <div>{{ Object.values(this.cursos).length }} resultados</div>
       </div>
       <div class="btn-addnew" @click="goAddCurso">Añadir curso</div>
       <div class="search-container">
@@ -76,11 +76,12 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta2");
             console.log(response.data);
-            console.log("aaa" + cursos);
-            cursos = response.data.cursos;
 
+            cursos = response.data.cursos;
+            console.log(cursos);
             this.cursos = cursos;
-            console.log(this.cursos);
+            console.log('adsdsdsadasd')
+            console.log(Object.values(this.cursos).length );
           }
         })
         .catch((e) => {
