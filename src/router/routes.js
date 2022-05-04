@@ -55,6 +55,15 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/curso",
+    component: () => import("layouts/AdminLayout.vue"),
+    children: [
+      { path: "", component: () => import("pages/Curso.vue") },
+      { path: ":id", component: () => import("pages/ShowCurso.vue") },
+      { path: ":id/add", component: () => import("pages/AddMaterial.vue") },
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
