@@ -118,9 +118,8 @@
         </q-item>
       </q-list>
       <div>
-        <p>Nombre apellidos</p>
-        <p>Email</p>
-        <p @click="logout">Cerrar sesión</p>
+        <input type="text" disabled v-model="user.nombre">
+        <input type="text" disabled v-model="user.email">
       </div>
     </q-drawer>
 
@@ -147,6 +146,10 @@ export default defineComponent({
   data() {
     return {
       openLogoutDialog: false,
+      user: {
+        nombre : 'nombre apellidos',
+        email : 'email'
+      }
     };
   },
   setup () {
@@ -202,9 +205,36 @@ export default defineComponent({
             */
         })
 
+    },
+    loadUserData(){
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem('eschoolssessiontoken')
+      let data2 = {
+        sessiontoken: token
+      }
+      api.post('/auth/checksessiontoken', data2)
+        .then((response) => {
+          console.log('conexion correcta token')
+          if (response.status == 200){
+            console.log('conexion correcta token 2')
+            console.log(response.data)
+            this.user.nombre = response.data.user.nombre + ' ' + response.data.user.apellidos
+            this.user.email = response.data.user.email
+
+          } else {
+            //this.$router.push("/auth");
+          }
+        })
+        .catch(() => {
+          //this.$router.push("/auth");
+          console.log('error de conexion')
+        })
     }
 
   },
+  mounted(){
+    this.loadUserData()
+  }
 });
 </script>
 
