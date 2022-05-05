@@ -13,7 +13,7 @@
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
         <div>{{ Object.values(this.cursos).length }} resultados</div>
       </div>
-      <div class="btn-addnew" @click="goAddCurso">Añadir curso</div>
+
       <div class="search-container">
         <input
           type="text"
@@ -25,7 +25,7 @@
     </div>
 
     <q-list>
-      <q-item class="each-item" v-for="(item, index) in cursos" :key="index">
+      <q-item class="each-item" v-for="(item, index) in cursos" :key="index" @click="goCurso(index)">
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
             item.nombre + " - " + item.precio + "€"
@@ -96,14 +96,8 @@ export default defineComponent({
             */
         });
     },
-
-    goAddCurso() {
-      this.$router.push("/admin/cursos/add");
-    },
-
     goCurso(index) {
-      console.log(index);
-      this.$router.push("/admin/cursos/" + index);
+      this.$router.push("/curso/" + index);
     },
   },
 

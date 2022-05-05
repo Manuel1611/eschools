@@ -183,6 +183,10 @@
           <q-item-label style="font-size: 1em" caption>{{
             item[1].email
           }}</q-item-label>
+
+          <q-item-label style="font-size: 1em" caption>
+            calvo toxico
+          </q-item-label>
         </q-item-section>
 
         <q-item-section side>
@@ -314,17 +318,17 @@ export default defineComponent({
       } else {
         this.openAddCursoProfesor = false;
         let data = {
-          idprof: idprofesor,
-          idcurso: this.matricula.curso,
+          profesorId: idprofesor,
+          cursoId: this.matricula.curso,
         };
-        /*  api.post('/matricula/store', data)
+        api.post('/user/addcursotoprofesor', data)
         .then((response) => {
           console.log(response)
         })
         .catch((e) => {
           console.log(e)
         })
-        */
+
         this.matricula.curso = "";
       }
     },

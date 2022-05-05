@@ -68,6 +68,11 @@
           >Resetear contraseña</span
         >
       </div>
+      <div>
+        <span
+          @click="goBack"
+          >Volver</span>
+      </div>
     </div>
   </q-page>
 </template>
@@ -165,8 +170,12 @@ export default defineComponent({
     },
 
     goBack() {
-      console.log("asdf " + index);
-      this.$router.push("/admin/users/");
+      if (this.user.rol == 'alumno'){
+        this.$router.push("/admin/users/");
+      } else {
+        this.$router.push("/admin/profesor/");
+      }
+
     },
 
     resetPass() {

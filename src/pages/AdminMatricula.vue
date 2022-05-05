@@ -276,7 +276,7 @@ export default defineComponent({
   padding: 10px;
   color: white;
   margin: 25px 0;
-  matricular: pointer;
+  cursor: pointer;
   border-radius: 3px;
   font-size: 1.1em;
   transition: 0.2s ease;
@@ -310,7 +310,7 @@ export default defineComponent({
   width: 100px;
   text-align: center;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
   padding: 10px 0;
   font-size: 1.1em;
 }
@@ -366,7 +366,7 @@ export default defineComponent({
 }
 
 .activate-bubble {
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .activate-bubble:hover ~ .bubble {

@@ -117,16 +117,24 @@
           <q-item-section class="color-white">Cerrar sesión</q-item-section>
         </q-item>
       </q-list>
+      <div>
+        <input type="text" disabled v-model="user.nombre">
+        <input type="text" disabled v-model="user.email">
+      </div>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
   </q-layout>
+
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue'
+import { api } from "boot/axios";
+
 import { useQuasar } from "quasar";
 
 export default defineComponent({
@@ -138,17 +146,28 @@ export default defineComponent({
   data() {
     return {
       openLogoutDialog: false,
+      user: {
+        nombre : 'nombre apellidos',
+        email : 'email'
+      }
     };
   },
-  setup() {
+  setup () {
     const $q = useQuasar();
-    const leftDrawerOpen = ref(false);
+    const leftDrawerOpen = ref(false)
+
     return {
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
-    };
+
+      saveLocalStorage(key, value){
+        $q.localStorage.set(key, value)
+      }
+
+    }
+
   },
   methods: {
     goUsers() {
@@ -163,10 +182,59 @@ export default defineComponent({
     goProfesores() {
       this.$router.push("/admin/profesor");
     },
-    logout() {
-      console.log("logout");
+    logout(){
+      console.log('logout')
+      api.post('/auth/logout')
+        .then((response) => {
+          console.log('conexion correcta logout')
+          if (response.status == 200){
+            console.log('conexion correcta2 logout')
+            console.log(response)
+            this.saveLocalStorage('eschoolssessiontoken', '')
+            this.$router.push("/auth");
+          }
+        })
+        .catch(() => {
+          console.log('error de conexion logout')
+           /*$q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Loading failed',
+              icon: 'report_problem'
+            })
+            */
+        })
+
     },
+    loadUserData(){
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem('eschoolssessiontoken')
+      let data2 = {
+        sessiontoken: token
+      }
+      api.post('/auth/checksessiontoken', data2)
+        .then((response) => {
+          console.log('conexion correcta token')
+          if (response.status == 200){
+            console.log('conexion correcta token 2')
+            console.log(response.data)
+            this.user.nombre = response.data.user.nombre + ' ' + response.data.user.apellidos
+            this.user.email = response.data.user.email
+
+          } else {
+            //this.$router.push("/auth");
+          }
+        })
+        .catch(() => {
+          //this.$router.push("/auth");
+          console.log('error de conexion')
+        })
+    }
+
   },
+  mounted(){
+    this.loadUserData()
+  }
 });
 </script>
 

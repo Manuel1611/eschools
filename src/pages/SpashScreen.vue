@@ -1,17 +1,15 @@
 <template>
   <q-page class="flex flex-center direction-column">
-    <div class="bg-img">
-      <q-circular-progress
-        indeterminate
-        size="60px"
-        :thickness="0.2"
-        color="white"
-        center-color="grey-8"
-        track-color="transparent"
-        class="q-ma-md"
-      />
-    </div>
-    <div class="title">E-Schools</div>
+    <div class="bg-info"></div>
+    <q-circular-progress
+      indeterminate
+      size="45px"
+      :thickness="1"
+      color="grey-8"
+      track-color="info"
+      class="q-ma-md progress-splash"
+    />
+    <div class="title">E-Schools - Desarrollado por GG, MG y CG</div>
   </q-page>
 </template>
 
@@ -25,22 +23,26 @@ export default {
 </script>
 
 <style scoped>
-.bg-img {
-  background: url(assets/img/splash-img.png) center center no-repeat;
-  width: 400px;
-  height: 400px;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .direction-column {
   flex-direction: column;
 }
 
+.progress-splash {
+  position: absolute;
+  bottom: 60px;
+}
+
 .title {
-  font-size: 1.5em;
+  position: absolute;
+  bottom: 20px;
+  font-size: 1em;
   color: #1c5785;
+}
+
+.bg-info {
+  background: url(assets/img/logo-eschools.png) center center no-repeat !important;
+  background-size: contain !important;
+  width: 200px;
+  height: 200px;
 }
 </style>
