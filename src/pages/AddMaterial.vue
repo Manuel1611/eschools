@@ -24,6 +24,27 @@
               <label>Material</label>
 
               <input v-model="material.data" type="text">
+              <!--v-model="file" -->
+              <q-uploader
+                style=""
+                label="Documento"
+                auto-upload
+                multiple="false"
+                max-files="1"
+                :factory="setFile"
+                @rejected="onRejected"
+              />
+
+
+              <!--<q-file
+
+                @value="file"
+                @update:model-value="setFile()"
+                label="Pick one file"
+                filled
+
+                style="max-width: 300px"
+              />-->
             </div>
 
             <div>
@@ -35,8 +56,10 @@
                 class="form-btn"
                 type="button"
                 name="button"
-                @click="submitForm"
+                @click="submitFormtest"
                 value="Añadir material"
+
+
               />
             </div>
           </form>
@@ -57,6 +80,7 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import { ref } from 'vue'
 
 export default defineComponent({
   name: "AdminAddUser",
@@ -69,6 +93,8 @@ export default defineComponent({
           visible: true,
       },
         id: "",
+        file : ref(null),
+        fileValue : ref(null)
     }
   },
   setup() {
@@ -97,6 +123,7 @@ export default defineComponent({
     },
 
     submitForm() {
+      /*
       if (
         this.material.name != "" &&
         this.material.type != "" &&
@@ -123,7 +150,56 @@ export default defineComponent({
       } else {
         this.registerError("Todos los campos son obligatorios");
       }
+      */
+
+
+
     },
+    submitFormtest(){
+      console.log('submitFile')
+      console.log(this.file)
+
+      let data = {
+        file: this.file,
+        curso:'fisica',
+      }
+      api.post( 'http://localhost:3000/material/test',
+        {
+
+            'file': this.file,
+            'curso':'fisica',
+
+        },
+        {
+          headers: {
+            // 'application/json' is the modern content-type for JSON, but some
+            // older servers may use 'text/json'.
+            // See: http://bit.ly/text-json
+            'content-type': 'multipart/form-data'
+          }
+        }
+      ).then(function(){
+        console.log('SUCCESS!!');
+      })
+      .catch(function(){
+        console.log('FAILURE!!');
+      });
+
+/*
+      api.post('material/test', data, headers).then((response) => {
+        console.log(response)
+      }).catch((e) => {
+        console.log(e)
+      })
+*/
+    },
+
+    setFile(files){
+      console.log('a b c')
+      console.log(files)
+      //console.log(e)
+      this.file = files[0]
+    }
 
   },
 

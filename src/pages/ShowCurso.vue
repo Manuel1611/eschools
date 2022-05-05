@@ -24,11 +24,34 @@
       <q-list bordered>
 
         <q-item v-for="(item, index) in curso.material" :key="index"  clickable v-ripple>
-          <q-item-section avatar>
-            <q-avatar color="teal" text-color="white" icon="bluetooth" />
-          </q-item-section>
+          <q-item  v-if="item.tipo == 'Enlace'">
+            <q-item-section avatar>
+              <q-avatar color="teal" text-color="white" icon="bluetooth" />
+            </q-item-section>
 
-          <q-item-section v-if="item.tipo == 'Enlace'"><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+          </q-item>
+
+          <q-item  v-else-if="item.tipo == 'PDF'">
+            <q-item-section avatar>
+              <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
+            </q-item-section>
+
+            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+          </q-item>
+          <q-item  v-else>
+            <q-item-section avatar>
+            <q-icon
+              class="icon-drawer"
+              color="white"
+              name="fa-solid fa-pencil"
+            />
+            </q-item-section>
+
+            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+          </q-item>
+
+
         </q-item>
       </q-list>
     </div>
