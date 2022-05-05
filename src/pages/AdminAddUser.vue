@@ -1,75 +1,74 @@
 <template>
   <q-page>
-    <h3>Añadir usuarios</h3>
-    <h4>Entonces, ¿importa el destino? ¿O es el camino que tomamos? </h4>
+    <div class="title">
+      <q-icon
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-angle-right"
+      />
+      <div>Añade a nuevos usuarios</div>
+    </div>
+
+    <div class="top-info">
+      <div class="query-found">
+        <q-icon
+          class="icon-drawer"
+          color="white"
+          name="fa-solid fa-angle-right"
+        />
+        <div>Da de alta a nuevos integrantes para la academia</div>
+      </div>
+      <div class="btn-addnew" @click="goBack">Volver</div>
+    </div>
 
     <div class="form-container">
       <div>
-        <div class="title">Regístrate</div>
-        <div class="bar"></div>
-        <div class="form">
-          <form ref="form">
-            <div>
-              <label for="">Nombre</label>
-              <input type="text" name="name" v-model="register.name" />
-            </div>
-            <div>
-              <label for="">Apellidos</label>
-              <input type="text" name="surname" v-model="register.surname" />
-            </div>
-            <div>
-              <label for="">Correo electrónico</label>
-              <input type="email" name="email" v-model="register.email" />
-            </div>
-            <div>
-              <label for="">Contraseña</label>
-              <input type="password" name="pass" v-model="register.pass" />
-            </div>
-            <div>
-              <label for="">Repetir contraseña</label>
-              <input
-                type="password"
-                name="retypedPass"
-                v-model="register.retypedPass"
-              />
-            </div>
+        <form ref="form">
+          <div>
+            <label for="name">Nombre</label>
+            <input type="text" name="name" v-model="register.name" />
+          </div>
+          <div>
+            <label for="surname">Apellidos</label>
+            <input type="text" name="surname" v-model="register.surname" />
+          </div>
+          <div>
+            <label for="email">Correo electrónico</label>
+            <input type="email" name="email" v-model="register.email" />
+          </div>
+          <div>
+            <label for="pass">Contraseña</label>
+            <input type="password" name="pass" v-model="register.pass" />
+          </div>
+          <div>
+            <label for="retypedPass">Repetir contraseña</label>
+            <input
+              type="password"
+              name="retypedPass"
+              v-model="register.retypedPass"
+            />
+          </div>
 
-            <div>
-              <label for="">Rol</label>
-              <select
-                name="rol"
-                v-model="register.rol"
-              >
+          <div>
+            <label for="rol">Alumno / Profesor</label>
+            <select name="rol" v-model="register.rol">
               <option value="alumno">Alumno</option>
               <option value="profesor">Profesor</option>
-              </select>
-            </div>
-            <div>
-              <input
-                class="form-btn"
-                type="button"
-                name="button"
-                @click="submitForm"
-                value="Registrarse"
-              />
-            </div>
-          </form>
-        </div>
+            </select>
+          </div>
+          <div>
+            <input
+              class="btn-register"
+              type="button"
+              name="button"
+              @click="submitForm"
+              value="Registrar usuario"
+            />
+          </div>
+        </form>
       </div>
     </div>
-    <div class="no-form-container">
-      <p>E-Schools</p>
-    </div>
-
-    <div @click="goBack">Volver
-
-    </div>
   </q-page>
-
-
-
-
-
 </template>
 
 <script>
@@ -81,7 +80,7 @@ export default defineComponent({
   name: "AdminAddUser",
   data() {
     return {
-        register: {
+      register: {
         name: "",
         surname: "",
         email: "",
@@ -89,7 +88,7 @@ export default defineComponent({
         retypedPass: "",
         rol: "",
       },
-    }
+    };
   },
   setup() {
     const $q = useQuasar();
@@ -111,8 +110,7 @@ export default defineComponent({
     };
   },
   methods: {
-
-    goBack(){
+    goBack() {
       this.$router.push("/admin/users");
     },
 
@@ -130,29 +128,150 @@ export default defineComponent({
           apellidos: this.register.surname,
           email: this.register.email,
           password: this.register.pass,
-          rol: this.register.rol
+          rol: this.register.rol,
         };
         api
           .post("/user/store", data)
           .then((response) => {
-            //this.$router.push("/auth");
-            this.registerOk("Usuario añadido");
+            this.registerOk("Usuario añadido correctamente");
           })
           .catch(() => {
-            this.registerError("No se ha podido registrar");
+            this.registerError("No se ha podido añadir al usuario");
           });
       } else {
         this.registerError("Todos los campos son obligatorios");
       }
     },
-
   },
 
-  mounted(){
-
-  }
+  mounted() {},
 });
 </script>
 
 <style scoped>
+.q-page {
+  padding: 20px;
+}
+
+.title {
+  margin-top: 20px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.icon-drawer {
+  margin: 15px 0;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.top-info {
+  background-color: #525252;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.query-found {
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  color: white;
+}
+
+.btn-addnew {
+  background-color: #05beed;
+  display: inline-block;
+  padding: 10px 20px;
+  color: black;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 25px;
+  text-align: center;
+}
+
+.btn-addnew:hover {
+  background-color: #12ccfc;
+}
+
+.form-container {
+  margin-top: 50px;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 40%;
+  min-width: 300px;
+  padding: 5px 0;
+  outline: none;
+  border: 0;
+  border-bottom: 2px solid #226294;
+}
+
+label::before {
+  position: absolute;
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: #02afdb;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+select {
+  margin-top: 10px;
+  width: 40%;
+  min-width: 300px;
+  padding: 6px;
+  background-color: #dedcdc;
+  border: 0;
+  outline: none;
+  appearance: none;
+}
+
+label {
+  font-size: 1.1em;
+  margin-top: 20px;
+  position: relative;
+  margin-left: 20px;
+}
+
+.btn-register {
+  background-color: #21ba45;
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 25px;
+  text-align: center;
+  outline: none;
+  border: 0;
+  width: fit-content;
+}
+
+.btn-register:hover {
+  background-color: #30c954;
+}
 </style>

@@ -6,14 +6,14 @@
         color="black"
         name="fa-solid fa-angle-right"
       />
-      <div>Matriculas en E-Schools</div>
+      <div>Matrículas en E-Schools</div>
     </div>
     <div class="top-info">
       <div class="query-found">
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
         <div>{{}} resultados</div>
       </div>
-      <div class="btn-addnew" @click="goAddmatricula">Añadir matricula</div>
+      <div class="btn-addnew" @click="goAddmatricula">Añadir nuevo</div>
       <div class="search-container">
         <input
           type="text"
