@@ -9,8 +9,7 @@
         :disabled="this.isDisabled"
       />
     </div>
-    <div>
-    </div>
+    <div></div>
     <div>
       <input
         type="text"
@@ -22,13 +21,19 @@
     <div class="items-list">
       <h4>Material del curso</h4>
       <q-list bordered>
-
-        <q-item v-for="(item, index) in curso.material" :key="index"  clickable v-ripple>
+        <q-item
+          v-for="(item, index) in curso.material"
+          :key="index"
+          clickable
+          v-ripple
+        >
           <q-item-section avatar>
             <q-avatar color="teal" text-color="white" icon="bluetooth" />
           </q-item-section>
 
-          <q-item-section v-if="item.tipo == 'Enlace'"><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+          <q-item-section v-if="item.tipo == 'Enlace'"
+            ><a :href="item.data" target="_blank"> {{ item.nombre }} </a>
+          </q-item-section>
         </q-item>
       </q-list>
     </div>
@@ -36,7 +41,13 @@
     <div class="btns-container">
       <span class="volverbtn display-block" @click="goBack">Volver</span>
       <br /><br />
-      <span class="volverbtn display-block" @click="goAdd">Añadir Material</span>
+      <span class="volverbtn display-block" @click="goAddMaterial"
+        >Añadir Material</span
+      >
+      <br /><br />
+      <span class="volverbtn display-block" @click="goAddExamen"
+        >Añadir Examen</span
+      >
       <br /><br />
     </div>
   </q-page>
@@ -60,7 +71,7 @@ export default defineComponent({
         apellidos: "",
         rol: "",
       },
-      material: {}
+      material: {},
     };
   },
   setup() {
@@ -108,9 +119,13 @@ export default defineComponent({
       this.$router.push("/curso/");
     },
 
-    goAdd(){
-      this.$router.push("/curso/"+ this.id + "/add");
-    }
+    goAddMaterial() {
+      this.$router.push("/curso/" + this.id + "/material/add");
+    },
+
+    goAddExamen() {
+      this.$router.push("/curso/" + this.id + "/examen/add");
+    },
   },
 
   mounted() {

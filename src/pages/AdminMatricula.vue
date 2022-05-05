@@ -71,7 +71,7 @@
     <div class="top-info">
       <div class="query-found">
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
-        <div>{{}} resultados</div>
+        <div>{{ Object.values(this.matriculas).length }} resultados</div>
       </div>
       <div class="btn-addnew" @click="goAddmatricula">Añadir matricula</div>
       <div class="search-container">

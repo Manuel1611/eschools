@@ -61,8 +61,15 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/Curso.vue") },
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
-      { path: ":id/add", component: () => import("pages/AddMaterial.vue") },
-    ]
+      {
+        path: ":id/material/add",
+        component: () => import("pages/AddMaterial.vue"),
+      },
+      {
+        path: ":id/examen/add",
+        component: () => import("pages/AddExamen.vue"),
+      },
+    ],
   },
 
   // Always leave this as last one,
