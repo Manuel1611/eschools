@@ -136,14 +136,11 @@ export default defineComponent({
         formData.append('tipo', this.material.type);
         formData.append('visible', this.material.visible);
         formData.append('curso', this.id);
-
         if (this.material.type == 'Enlace'){
           formData.append('data', this.material.data);
         } else if (this.material.type == 'PDF'){
           formData.append('file', this.file);
         }
-
-
         api
           .post("/material/store", formData)
           .then((response) => {
