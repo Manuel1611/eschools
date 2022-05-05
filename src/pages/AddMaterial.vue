@@ -56,7 +56,7 @@
                 class="form-btn"
                 type="button"
                 name="button"
-                @click="submitFormtest"
+                @click="submitForm"
                 value="Añadir material"
 
 
@@ -94,7 +94,6 @@ export default defineComponent({
       },
         id: "",
         file : ref(null),
-        fileValue : ref(null)
     }
   },
   setup() {
@@ -123,23 +122,30 @@ export default defineComponent({
     },
 
     submitForm() {
-      /*
+
       if (
         this.material.name != "" &&
         this.material.type != "" &&
-        this.material.data != "" &&
+        //this.material.data != "" &&
         this.material.visible != "" &&
         this.id != ""
       ) {
-        let data = {
-          nombre: this.material.name,
-          tipo: this.material.type,
-          data: this.material.data,
-          visible: this.material.visible,
-          curso: this.id,
-        };
+        console.log('asdf')
+        let formData = new FormData()
+        formData.append('nombre', this.material.name);
+        formData.append('tipo', this.material.type);
+        formData.append('visible', this.material.visible);
+        formData.append('curso', this.id);
+
+        if (this.material.type == 'Enlace'){
+          formData.append('data', this.material.data);
+        } else if (this.material.type == 'PDF'){
+          formData.append('file', this.file);
+        }
+
+
         api
-          .post("/material/store", data)
+          .post("/material/store", formData)
           .then((response) => {
             //this.$router.push("/auth");
             this.registerOk("Material añadido");
@@ -150,7 +156,7 @@ export default defineComponent({
       } else {
         this.registerError("Todos los campos son obligatorios");
       }
-      */
+
 
 
 
