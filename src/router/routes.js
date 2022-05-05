@@ -69,6 +69,10 @@ const routes = [
         path: ":id/examen/add",
         component: () => import("pages/AddExamen.vue"),
       },
+      {
+        path: ":idcurso/examen/:idexamen",
+        component: () => import("pages/ShowExamen.vue"),
+      },
     ],
   },
 

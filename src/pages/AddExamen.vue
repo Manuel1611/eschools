@@ -14,6 +14,7 @@
               <label>Pregunta</label>
               <input v-model="find.pregunta" />
               <input
+                v-if="Object.values(find.respuesta).length < 5"
                 class="form-btn"
                 type="button"
                 name="button"
@@ -31,7 +32,24 @@
                   type="text"
                   v-model="this.examen.preguntas[index].respuesta[index2].value"
                 />
+                <input
+                  v-if="Object.values(find.respuesta).length > 1"
+                  class="form-btn"
+                  type="button"
+                  name="button"
+                  @click="eliminarRespuesta(index, index2)"
+                  value="Eliminar respuesta"
+                />
               </div>
+
+              <input
+                v-if="Object.values(this.examen.preguntas).length > 1"
+                class="form-btn"
+                type="button"
+                name="button"
+                @click="eliminarPregunta(index)"
+                value="Eliminar Pregunta"
+              />
             </div>
             <div>
               <input
@@ -121,14 +139,28 @@ export default defineComponent({
       this.examen.preguntas[indice].respuesta.push({ value: "" });
     },
 
+    eliminarPregunta(indicePregunta) {
+      if (indicePregunta != -1) {
+        this.examen.preguntas.splice(indicePregunta, 1);
+      }
+    },
+
     añadirRespuesta(indicePregunta) {
       this.examen.preguntas[indicePregunta].respuesta.push({ value: "" });
+    },
+
+    eliminarRespuesta(indicePregunta, indiceRespuesta) {
+      if (indiceRespuesta != -1) {
+        this.examen.preguntas[indicePregunta].respuesta.splice(
+          indiceRespuesta,
+          1
+        );
+      }
     },
 
     submitForm() {
       if (
         this.examen.titulo != "" &&
-        this.examen.preguntas != "" &&
         this.examen.preguntas != "" &&
         this.examen.visible != "" &&
         this.id != ""
@@ -136,7 +168,6 @@ export default defineComponent({
         let data = {
           titulo: this.examen.titulo,
           preguntas: this.examen.preguntas,
-          data: this.examen.data,
           visible: this.examen.visible,
           curso: this.id,
         };
