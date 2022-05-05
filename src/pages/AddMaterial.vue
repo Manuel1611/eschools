@@ -159,17 +159,16 @@ export default defineComponent({
       console.log('submitFile')
       console.log(this.file)
 
+      let formData = new FormData()
+      formData.append('curso', 'Fisica');
+      formData.append('file', this.file);
+
       let data = {
         file: this.file,
         curso:'fisica',
       }
       api.post( 'http://localhost:3000/material/test',
-        {
-
-            'file': this.file,
-            'curso':'fisica',
-
-        },
+        formData,
         {
           headers: {
             // 'application/json' is the modern content-type for JSON, but some
