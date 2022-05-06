@@ -37,7 +37,7 @@
               <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
             </q-item-section>
 
-            <q-item-section><a :href="this.server + this.id + '/' + item.file" target="_blank"> {{ item.nombre }} SUCCESS </a> </q-item-section>
+            <q-item-section><a :href="this.server + this.id + '/' + item.file" target="_blank"> {{ item.nombre }} </a> </q-item-section>
           </q-item>
           <q-item  v-else>
             <q-item-section avatar>
