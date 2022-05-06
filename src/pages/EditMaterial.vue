@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <h3>Añadir Material</h3>
-    <h4>Honor no está muerto mientras permanezca en el corazón de los hombres </h4>
+    <h3>Editar Material</h3>
+    <h4>Tres gobernaban antes pero ahora Uno Reina</h4>
     <div class="form-container">
       <div>
         <div class="bar"></div>
@@ -12,30 +12,12 @@
               <input type="text" name="name" v-model="material.name" />
             </div>
             <div>
-              <label for="">Tipo</label>
-              <select v-model="material.type">
-                <option name="enlace">Enlace</option>
-                <option name="pdf">PDF</option>
-                <option name="tarea">Tarea</option>
-              </select>
+              <label for="">Tipo: *Inserte Tipo*</label>
+
             </div>
 
             <div>
-              <label>Material</label>
-
-              <input v-model="material.data" type="text">
-              <!--v-model="file" -->
-              <q-uploader
-                style=""
-                label="Documento"
-                auto-upload
-                multiple="false"
-                max-files="1"
-                :factory="setFile"
-                @rejected="onRejected"
-              />
-
-
+              <label>Material: *Inserte material* </label>
               <!--<q-file
 
                 @value="file"
@@ -57,7 +39,7 @@
                 type="button"
                 name="button"
                 @click="submitForm"
-                value="Añadir material"
+                value="Editar material"
 
 
               />
@@ -123,37 +105,9 @@ export default defineComponent({
 
     submitForm() {
 
-      if (
-        this.material.name != "" &&
-        this.material.type != "" &&
-        //this.material.data != "" &&
-        //this.material.visible != "" &&
-        this.id != ""
-      ) {
-        console.log('asdf')
-        let formData = new FormData()
-        formData.append('nombre', this.material.name);
-        formData.append('tipo', this.material.type);
-        formData.append('visible', this.material.visible);
-        formData.append('curso', this.id);
-        if (this.material.type == 'Enlace'){
-          formData.append('data', this.material.data);
-        } else if (this.material.type == 'PDF'){
-          formData.append('file', this.file);
-        }
-        api
-          .post("/material/store", formData)
-          .then((response) => {
-            //this.$router.push("/auth");
-            this.registerOk("Material añadido");
-          })
-          .catch(() => {
-            this.registerError("No se ha podido añadir el curso");
-          });
-      } else {
-        this.registerError("Todos los campos son obligatorios");
-      }
+
     },
+
     setFile(files){
       console.log('a b c')
       console.log(files)
