@@ -134,6 +134,12 @@ export default defineComponent({
           .post("/user/store", data)
           .then((response) => {
             this.registerOk("Usuario añadido correctamente");
+            this.register.name = "";
+            this.register.surname = "";
+            this.register.email = "";
+            this.register.pass = "";
+            this.register.retypedPass = "";
+            this.register.rol = "";
           })
           .catch(() => {
             this.registerError("No se ha podido añadir al usuario");

@@ -33,7 +33,7 @@
         color="black"
         name="fa-solid fa-angle-right"
       />
-      <div>{{ this.user.nombre }}</div>
+      <div>{{ this.nombreDelUser }}</div>
     </div>
 
     <div class="top-info">
@@ -229,6 +229,7 @@ export default defineComponent({
         rol: "",
       },
       openResetPassDialog: false,
+      nombreDelUser: "",
     };
   },
   setup() {
@@ -278,6 +279,7 @@ export default defineComponent({
           console.log("edit OK");
           this.show = !this.show;
           this.isDisabled = !this.isDisabled;
+          this.nombreDelUser = data.nombre;
         })
         .catch(() => {
           console.log("edit MAL");
@@ -295,6 +297,7 @@ export default defineComponent({
             console.log("aaa" + user);
             user = response.data.usuario;
             this.user = user;
+            this.nombreDelUser = this.user.nombre;
           }
         })
         .catch((e) => {

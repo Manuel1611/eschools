@@ -31,23 +31,23 @@
         :key="index"
       >
         <q-item-section side class="precio-container">
-          <div class="precio">{{ item.precio }}</div>
+          <div class="precio">{{ item[1].precio }}</div>
           <div class="euros">€</div>
         </q-item-section>
 
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
-            item.nombre
+            item[1].nombre
           }}</q-item-label>
           <q-item-label style="font-size: 1em" caption>{{
-            item.descripcion
+            item[1].descripcion
           }}</q-item-label>
         </q-item-section>
 
         <q-item-section side>
           <q-avatar
             style="cursor: pointer"
-            @click="goCurso(index)"
+            @click="goCurso(item[0])"
             icon="fa-solid fa-pencil"
             color="primary"
             text-color="white"
@@ -132,7 +132,7 @@ export default defineComponent({
     filteredCursos: function () {
       return Object.values(this.cursos)
         .filter((curso) =>
-          String(curso.nombre).toLowerCase().match(this.search.toLowerCase())
+          String(curso[1].nombre).toLowerCase().match(this.search.toLowerCase())
         )
         .slice(
           (this.page - 1) * this.totalPages,
@@ -307,6 +307,17 @@ export default defineComponent({
   align-items: center;
   justify-content: flex-start;
   color: #c92804;
+  position: relative;
+}
+
+.precio-container::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  bottom: -10px;
+  width: 15px;
+  height: 2px;
+  background-color: #c92804;
 }
 
 .precio {
@@ -318,5 +329,6 @@ export default defineComponent({
   align-self: flex-end;
   margin-bottom: 8px;
   margin-left: 5px;
+  text-shadow: 1px 1px 1px rgba(1, 1, 1, 0.3);
 }
 </style>
