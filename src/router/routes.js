@@ -10,6 +10,7 @@ const routes = [
     children: [
       { path: "", name: "/login", component: () => import("pages/Login.vue") },
       { path: "register", component: () => import("pages/Register.vue") },
+      { path: "registerProfesor/:tokenRegistro", component: () => import("pages/RegisterProfesor.vue") },
     ],
   },
   {

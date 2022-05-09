@@ -60,6 +60,41 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog
+      v-model="openAddDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Invitar Profesor</div>
+        </q-card-section>
+
+        <q-card-section style="font-size: 1.1em" class="q-pt-none">
+          Escribe el correo de la persona a la que quieres invitar
+        </q-card-section>
+        <q-card-section style="font-size: 1.1em" class="q-pt-none">
+          <input type="text" v-model="invitedUser">
+        </q-card-section>
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+          <div
+            class="logout-btn-yes"
+            v-close-popup
+            @click="invitarUsuario(idBajaAlta)"
+          >
+            Aceptar
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+
     <q-dialog
       v-model="openAddCursoProfesor"
       persistent
@@ -232,6 +267,9 @@
       >
       </q-pagination>
     </div>
+    <p
+    @click="openAddDialog = true"
+    >Añadir profesor</p>
   </q-page>
 </template>
 
@@ -262,6 +300,8 @@ export default defineComponent({
       currentPage: 1,
       nextPage: null,
       totalPages: 8,
+      openAddDialog: false,
+      invitedUser: "",
     };
   },
   setup() {
@@ -382,6 +422,24 @@ export default defineComponent({
     disableUser(id, email) {
       this.confirmDisableUser(id, email);
     },
+
+    invitarUsuario(){
+      let data = {
+        email : this.invitedUser
+      }
+      api
+        .post("/auth/inviteUser", data)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            this.loadUsers();
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
+    }
   },
   mounted() {
     this.loadUsers();
