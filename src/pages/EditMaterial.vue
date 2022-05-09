@@ -9,26 +9,12 @@
           <form ref="form">
             <div>
               <label for="">Nombre</label>
-              <input type="text" name="name" v-model="material.name" />
+              <input type="text" name="name" v-model="material.nombre" />
             </div>
             <div>
-              <label for="">Tipo: *Inserte Tipo*</label>
-
+              <label>Tipo </label>
+              <input name="" v-model="this.material.tipo" disabled/>
             </div>
-
-            <div>
-              <label>Material: *Inserte material* </label>
-              <!--<q-file
-
-                @value="file"
-                @update:model-value="setFile()"
-                label="Pick one file"
-                filled
-
-                style="max-width: 300px"
-              />-->
-            </div>
-
             <div>
               <label for="">Visible</label>
               <input v-model="material.visible" type="checkbox">
@@ -40,8 +26,6 @@
                 name="button"
                 @click="submitForm"
                 value="Editar material"
-
-
               />
             </div>
           </form>
@@ -74,8 +58,8 @@ export default defineComponent({
           data: "",
           visible: true,
       },
-        id: "",
-        file : ref(null),
+        cursoid: '',
+        materialid: '',
     }
   },
   setup() {
@@ -104,21 +88,43 @@ export default defineComponent({
     },
 
     submitForm() {
-
+      let data = {
+        nombre: this.material.nombre,
+        visible : this.material.visible
+      }
+      api
+      .put("/material/" + this.cursoid + '/' + this.materialid, data )
+      .then((response) => {
+        this.registerOk(response.data.message)
+      })
+      .catch((error) => {
+        console.log('erro de load material')
+        console.log(error)
+      });
 
     },
 
-    setFile(files){
-      console.log('a b c')
-      console.log(files)
-      //console.log(e)
-      this.file = files[0]
+    loadMaterial(){
+    api
+      .get("/material/" + this.cursoid + '/' + this.materialid )
+      .then((response) => {
+        console.log('get material by id')
+        console.log(response.data)
+        this.material = response.data.material
+        console.log(this.material)
+      })
+      .catch((error) => {
+        console.log('erro de load material')
+        console.log(error)
+      });
     }
 
   },
 
   mounted(){
-    this.id = this.$router.currentRoute._value.params.id;
+    this.cursoid = this.$router.currentRoute._value.params.id;
+    this.materialid = this.$router.currentRoute._value.params.idmaterial;
+    this.loadMaterial()
   }
 });
 </script>

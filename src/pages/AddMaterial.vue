@@ -13,11 +13,21 @@
             </div>
             <div>
               <label for="">Tipo</label>
+              <q-select
+                filled
+                v-model="material.type"
+                :options="options"
+                label="Tipo de Material"
+              />
+
+<!--
               <select v-model="material.type">
                 <option name="enlace">Enlace</option>
                 <option name="pdf">PDF</option>
                 <option name="tarea">Tarea</option>
+                <option name="bloque">Bloque</option>
               </select>
+              -->
             </div>
 
             <div>
@@ -50,6 +60,16 @@
             <div>
               <label for="">Visible</label>
               <input v-model="material.visible" type="checkbox">
+            </div>
+
+            <div>
+              <label for="">Bloque</label>
+              <q-select
+                filled
+                v-model="material.bloque"
+                :options="bloques"
+                label="Bloque"
+              />
             </div>
             <div>
               <input
@@ -91,9 +111,36 @@ export default defineComponent({
           type: "",
           data: "",
           visible: true,
+          bloque : ''
       },
         id: "",
         file : ref(null),
+        options: [
+          {
+            label: 'Enlace',
+            value: 'enlace'
+          },
+          {
+            label: 'PDF',
+            value: 'PDF'
+          },
+          {
+            label: 'Tarea',
+            value: 'tarea'
+          },
+          {
+            label: 'Bloque',
+            value: 'bloque'
+          }
+
+        ],
+        bloques: [
+          {
+            label: '',
+            value: '',
+          },
+        ],
+
     }
   },
   setup() {
@@ -122,7 +169,8 @@ export default defineComponent({
     },
 
     submitForm() {
-
+      console.log('type: ')
+      console.log(this.material.type.value)
       if (
         this.material.name != "" &&
         this.material.type != "" &&
@@ -133,12 +181,12 @@ export default defineComponent({
         console.log('asdf')
         let formData = new FormData()
         formData.append('nombre', this.material.name);
-        formData.append('tipo', this.material.type);
+        formData.append('tipo', this.material.type.value);
         formData.append('visible', this.material.visible);
         formData.append('curso', this.id);
-        if (this.material.type == 'Enlace'){
+        if (this.material.type.value == 'enlace'){
           formData.append('data', this.material.data);
-        } else if (this.material.type == 'PDF'){
+        } else if (this.material.type.value == 'PDF'){
           formData.append('file', this.file);
         }
         api
@@ -159,12 +207,36 @@ export default defineComponent({
       console.log(files)
       //console.log(e)
       this.file = files[0]
+    },
+
+    loadBloques(){
+      api
+        .get("/material/"+this.id +"/bloques")
+        .then((response) => {
+          console.log('get bloques')
+          console.log(response.data)
+          let bloques = response.data.bloques
+
+          for (var i in bloques){
+            console.log(bloques[i][1])
+            this.bloques.push(
+              {
+                label: bloques[i][1].nombre,
+                value: bloques[i][0]
+              }
+            )
+          }
+        })
+        .catch(() => {
+
+        });
     }
 
   },
 
   mounted(){
     this.id = this.$router.currentRoute._value.params.id;
+    this.loadBloques()
   }
 });
 </script>

@@ -24,7 +24,7 @@
       <q-list bordered>
 
         <q-item v-for="(item, index) in curso.material" :key="index"  clickable v-ripple>
-          <q-item  v-if="item.tipo == 'Enlace'">
+          <q-item  v-if="item.tipo == 'enlace'">
             <q-item-section avatar>
               <q-avatar color="teal" text-color="white" icon="bluetooth" />
             </q-item-section>
@@ -52,6 +52,23 @@
             <q-item-section @click="goEdit(index)">Editar </q-item-section>
             <br> <br>
             <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
+            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
+          </q-item>
+
+          <q-item  v-else-if="item.tipo == 'bloque'">
+            <q-item-section avatar>
+              <q-icon class="icon-drawer" color="white" name="fa-solid fa-chess-knight" />
+            </q-item-section>
+
+            <q-item-section>
+
+
+              <h4>{{ item.nombre }} </h4>
+            </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br> <br>
+            <!--<q-item-section @click="deleteMaterial(index)">Borrar </q-item-section> -->
             <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
           </q-item>
           <q-item  v-else>
@@ -161,7 +178,7 @@ export default defineComponent({
         materialid: idmaterial
       }
       api
-        .post("/material/", data)
+        .post("material/deletematerial/", data)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
