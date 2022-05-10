@@ -10,6 +10,7 @@ const routes = [
     children: [
       { path: "", name: "/login", component: () => import("pages/Login.vue") },
       { path: "register", component: () => import("pages/Register.vue") },
+      { path: "registerProfesor/:tokenRegistro", component: () => import("pages/RegisterProfesor.vue") },
     ],
   },
   {
@@ -55,6 +56,31 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/curso",
+    component: () => import("layouts/AdminLayout.vue"),
+    children: [
+      { path: "", component: () => import("pages/Curso.vue") },
+      { path: "miscursos", component: () => import("pages/MisCursos.vue") },
+      { path: "miscursos/:id", component: () => import("pages/ShowCursoAlumno.vue") },
+      { path: "miscursos/:id/:idtarea", component: () => import("pages/ShowTareaAlumno.vue") },
+
+      { path: ":id", component: () => import("pages/ShowCurso.vue") },
+      {
+        path: ":id/material/add",
+        component: () => import("pages/AddMaterial.vue"),
+      },
+      {
+        path: ":id/examen/add",
+        component: () => import("pages/AddExamen.vue"),
+      },
+      {
+        path: ":idcurso/examen/:idexamen",
+        component: () => import("pages/ShowExamen.vue"),
+      },
+      { path: ":id/material/:idmaterial/edit", component: () => import("pages/EditMaterial.vue") },
+    ]
+  },
 
   // Always leave this as last one,
   // but you can also remove it
@@ -65,3 +91,4 @@ const routes = [
 ];
 
 export default routes;
+

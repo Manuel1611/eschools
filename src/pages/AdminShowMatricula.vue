@@ -2,10 +2,36 @@
   <q-page class="auth-container">
     <h3>Show Matriculas</h3>
     <div>
+      <select
+        required
+        v-model="this.matricula.idalumno"
+        name="idalumno"
+        :class="this.show ? 'isShow' : 'isEdit'"
+        :disabled="this.isDisabled"
+      >
+        <option v-for="(item, index) in students" :key="index" :value="item[0]">
+          {{ item[1].nombre + " " + item[1].apellidos + " - " + item[1].email }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <select
+        required
+        v-model="this.matricula.idcurso"
+        name="idcurso"
+        :class="this.show ? 'isShow' : 'isEdit'"
+        :disabled="this.isDisabled"
+      >
+        <option v-for="(item, index) in courses" :key="index" :value="index">
+          {{ item.nombre }}
+        </option>
+      </select>
+    </div>
+    <div>
       <input
         type="text"
         :class="this.show ? 'isShow' : 'isEdit'"
-        v-model="this.matricula.nombre"
+        v-model="this.matricula.fechainicio"
         :disabled="this.isDisabled"
       />
     </div>
@@ -13,15 +39,7 @@
       <input
         type="text"
         :class="this.show ? 'isShow' : 'isEdit'"
-        v-model="this.matricula.precio"
-        :disabled="this.isDisabled"
-      />
-    </div>
-    <div>
-      <input
-        type="text"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        v-model="this.matricula.descripcion"
+        v-model="this.matricula.fechafin"
         :disabled="this.isDisabled"
       />
     </div>
@@ -42,7 +60,7 @@
       >
       <span
         :class="this.show ? 'savebtn display-none' : 'savebtn display-block'"
-        @click="updatematricula"
+        @click="updateMatricula"
         >Guardar</span
       >
     </div>
@@ -62,54 +80,42 @@ export default defineComponent({
       matricula: {},
       show: true,
       isDisabled: true,
-      defaultValues: {
-        nombre: "",
-        apellidos: "",
-        rol: "",
-      },
-    };
-  },
-  setup() {
-    const $q = useQuasar();
 
-    return {
-      emailSent(msg) {
-        $q.notify({
-          message: msg,
-          color: "green",
-          badgeStyle: "opacity: 0",
-        });
-      },
-      emailError(msg) {
-        $q.notify({
-          message: msg,
-          color: "red",
-          badgeStyle: "opacity: 0",
-        });
+      courses: {},
+      students: {},
+      defaultValues: {
+        idalumno: "",
+        idcurso: "",
+        fechafin: "",
+        fechainicio: "",
       },
     };
   },
   methods: {
     changeEditStyles() {
-      console.log("estoy");
-      this.defaultValues.nombre = this.matricula.nombre;
-      this.defaultValues.precio = this.matricula.precio;
-      this.defaultValues.descripcion = this.matricula.descripcion;
+      console.log(this.matricula.idalumno);
+      this.defaultValues.idalumno = this.matricula.idalumno;
+      this.defaultValues.idcurso = this.matricula.idcurso;
+      this.defaultValues.fechafin = this.matricula.fechafin;
+      this.defaultValues.fechainicio = this.matricula.fechainicio;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
     cancelEdit() {
-      this.matricula.nombre = this.defaultValues.nombre;
-      this.matricula.precio = this.defaultValues.precio;
-      this.matricula.descripcion = this.defaultValues.descripcion;
+      this.matricula.idalumno = this.defaultValues.idalumno;
+      this.matricula.idcurso = this.defaultValues.idcurso;
+      this.matricula.fechafin = this.defaultValues.fechafin;
+      this.matricula.fechainicio = this.defaultValues.fechainicio;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
-    updatematricula() {
+    updateMatricula() {
       let data = {
-        nombre: this.matricula.nombre,
-        precio: this.matricula.precio,
-        descripcion: this.matricula.descripcion,
+        idalumno: this.matricula.idalumno,
+        idcurso: this.matricula.idcurso,
+        activa: this.matricula.activa,
+        fechafin: this.matricula.fechafin,
+        fechainicio: this.matricula.fechainicio,
       };
       api
         .put("/matricula/" + this.id, data)
@@ -127,13 +133,13 @@ export default defineComponent({
       api
         .get("/matricula/" + this.id)
         .then((response) => {
-          console.log("conexion correcta");
+          //console.log("conexion correcta");
           if (response.status == 200) {
-            console.log("conexion correcta2");
+            //console.log("conexion correcta2");
             console.log(response.data);
             matriculas = response.data.matricula;
             this.matricula = matriculas;
-            console.log(this.matricula);
+            //console.log(this.matricula);
           }
         })
         .catch((e) => {
@@ -141,15 +147,77 @@ export default defineComponent({
           console.log(e);
         });
     },
+    loadStudents() {
+      let students;
+      api
+        .get("/user/alumnos")
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            //console.log('conexion correcta2')
+            console.log(response.data);
+            //console.log("aaa" + students);
+            students = response.data.usuarios;
+
+            //console.log("bbb" + students);
+
+            this.students = students;
+            //console.log(this.students)
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+          /*$q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Loading failed',
+              icon: 'report_problem'
+            })
+            */
+        });
+    },
+    loadCourses() {
+      let cursos;
+      api
+        .get("/curso/index")
+        .then((response) => {
+          console.log("conexion correcta cursos");
+          if (response.status == 200) {
+            //console.log("conexion correcta2");
+            console.log(response.data);
+            //console.log("aaa" + cursos);
+            cursos = response.data.cursos;
+
+            //console.log("bbb" + cursos);
+
+            this.courses = cursos;
+            //console.log(this.cursos);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+          /*$q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Loading failed',
+              icon: 'report_problem'
+            })
+            */
+        });
+    },
 
     goBack() {
-      this.$router.push("/admin/matriculas/");
+      this.$router.push("/admin/matricula/");
     },
   },
 
   mounted() {
     this.id = this.$router.currentRoute._value.params.id;
     this.loadmatricula();
+    this.loadCourses();
+    this.loadStudents();
   },
 });
 </script>
