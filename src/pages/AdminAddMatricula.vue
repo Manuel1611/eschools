@@ -33,9 +33,9 @@
                 <option
                   v-for="(item, index) in courses"
                   :key="index"
-                  :value="index"
+                  :value="item[0]"
                 >
-                  {{ item.nombre }}
+                  {{ item[1].nombre }}
                 </option>
               </select>
             </div>
@@ -91,9 +91,27 @@ export default defineComponent({
     submitForm() {
       console.log("kek");
       if (this.matricula.usuario != "" && this.matricula.curso != "") {
+        let nombreAlumno = '';
+        let nombreCurso = '';
+        console.log('matricula usuario: ' + this.matricula.usuario)
+        for (let i = 0; i < this.students.length; i++){
+          if (this.students[i][0] == this.matricula.usuario){
+            console.log('entro en el if')
+            console.log(this.students[i][1].nombre)
+            nombreAlumno = this.students[i][1].nombre + ' ' + this.students[i][1].apellidos
+          }
+        }
+        for (let i = 0; i < this.courses.length; i++){
+          if (this.courses[i][0] == this.matricula.curso){
+            nombreCurso = this.courses[i][1].nombre
+          }
+        }
+
         let data = {
           idalumno: this.matricula.usuario,
           idcurso: this.matricula.curso,
+          nombreAlumno: nombreAlumno,
+          nombreCurso: nombreCurso,
         };
 
         api
@@ -104,9 +122,11 @@ export default defineComponent({
           .catch((e) => {
             console.log(e);
           });
+
       } else {
         console.log("kekwww");
       }
+
     },
 
     loadStudents() {
