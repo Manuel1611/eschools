@@ -146,7 +146,7 @@
                 ? 'logout-btn-yes-disabled'
                 : 'logout-btn-yes'
             "
-            @click="sendAddCursoProfesor(idProfesorParaCurso)"
+            @click="sendAddCursoProfesor(idProfesorParaCurso, nombreProfesor)"
           >
             Asignar
           </div>
@@ -240,6 +240,7 @@
               correoParaCurso = item[1].email;
               nombreParaCurso = item[1].nombre + ' ' + item[1].apellidos;
               idProfesorParaCurso = item[0];
+              nombreProfesor = item[1].nombre;
             "
             text-color="white"
           />
@@ -290,6 +291,7 @@ export default defineComponent({
       correoParaCurso: "",
       nombreParaCurso: "",
       idProfesorParaCurso: "",
+      nombreProfesor: "",
       users: {},
       matricula: {
         curso: "",
@@ -307,7 +309,15 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
 
-    return {};
+    return {
+      cursoAddedToProfesor(msg) {
+        $q.notify({
+          message: msg,
+          color: "green",
+          badgeStyle: "opacity: 0",
+        });
+      },
+    };
   },
   methods: {
     loadUsers() {
@@ -352,7 +362,7 @@ export default defineComponent({
     cancelAddCursoDialog() {
       this.matricula.curso = "";
     },
-    sendAddCursoProfesor(idprofesor) {
+    sendAddCursoProfesor(idprofesor, nombreProf) {
       if (this.matricula.curso == "") {
         this.openAddCursoProfesor = true;
       } else {
@@ -361,13 +371,17 @@ export default defineComponent({
           profesorId: idprofesor,
           cursoId: this.matricula.curso,
         };
-        api.post('/user/addcursotoprofesor', data)
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
+        api
+          .post("/user/addcursotoprofesor", data)
+          .then((response) => {
+            console.log(response);
+            this.cursoAddedToProfesor(
+              "Se le ha asignado el curso al profesor " + nombreProf
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+          });
 
         this.matricula.curso = "";
       }

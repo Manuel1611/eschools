@@ -100,6 +100,20 @@
 
         <div class="top-logout"></div>
         <div class="top-logout-two"></div>
+        <q-item class="q-item-user-info" @click="openLogoutDialog = true">
+          <q-item-section avatar>
+            <q-icon class="icon-drawer" color="white" name="fa-solid fa-user" />
+          </q-item-section>
+
+          <div class="user-info-container">
+            <q-item-section class="color-white">{{
+              user.nombre
+            }}</q-item-section>
+            <q-item-section class="color-white">{{
+              user.email
+            }}</q-item-section>
+          </div>
+        </q-item>
         <q-item
           class="q-item-logout"
           clickable
@@ -117,22 +131,16 @@
           <q-item-section class="color-white">Cerrar sesión</q-item-section>
         </q-item>
       </q-list>
-      <div>
-        <input type="text" disabled v-model="user.nombre">
-        <input type="text" disabled v-model="user.email">
-      </div>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
-
   </q-layout>
-
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from "vue";
 import { api } from "boot/axios";
 
 import { useQuasar } from "quasar";
@@ -147,14 +155,14 @@ export default defineComponent({
     return {
       openLogoutDialog: false,
       user: {
-        nombre : 'nombre apellidos',
-        email : 'email'
-      }
+        nombre: "No has iniciado sesión",
+        email: "No has iniciado sesión",
+      },
     };
   },
-  setup () {
+  setup() {
     const $q = useQuasar();
-    const leftDrawerOpen = ref(false)
+    const leftDrawerOpen = ref(false);
 
     return {
       leftDrawerOpen,
@@ -162,12 +170,10 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },
 
-      saveLocalStorage(key, value){
-        $q.localStorage.set(key, value)
-      }
-
-    }
-
+      saveLocalStorage(key, value) {
+        $q.localStorage.set(key, value);
+      },
+    };
   },
   methods: {
     goUsers() {
@@ -182,59 +188,59 @@ export default defineComponent({
     goProfesores() {
       this.$router.push("/admin/profesor");
     },
-    logout(){
-      console.log('logout')
-      api.post('/auth/logout')
+    logout() {
+      console.log("logout");
+      api
+        .post("/auth/logout")
         .then((response) => {
-          console.log('conexion correcta logout')
-          if (response.status == 200){
-            console.log('conexion correcta2 logout')
-            console.log(response)
-            this.saveLocalStorage('eschoolssessiontoken', '')
+          console.log("conexion correcta logout");
+          if (response.status == 200) {
+            console.log("conexion correcta2 logout");
+            console.log(response);
+            this.saveLocalStorage("eschoolssessiontoken", "");
             this.$router.push("/auth");
           }
         })
         .catch(() => {
-          console.log('error de conexion logout')
-           /*$q.notify({
+          console.log("error de conexion logout");
+          /*$q.notify({
               color: 'negative',
               position: 'top',
               message: 'Loading failed',
               icon: 'report_problem'
             })
             */
-        })
-
+        });
     },
-    loadUserData(){
+    loadUserData() {
       const $q = useQuasar();
-      let token = $q.localStorage.getItem('eschoolssessiontoken')
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
       let data2 = {
-        sessiontoken: token
-      }
-      api.post('/auth/checksessiontoken', data2)
+        sessiontoken: token,
+      };
+      api
+        .post("/auth/checksessiontoken", data2)
         .then((response) => {
-          console.log('conexion correcta token')
-          if (response.status == 200){
-            console.log('conexion correcta token 2')
-            console.log(response.data)
-            this.user.nombre = response.data.user.nombre + ' ' + response.data.user.apellidos
-            this.user.email = response.data.user.email
-
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 2");
+            console.log(response.data);
+            this.user.nombre =
+              response.data.user.nombre + " " + response.data.user.apellidos;
+            this.user.email = response.data.user.email;
           } else {
             //this.$router.push("/auth");
           }
         })
         .catch(() => {
           //this.$router.push("/auth");
-          console.log('error de conexion')
-        })
-    }
-
+          console.log("error de conexion");
+        });
+    },
   },
-  mounted(){
-    this.loadUserData()
-  }
+  mounted() {
+    this.loadUserData();
+  },
 });
 </script>
 
@@ -292,13 +298,24 @@ export default defineComponent({
   background-color: #2c6591;
 }
 
+.q-item-user-info {
+  position: absolute;
+  bottom: 64px;
+  width: 100%;
+  background-color: #2c6591;
+}
+
+.q-item-user-info:hover {
+  background-color: #2c6591 !important;
+}
+
 .q-item-logout:hover {
   background-color: #5f9bc9;
 }
 
 .top-logout {
   position: absolute;
-  bottom: 64px;
+  bottom: 128px;
   width: 100%;
   height: 20px;
   left: 0;
@@ -307,7 +324,7 @@ export default defineComponent({
 
 .top-logout-two {
   position: absolute;
-  bottom: 84px;
+  bottom: 148px;
   width: 100%;
   height: 20px;
   left: 0;
@@ -356,5 +373,19 @@ export default defineComponent({
 
 .logout-btn-yes:hover {
   background-color: #30c954;
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info-container div {
+  margin: 0;
+  padding: 0;
+}
+
+.user-info-container div:not(:first-of-type) {
+  font-size: 0.9em;
 }
 </style>

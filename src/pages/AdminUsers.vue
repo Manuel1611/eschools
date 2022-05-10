@@ -1,5 +1,5 @@
 <template>
-  <q-page class="auth-container">
+  <q-page>
     <q-dialog
       v-model="openBajaDialog"
       persistent
@@ -85,7 +85,7 @@
       </div>
     </div>
 
-    <q-list v-if="search == ''">
+    <q-list>
       <q-item
         class="each-item"
         v-for="(item, index) in filteredUsers"
@@ -144,71 +144,12 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <q-list v-if="search != ''">
-      <q-item
-        class="each-item"
-        v-for="(item, index) in filteredUsersSearch"
-        :key="index"
-      >
-        <q-item-section avatar top>
-          <q-avatar
-            style="cursor: pointer"
-            v-if="item[1].activo"
-            @click="
-              openBajaDialog = true;
-              correoBajaAlta = item[1].email;
-              idBajaAlta = item[0];
-            "
-            icon="fa-solid fa-arrow-down"
-            color="negative"
-            text-color="white"
-          />
-          <q-avatar
-            style="cursor: pointer"
-            v-else
-            @click="
-              openAltaDialog = true;
-              correoBajaAlta = item[1].email;
-              idBajaAlta = item[0];
-            "
-            icon="fa-solid fa-arrow-up"
-            color="positive"
-            text-color="white"
-          />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label lines="1" style="font-size: 1.1em">{{
-            item[1].nombre + " " + item[1].apellidos
-          }}</q-item-label>
-          <q-item-label style="font-size: 1em" caption>{{
-            item[1].email
-          }}</q-item-label>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon class="activate-bubble" name="info" color="green" />
-          <div v-if="item[1].activo" class="bubble">Activo</div>
-          <div v-else class="bubble">Inactivo</div>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-avatar
-            style="cursor: pointer"
-            @click="goUser(item[0])"
-            icon="fa-solid fa-pencil"
-            color="primary"
-            text-color="white"
-          />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <div class="q-pa-lg flex flex-center" v-if="search == ''">
+    <div class="q-pa-lg flex flex-center">
       <q-pagination
         v-if="users.length >= 8"
         v-model="page"
         :min="currentPage"
-        :max="Math.ceil(this.users.length / this.totalPages)"
+        :max="Math.ceil(users.length / totalPages)"
         :max-pages="3"
         boundary-numbers
         direction-links
@@ -253,7 +194,6 @@ export default defineComponent({
           if (response.status == 200) {
             users = response.data.usuarios;
             this.users = users;
-            this.paginas = Math.ceil(this.users.length / this.totalPages);
           }
         })
         .catch((e) => {
@@ -337,18 +277,6 @@ export default defineComponent({
           (this.page - 1) * this.totalPages,
           (this.page - 1) * this.totalPages + this.totalPages
         );
-    },
-    filteredUsersSearch: function () {
-      return Object.values(this.users).filter(
-        (user) =>
-          String(user[1].nombre)
-            .toLowerCase()
-            .match(this.search.toLowerCase()) ||
-          String(user[1].apellidos)
-            .toLowerCase()
-            .match(this.search.toLowerCase()) ||
-          String(user[1].email).toLowerCase().match(this.search.toLowerCase())
-      );
     },
   },
   watch: {
