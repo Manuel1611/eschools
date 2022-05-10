@@ -174,7 +174,7 @@ export default defineComponent({
     },
 
     goEdit(index){
-      this.$router.push("/curso/"+ this.id +"/material/" + index);
+      this.$router.push("/curso/"+ this.id +"/material/" + index + "/edit");
     },
     deleteMaterial(idmaterial){
       console.log('Deleting material ' + idmaterial + 'from curso ' + this.id)

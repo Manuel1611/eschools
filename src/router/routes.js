@@ -63,7 +63,7 @@ const routes = [
       { path: "", component: () => import("pages/Curso.vue") },
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       { path: ":id/add", component: () => import("pages/AddMaterial.vue") },
-      { path: ":id/material/:idmaterial", component: () => import("pages/EditMaterial.vue") },
+      { path: ":id/material/:idmaterial/edit", component: () => import("pages/EditMaterial.vue") },
     ]
   },
 
