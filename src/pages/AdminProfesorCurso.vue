@@ -76,7 +76,7 @@
           Escribe el correo de la persona a la que quieres invitar
         </q-card-section>
         <q-card-section style="font-size: 1.1em" class="q-pt-none">
-          <input type="text" v-model="invitedUser">
+          <input type="text" v-model="invitedUser" />
         </q-card-section>
         <q-card-actions
           align="right"
@@ -93,7 +93,6 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-
 
     <q-dialog
       v-model="openAddCursoProfesor"
@@ -268,9 +267,7 @@
       >
       </q-pagination>
     </div>
-    <p
-    @click="openAddDialog = true"
-    >Añadir profesor</p>
+    <p @click="openAddDialog = true">Añadir profesor</p>
   </q-page>
 </template>
 
@@ -437,23 +434,24 @@ export default defineComponent({
       this.confirmDisableUser(id, email);
     },
 
-    invitarUsuario(){
+    invitarUsuario() {
       let data = {
-        email : this.invitedUser
-      }
+        email: this.invitedUser,
+      };
       api
         .post("/auth/inviteUser", data)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
             this.loadUsers();
+            this.cursoAddedToProfesor("Se ha enviado un correo electrónico");
           }
         })
         .catch((e) => {
           console.log("error de conexion");
           console.log(e);
         });
-    }
+    },
   },
   mounted() {
     this.loadUsers();

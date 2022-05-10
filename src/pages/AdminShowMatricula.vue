@@ -22,8 +22,8 @@
         :class="this.show ? 'isShow' : 'isEdit'"
         :disabled="this.isDisabled"
       >
-        <option v-for="(item, index) in courses" :key="index" :value="index">
-          {{ item.nombre }}
+        <option v-for="(item, index) in courses" :key="index" :value="item[0]">
+          {{ item[1].nombre }}
         </option>
       </select>
     </div>
