@@ -31,3 +31,6 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+src/e-schoolsadmin.js
+src/admin.authdb.js

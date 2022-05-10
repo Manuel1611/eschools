@@ -9,8 +9,7 @@
         :disabled="this.isDisabled"
       />
     </div>
-    <div>
-    </div>
+    <div></div>
     <div>
       <input
         type="text"
@@ -96,7 +95,13 @@
     <div class="btns-container">
       <span class="volverbtn display-block" @click="goBack">Volver</span>
       <br /><br />
-      <span class="volverbtn display-block" @click="goAdd">Añadir Material</span>
+      <span class="volverbtn display-block" @click="goAddMaterial"
+        >Añadir Material</span
+      >
+      <br /><br />
+      <span class="volverbtn display-block" @click="goAddExamen"
+        >Añadir Examen</span
+      >
       <br /><br />
     </div>
   </q-page>
@@ -169,8 +174,12 @@ export default defineComponent({
       this.$router.push("/curso/");
     },
 
-    goAdd(){
-      this.$router.push("/curso/"+ this.id + "/add");
+    goAddMaterial() {
+      this.$router.push("/curso/" + this.id + "/material/add");
+    },
+
+    goAddExamen() {
+      this.$router.push("/curso/" + this.id + "/examen/add");
     },
 
     goEdit(index){
