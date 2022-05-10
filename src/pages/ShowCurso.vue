@@ -21,19 +21,73 @@
     <div class="items-list">
       <h4>Material del curso</h4>
       <q-list bordered>
-        <q-item
-          v-for="(item, index) in curso.material"
-          :key="index"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-avatar color="teal" text-color="white" icon="bluetooth" />
-          </q-item-section>
 
-          <q-item-section v-if="item.tipo == 'Enlace'"
-            ><a :href="item.data" target="_blank"> {{ item.nombre }} </a>
-          </q-item-section>
+        <q-item v-for="(item, index) in curso.material" :key="index"  clickable v-ripple>
+          <q-item  v-if="item.tipo == 'enlace'">
+            <q-item-section avatar>
+              <q-avatar color="teal" text-color="white" icon="bluetooth" />
+            </q-item-section>
+
+
+            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br><br>
+            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
+            <q-item-section v-if="item.visible === 'false'"> {{ item.visible}} Material no visible para los alumnos</q-item-section>
+          </q-item>
+
+          <q-item  v-else-if="item.tipo == 'PDF'">
+            <q-item-section avatar>
+              <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
+            </q-item-section>
+
+            <q-item-section>
+
+
+              <a :href="this.server + this.id + '/' + item.file" target="_blank"> {{ item.nombre }}</a>
+            </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br> <br>
+            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
+            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
+          </q-item>
+
+          <q-item  v-else-if="item.tipo == 'bloque'">
+            <q-item-section avatar>
+              <q-icon class="icon-drawer" color="white" name="fa-solid fa-chess-knight" />
+            </q-item-section>
+
+            <q-item-section>
+
+
+              <h4>{{ item.nombre }} </h4>
+            </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br> <br>
+            <!--<q-item-section @click="deleteMaterial(index)">Borrar </q-item-section> -->
+            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
+          </q-item>
+          <q-item  v-else-if="item.tipo =='tarea'">
+            <q-item-section avatar>
+            <q-icon
+              class="icon-drawer"
+              color="white"
+              name="fa-solid fa-pencil"
+            />
+            </q-item-section>
+
+            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br> <br>
+            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
+            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
+          </q-item>
+
+
         </q-item>
       </q-list>
     </div>
@@ -72,6 +126,7 @@ export default defineComponent({
         rol: "",
       },
       material: {},
+      server : 'http://localhost:3000/public/'
     };
   },
   setup() {
@@ -126,6 +181,30 @@ export default defineComponent({
     goAddExamen() {
       this.$router.push("/curso/" + this.id + "/examen/add");
     },
+
+    goEdit(index){
+      this.$router.push("/curso/"+ this.id +"/material/" + index + "/edit");
+    },
+    deleteMaterial(idmaterial){
+      console.log('Deleting material ' + idmaterial + 'from curso ' + this.id)
+      let data = {
+        cursoid: this.id,
+        materialid: idmaterial
+      }
+      api
+        .post("material/deletematerial/", data)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
+    }
   },
 
   mounted() {

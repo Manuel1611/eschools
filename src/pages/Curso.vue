@@ -28,17 +28,17 @@
       <q-item class="each-item" v-for="(item, index) in cursos" :key="index" @click="goCurso(index)">
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
-            item.nombre + " - " + item.precio + "€"
+            item[1].nombre + " - " + item[1].precio + "€"
           }}</q-item-label>
           <q-item-label style="font-size: 1em" caption>{{
-            item.descripcion
+            item[1].descripcion
           }}</q-item-label>
         </q-item-section>
 
         <q-item-section side>
           <q-avatar
             style="cursor: pointer"
-            @click="goCurso(index)"
+            @click="goCurso(item[0])"
             icon="fa-solid fa-pencil"
             color="primary"
             text-color="white"
