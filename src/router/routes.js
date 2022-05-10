@@ -10,6 +10,7 @@ const routes = [
     children: [
       { path: "", name: "/login", component: () => import("pages/Login.vue") },
       { path: "register", component: () => import("pages/Register.vue") },
+      { path: "registerProfesor/:tokenRegistro", component: () => import("pages/RegisterProfesor.vue") },
     ],
   },
   {
@@ -62,6 +63,7 @@ const routes = [
       { path: "", component: () => import("pages/Curso.vue") },
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       { path: ":id/add", component: () => import("pages/AddMaterial.vue") },
+      { path: ":id/material/:idmaterial/edit", component: () => import("pages/EditMaterial.vue") },
     ]
   },
 
@@ -74,3 +76,4 @@ const routes = [
 ];
 
 export default routes;
+
