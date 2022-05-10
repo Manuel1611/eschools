@@ -169,6 +169,7 @@ export default defineComponent({
   },
   methods: {
     loadmatriculas() {
+      console.log('cargando matricula')
       let matriculas;
       api
         .get("/matricula/index")
@@ -185,7 +186,7 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log("error de conexion");
+          console.log("error de conexionesss");
           console.log(e);
           /*$q.notify({
               color: 'negative',

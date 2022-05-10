@@ -61,6 +61,10 @@ const routes = [
     component: () => import("layouts/AdminLayout.vue"),
     children: [
       { path: "", component: () => import("pages/Curso.vue") },
+      { path: "miscursos", component: () => import("pages/MisCursos.vue") },
+      { path: "miscursos/:id", component: () => import("pages/ShowCursoAlumno.vue") },
+      { path: "miscursos/:id/:idtarea", component: () => import("pages/ShowTareaAlumno.vue") },
+
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       {
         path: ":id/material/add",

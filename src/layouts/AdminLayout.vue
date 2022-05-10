@@ -234,7 +234,7 @@ export default defineComponent({
         })
         .catch(() => {
           //this.$router.push("/auth");
-          console.log("error de conexion");
+          console.log("error de conexion sesion");
         });
     },
   },

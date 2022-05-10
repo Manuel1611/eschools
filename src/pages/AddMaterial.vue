@@ -190,6 +190,9 @@ export default defineComponent({
         formData.append('tipo', this.material.type.value);
         formData.append('visible', this.material.visible);
         formData.append('curso', this.id);
+        formData.append('bloque', this.material.bloque.value)
+        console.log('BLOQUE: ')
+        console.log(this.material.bloque.value)
         if (this.material.type.value == 'enlace'){
           formData.append('data', this.material.data);
         } else if (this.material.type.value == 'PDF'){
