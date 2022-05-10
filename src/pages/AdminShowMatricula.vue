@@ -4,8 +4,8 @@
     <div>
       <select
         required
-        v-model="this.matricula.usuario"
-        name="usuario"
+        v-model="this.matricula.idalumno"
+        name="idalumno"
         :class="this.show ? 'isShow' : 'isEdit'"
         :disabled="this.isDisabled"
       >
@@ -17,8 +17,8 @@
     <div>
       <select
         required
-        v-model="this.matricula.curso"
-        name="curso"
+        v-model="this.matricula.idcurso"
+        name="idcurso"
         :class="this.show ? 'isShow' : 'isEdit'"
         :disabled="this.isDisabled"
       >
@@ -60,7 +60,7 @@
       >
       <span
         :class="this.show ? 'savebtn display-none' : 'savebtn display-block'"
-        @click="updatematricula"
+        @click="updateMatricula"
         >Guardar</span
       >
     </div>
@@ -83,30 +83,37 @@ export default defineComponent({
 
       courses: {},
       students: {},
+      defaultValues: {
+        idalumno: "",
+        idcurso: "",
+        fechafin: "",
+        fechainicio: "",
+      },
     };
   },
   methods: {
     changeEditStyles() {
-      console.log("estoy");
-      this.defaultValues.idalumno = this.matricula.alumno;
-      this.defaultValues.idcurso = this.matricula.curso;
+      console.log(this.matricula.idalumno);
+      this.defaultValues.idalumno = this.matricula.idalumno;
+      this.defaultValues.idcurso = this.matricula.idcurso;
       this.defaultValues.fechafin = this.matricula.fechafin;
       this.defaultValues.fechainicio = this.matricula.fechainicio;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
     cancelEdit() {
-      this.matricula.alumno = this.defaultValues.idalumno;
-      this.matricula.curso = this.defaultValues.idcurso;
+      this.matricula.idalumno = this.defaultValues.idalumno;
+      this.matricula.idcurso = this.defaultValues.idcurso;
       this.matricula.fechafin = this.defaultValues.fechafin;
       this.matricula.fechainicio = this.defaultValues.fechainicio;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
-    updatematricula() {
+    updateMatricula() {
       let data = {
-        idalumno: this.matricula.alumno,
-        idcurso: this.matricula.curso,
+        idalumno: this.matricula.idalumno,
+        idcurso: this.matricula.idcurso,
+        activa: this.matricula.activa,
         fechafin: this.matricula.fechafin,
         fechainicio: this.matricula.fechainicio,
       };
@@ -126,13 +133,13 @@ export default defineComponent({
       api
         .get("/matricula/" + this.id)
         .then((response) => {
-          console.log("conexion correcta");
+          //console.log("conexion correcta");
           if (response.status == 200) {
-            console.log("conexion correcta2");
+            //console.log("conexion correcta2");
             console.log(response.data);
             matriculas = response.data.matricula;
             this.matricula = matriculas;
-            console.log(this.matricula);
+            //console.log(this.matricula);
           }
         })
         .catch((e) => {
@@ -141,21 +148,21 @@ export default defineComponent({
         });
     },
     loadStudents() {
-      let cursos;
+      let students;
       api
         .get("/user/alumnos")
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
             //console.log('conexion correcta2')
-            //console.log(response.data)
-            //console.log('aaa'+ cursos)
-            cursos = response.data.usuarios;
+            console.log(response.data);
+            //console.log("aaa" + students);
+            students = response.data.usuarios;
 
-            //console.log('bbb'+ cursos)
+            //console.log("bbb" + students);
 
-            this.students = cursos;
-            //console.log(this.cursos)
+            this.students = students;
+            //console.log(this.students)
           }
         })
         .catch((e) => {
@@ -170,7 +177,6 @@ export default defineComponent({
             */
         });
     },
-
     loadCourses() {
       let cursos;
       api
@@ -178,15 +184,15 @@ export default defineComponent({
         .then((response) => {
           console.log("conexion correcta cursos");
           if (response.status == 200) {
-            console.log("conexion correcta2");
+            //console.log("conexion correcta2");
             console.log(response.data);
-            console.log("aaa" + cursos);
+            //console.log("aaa" + cursos);
             cursos = response.data.cursos;
 
-            console.log("bbb" + cursos);
+            //console.log("bbb" + cursos);
 
             this.courses = cursos;
-            console.log(this.cursos);
+            //console.log(this.cursos);
           }
         })
         .catch((e) => {

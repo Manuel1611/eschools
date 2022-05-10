@@ -117,7 +117,7 @@
 
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
-            loadUser(item.idalumno) + " - " + loadCurso(item.idcurso)
+            item.nombreAlumno + " - " + item.nombreCurso
           }}</q-item-label>
           <q-item-label style="font-size: 1em" caption>{{
             item.fechafin + " - " + item.fechainicio
@@ -207,12 +207,12 @@ export default defineComponent({
     },
 
     loadUser(userId) {
-      console.log(userId);
+      //console.log(userId);
       api
         .get("/user/" + userId)
         .then((response) => {
           if (response.status == 200) {
-            console.log(response.data);
+            //console.log(response.data);
             let nombreUsuario = response.data.usuario.nombre;
             console.log(nombreUsuario);
 
@@ -231,7 +231,7 @@ export default defineComponent({
         .get("/curso/" + cursoId)
         .then((response) => {
           if (response.status == 200) {
-            console.log(response.data);
+            //console.log(response.data);
             let nombreCurso = response.data.curso.nombre;
             console.log(nombreCurso);
 
