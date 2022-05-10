@@ -16,6 +16,11 @@
               <input name="" v-model="this.material.tipo" disabled/>
             </div>
             <div>
+              <label>Descripcion</label>
+              <textarea name="" v-model="this.material.descripcion"/>
+
+            </div>
+            <div>
               <label for="">Visible</label>
               <input v-model="material.visible" type="checkbox">
             </div>
@@ -88,10 +93,21 @@ export default defineComponent({
     },
 
     submitForm() {
-      let data = {
-        nombre: this.material.nombre,
-        visible : this.material.visible
+      let data
+      if (this.material.tipo == 'tarea'){
+        data = {
+          nombre: this.material.nombre,
+          visible : this.material.visible,
+          descripcion: this.material.descripcion,
+        }
+      } else {
+        data = {
+          nombre: this.material.nombre,
+          visible : this.material.visible,
+        }
       }
+
+
       api
       .put("/material/" + this.cursoid + '/' + this.materialid, data )
       .then((response) => {

@@ -71,7 +71,7 @@
             <!--<q-item-section @click="deleteMaterial(index)">Borrar </q-item-section> -->
             <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
           </q-item>
-          <q-item  v-else>
+          <q-item  v-else-if="item.tipo =='tarea'">
             <q-item-section avatar>
             <q-icon
               class="icon-drawer"
@@ -81,6 +81,11 @@
             </q-item-section>
 
             <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+            <br> <br>
+            <q-item-section @click="goEdit(index)">Editar </q-item-section>
+            <br> <br>
+            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
+            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
           </q-item>
 
 

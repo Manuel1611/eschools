@@ -72,6 +72,10 @@
               />
             </div>
             <div>
+              <label for="">Descripción de la tarea</label>
+              <textarea v-model="descripcion"></textarea>
+            </div>
+            <div>
               <input
                 class="form-btn"
                 type="button"
@@ -111,10 +115,12 @@ export default defineComponent({
           type: "",
           data: "",
           visible: true,
-          bloque : ''
+          bloque : '',
+
       },
         id: "",
         file : ref(null),
+        descripcion: '',
         options: [
           {
             label: 'Enlace',
@@ -188,6 +194,8 @@ export default defineComponent({
           formData.append('data', this.material.data);
         } else if (this.material.type.value == 'PDF'){
           formData.append('file', this.file);
+        } else if (this.material.type.value == 'tarea'){
+          formData.append('descripcion', this.descripcion);
         }
         api
           .post("/material/store", formData)
