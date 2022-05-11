@@ -107,6 +107,7 @@ export default defineComponent({
             console.log(response)
             this.entregada = response.data.entregada
             this.nota = response.data.nota
+            this.comentario = response.data.comentario
           }
         })
         .catch((error) => {

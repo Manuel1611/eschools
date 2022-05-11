@@ -118,6 +118,25 @@ export default defineComponent({
 
     sendCalification(){
       console.log('Enviando calificacion al servidor')
+      let data = {
+        idtarea: this.idtarea,
+        iduser: this.calificacion.id,
+        nota: this.calificacion.nota,
+        comentario: this.calificacion.comentario,
+      }
+      api
+        .post("/tarea/calificarTarea/", data)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+          }
+        })
+        .catch((error) =>{
+          console.log('error calificando')
+          console.log(error)
+        })
     }
   },
   mounted() {
