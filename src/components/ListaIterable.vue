@@ -51,7 +51,7 @@
             />
             </q-item-section>
 
-            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
+            <q-item-section><a @click="goTarea(index)"> {{ item.nombre }} </a> </q-item-section>
           </q-item>
           <q-item-section v-if="this.profesor == true">
             <br> <br>
@@ -99,13 +99,15 @@ export default {
   },
   methods :{
     goTarea(id) {
-      console.log("go tarea: " + id);
-      this.$router.push("/curso/miscursos/" + this.cursoid + "/" + id);
+      this.$router.push({
+        path: "/curso/miscursos/" + this.cursoid + "/" + id,
+        query: {
+          bloqueid: this.bloque
+        },
+      });
     },
     goEdit(id) {
-      console.log('this bloque es: ' + this.bloque)
       this.$router.push({
-
         path: "/curso/" + this.cursoid + "/material/" + id + "/edit",
         query: {
           bloqueid: this.bloque

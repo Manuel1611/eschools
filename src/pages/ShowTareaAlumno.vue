@@ -4,7 +4,7 @@
     <div class="items-list">
       <h4>{{ this.tarea.nombre}}</h4>
       <h5>{{ this.tarea.descripcion}}</h5>
-
+      <h6>{{ this.error}}</h6>
       <q-uploader
         style=""
         label="Documento"
@@ -33,11 +33,13 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      id: "",
+      cursoid: "",
       tareaid: "",
       tarea : {},
       file : '',
-      server : 'http://localhost:3000/public/'
+      server : 'http://localhost:3000/public/',
+      error: 'no carga',
+      bloqueid : '',
     };
   },
   setup() {
@@ -61,21 +63,22 @@ export default defineComponent({
     };
   },
   methods: {
-    loadTarea() {
+    loadTarea(){
+      let url = "/material/" + this.cursoid + '/' + this.tareaid
+      if (this.bloqueid != '' && this.bloqueid != undefined){
+        console.log('change url' + this.bloqueid)
+        url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.tareaid
+      }
+      console.log('url: ' + url)
       api
-        .get("/material/"+ this.id +"/" + this.tareaid)
+        .get(url )
         .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
-            this.tarea = response.data.material;
-            console.log(this.tarea);
-          }
+          this.error = ''
+          this.tarea = response.data.material
         })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
+        .catch((error) => {
+          console.log('erro de load material')
+          console.log(error)
         });
     },
 
@@ -86,7 +89,24 @@ export default defineComponent({
     submitForm(){
       if(this.file != ''){
         let formData = new FormData()
-        //formData.append('nombre', this.material.name);
+        formData.append('userid', 'kmhHWDypPBcFTqErFSsFazwBpkt2')
+        formData.append('tarea', this.tareaid);
+        formData.append('entrega', this.file)
+        api
+        .post('/material/uploadTarea', formData )
+        .then((response) => {
+          if (response.status == 200){
+            console.log('Subida la tarea')
+            console.log(response)
+          } else {
+            console.log('NO SE HA SUBIDO')
+          }
+        })
+        .catch((error) => {
+          console.log('erro de load material')
+          console.log(error)
+        });
+
       }
 
     },
@@ -100,7 +120,12 @@ export default defineComponent({
   },
 
   mounted() {
-    this.id = this.$router.currentRoute._value.params.id;
+    if (this.$route.query.bloqueid != '') {
+      console.log(' a v c')
+      console.log(this.$route)
+      this.bloqueid = this.$route.query.bloqueid
+    }
+    this.cursoid = this.$router.currentRoute._value.params.id;
     this.tareaid = this.$router.currentRoute._value.params.idtarea;
     this.loadTarea();
   },

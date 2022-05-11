@@ -127,22 +127,14 @@ export default defineComponent({
     },
 
     loadMaterial(){
-      console.log('asdf fdsa' + this.bloqueid)
       let url = "/material/" + this.cursoid + '/' + this.materialid
       if (this.bloqueid != '' && this.bloqueid != undefined){
-        console.log('entro aqui perro')
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
       }
-
-      console.log('aqui tienes la url mongolin')
-      console.log(url)
       api
         .get(url )
         .then((response) => {
-          console.log('get material by id')
-          console.log(response.data)
           this.material = response.data.material
-          console.log(this.material)
         })
         .catch((error) => {
           console.log('erro de load material')
