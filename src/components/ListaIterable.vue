@@ -51,7 +51,8 @@
             />
             </q-item-section>
 
-            <q-item-section><a @click="goTarea(index)"> {{ item.nombre }} </a> </q-item-section>
+            <q-item-section v-if="this.profesor == true"><a @click="goTareaProfesor(index)"> {{ item.nombre }} </a> </q-item-section>
+            <q-item-section v-else><a @click="goTarea(index)"> {{ item.nombre }} </a> </q-item-section>
           </q-item>
           <q-item-section v-if="this.profesor == true">
             <br> <br>
@@ -101,6 +102,14 @@ export default {
     goTarea(id) {
       this.$router.push({
         path: "/curso/miscursos/" + this.cursoid + "/" + id,
+        query: {
+          bloqueid: this.bloque
+        },
+      });
+    },
+    goTareaProfesor(id){
+      this.$router.push({
+        path: "/curso/tarea/" + this.cursoid + "/" + id,
         query: {
           bloqueid: this.bloque
         },

@@ -11,6 +11,7 @@
         </q-section>
         <q-section v-else>
           <h5>calificación: {{ this.nota }}/10</h5>
+          <h5>Comentario: {{ this.comentario }}</h5>
         </q-section>
       </q-section>
       <q-section v-else>
@@ -53,6 +54,7 @@ export default defineComponent({
       userid : '',
       entregada : false,
       nota: -1,
+      comentario: '',
     };
   },
   setup() {

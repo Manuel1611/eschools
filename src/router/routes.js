@@ -65,6 +65,8 @@ const routes = [
       { path: "miscursos/:id", component: () => import("pages/ShowCursoAlumno.vue") },
       { path: "miscursos/:id/:idtarea", component: () => import("pages/ShowTareaAlumno.vue") },
 
+      { path: "tarea/:idcurso/:idtarea", component: () => import("pages/ShowTarea.vue") },
+
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       {
         path: ":id/material/add",
@@ -81,7 +83,6 @@ const routes = [
       { path: ":id/material/:idmaterial/edit", component: () => import("pages/EditMaterial.vue") },
     ]
   },
-
   // Always leave this as last one,
   // but you can also remove it
   {
