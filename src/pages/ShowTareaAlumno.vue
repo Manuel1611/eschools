@@ -4,17 +4,27 @@
     <div class="items-list">
       <h4>{{ this.tarea.nombre}}</h4>
       <h5>{{ this.tarea.descripcion}}</h5>
-      <h6>{{ this.error}}</h6>
-      <q-uploader
-        style=""
-        label="Documento"
-        auto-upload
-        multiple="false"
-        max-files="1"
-        :factory="setFile"
-        @rejected="onRejected"
-      />
+      <q-section v-if="this.entregada == 'true' || this.entregada == true">
+        <h5>Esta tarea ya ha sido entregada</h5>
+        <q-section v-if="this.nota < 0">
+          <h5>Esperando calificación...</h5>
+        </q-section>
+        <q-section v-else>
+          <h5>calificación: {{ this.nota }}/10</h5>
+        </q-section>
+      </q-section>
+      <q-section v-else>
+        <q-uploader
+          style=""
+          label="Documento"
+          auto-upload
+          multiple="false"
+          max-files="1"
+          :factory="setFile"
+          @rejected="onRejected"
+        />
 
+      </q-section>
     </div>
 
     <div class="btns-container">
@@ -40,6 +50,9 @@ export default defineComponent({
       server : 'http://localhost:3000/public/',
       error: 'no carga',
       bloqueid : '',
+      userid : '',
+      entregada : false,
+      nota: -1,
     };
   },
   setup() {
@@ -78,6 +91,24 @@ export default defineComponent({
         })
         .catch((error) => {
           console.log('erro de load material')
+          console.log(error)
+        });
+    },
+
+    checkEntregada(){
+      this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+      api
+        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid)
+        .then((response) => {
+          if (response.status == 200){
+            console.log('checkentregada')
+            console.log(response)
+            this.entregada = response.data.entregada
+            this.nota = response.data.nota
+          }
+        })
+        .catch((error) => {
+          console.log('erro de check entregada.')
           console.log(error)
         });
     },
@@ -128,6 +159,7 @@ export default defineComponent({
     this.cursoid = this.$router.currentRoute._value.params.id;
     this.tareaid = this.$router.currentRoute._value.params.idtarea;
     this.loadTarea();
+    this.checkEntregada();
   },
 });
 </script>
