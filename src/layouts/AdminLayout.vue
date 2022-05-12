@@ -38,6 +38,8 @@
         />
 
         <q-toolbar-title> E-Schools · Academia Online </q-toolbar-title>
+        <q-toolbar-title> Panel de Administrador </q-toolbar-title>
+
         <q-icon
           @click="openLogoutDialog = true"
           class="icon-drawer icon-logout"
@@ -230,8 +232,10 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta token 2");
             console.log(response.data);
-            this.user.nombre =
-              response.data.user.nombre + " " + response.data.user.apellidos;
+            if (response.data.user.rol != 'Administrador'){
+              this.$router.push("/curso");
+            }
+            this.user.nombre = response.data.user.nombre + " " + response.data.user.apellidos;
             this.user.email = response.data.user.email;
           } else {
             q.notify({
@@ -256,7 +260,7 @@ export default defineComponent({
     },
   },
   mounted() {
-   // this.loadUserData();
+    this.loadUserData();
     //this.$router.push("/auth");
   },
 });

@@ -44,7 +44,7 @@ export default defineComponent({
     },
   },
   mounted() {
-   // this.checkLoggedUser();
+    this.checkLoggedUser();
   },
 });
 </script>
