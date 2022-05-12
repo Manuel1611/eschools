@@ -37,8 +37,9 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> E-Schools · Academia Online </q-toolbar-title>
-        <q-toolbar-title> Panel de Administrador </q-toolbar-title>
+        <q-toolbar-title>
+          E-Schools · Academia Online - Panel de administrador
+        </q-toolbar-title>
 
         <q-icon
           @click="openLogoutDialog = true"
@@ -221,9 +222,9 @@ export default defineComponent({
       };
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
 
       api
         .post("/auth/checksessiontoken", data2, config)
@@ -232,28 +233,29 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta token 2");
             console.log(response.data);
-            if (response.data.user.rol != 'Administrador'){
+            if (response.data.user.rol != "Administrador") {
               this.$router.push("/curso");
             }
-            this.user.nombre = response.data.user.nombre + " " + response.data.user.apellidos;
+            this.user.nombre =
+              response.data.user.nombre + " " + response.data.user.apellidos;
             this.user.email = response.data.user.email;
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch(() => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
-            message: 'Sesión caducada.',
-            icon: 'report_problem'
-          })
+            color: "negative",
+            position: "top",
+            message: "Sesión caducada.",
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
