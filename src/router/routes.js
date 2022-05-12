@@ -58,7 +58,7 @@ const routes = [
   },
   {
     path: "/curso",
-    component: () => import("layouts/AdminLayout.vue"),
+    component: () => import("layouts/AlumnoLayout.vue"),
     children: [
       { path: "", component: () => import("pages/Curso.vue") },
       { path: "miscursos", component: () => import("pages/MisCursos.vue") },
