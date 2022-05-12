@@ -38,8 +38,6 @@
         />
 
         <q-toolbar-title> E-Schools · Academia Online </q-toolbar-title>
-        <q-toolbar-title> Panel de Administrador </q-toolbar-title>
-
         <q-icon
           @click="openLogoutDialog = true"
           class="icon-drawer icon-logout"
@@ -56,7 +54,9 @@
     >
       <div class="navega">Menú</div>
       <q-list bordered>
-        <q-item clickable v-ripple @click="goUsers">
+
+        <!--
+          <q-item clickable v-ripple @click="goUsers">
           <q-item-section avatar>
             <q-icon
               class="icon-drawer"
@@ -67,13 +67,14 @@
 
           <q-item-section class="color-white">Alumnos</q-item-section>
         </q-item>
+        -->
 
         <q-item clickable v-ripple @click="goCursos">
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
           </q-item-section>
 
-          <q-item-section class="color-white">Cursos</q-item-section>
+          <q-item-section class="color-white">Mis Cursos</q-item-section>
         </q-item>
 
         <q-item clickable v-ripple @click="goMatricula">
@@ -182,7 +183,7 @@ export default defineComponent({
       this.$router.push("/admin/users");
     },
     goCursos() {
-      this.$router.push("/admin/cursos");
+      this.$router.push("/curso/miscursos");
     },
     goMatricula() {
       this.$router.push("/admin/matricula");
@@ -217,13 +218,15 @@ export default defineComponent({
       const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let data2 = {
-        //sessiontoken: token,
+//        sessiontoken: token,
       };
+
       let config = {
         headers: {
           'x-access-token' : token
         }
       }
+
 
       api
         .post("/auth/checksessiontoken", data2, config)
@@ -232,10 +235,8 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta token 2");
             console.log(response.data);
-            if (response.data.user.rol != 'Administrador'){
-              this.$router.push("/curso");
-            }
-            this.user.nombre = response.data.user.nombre + " " + response.data.user.apellidos;
+            this.user.nombre =
+              response.data.user.nombre + " " + response.data.user.apellidos;
             this.user.email = response.data.user.email;
           } else {
             q.notify({

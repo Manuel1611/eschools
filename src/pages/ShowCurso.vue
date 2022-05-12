@@ -20,76 +20,11 @@
     </div>
     <div class="items-list">
       <h4>Material del curso</h4>
-      <q-list bordered>
-
-        <q-item v-for="(item, index) in curso.material" :key="index"  clickable v-ripple>
-          <q-item  v-if="item.tipo == 'enlace'">
-            <q-item-section avatar>
-              <q-avatar color="teal" text-color="white" icon="bluetooth" />
-            </q-item-section>
-
-
-            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
-            <br> <br>
-            <q-item-section @click="goEdit(index)">Editar </q-item-section>
-            <br><br>
-            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
-            <q-item-section v-if="item.visible === 'false'"> {{ item.visible}} Material no visible para los alumnos</q-item-section>
-          </q-item>
-
-          <q-item  v-else-if="item.tipo == 'PDF'">
-            <q-item-section avatar>
-              <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
-            </q-item-section>
-
-            <q-item-section>
-
-
-              <a :href="this.server + this.id + '/' + item.file" target="_blank"> {{ item.nombre }}</a>
-            </q-item-section>
-            <br> <br>
-            <q-item-section @click="goEdit(index)">Editar </q-item-section>
-            <br> <br>
-            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
-            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
-          </q-item>
-
-          <q-item  v-else-if="item.tipo == 'bloque'">
-            <q-item-section avatar>
-              <q-icon class="icon-drawer" color="white" name="fa-solid fa-chess-knight" />
-            </q-item-section>
-
-            <q-item-section>
-
-
-              <h4>{{ item.nombre }} </h4>
-            </q-item-section>
-            <br> <br>
-            <q-item-section @click="goEdit(index)">Editar </q-item-section>
-            <br> <br>
-            <!--<q-item-section @click="deleteMaterial(index)">Borrar </q-item-section> -->
-            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
-          </q-item>
-          <q-item  v-else-if="item.tipo =='tarea'">
-            <q-item-section avatar>
-            <q-icon
-              class="icon-drawer"
-              color="white"
-              name="fa-solid fa-pencil"
-            />
-            </q-item-section>
-
-            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
-            <br> <br>
-            <q-item-section @click="goEdit(index)">Editar </q-item-section>
-            <br> <br>
-            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
-            <q-item-section v-if="item.visible === 'false'"> {{item.visible}} Material no visible para los alumnos</q-item-section>
-          </q-item>
-
-
-        </q-item>
-      </q-list>
+      <ListaIterable
+        :profesor="true"
+        :material="this.curso.material"
+        :cursoid="this.id"
+      />
     </div>
 
     <div class="btns-container">
@@ -111,106 +46,82 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import ListaIterable from "src/components/ListaIterable.vue";
 
 export default defineComponent({
-  name: "RegisterPage",
-  data() {
-    return {
-      id: "",
-      curso: {},
-      show: true,
-      isDisabled: true,
-      defaultValues: {
-        nombre: "",
-        apellidos: "",
-        rol: "",
-      },
-      material: {},
-      server : 'http://localhost:3000/public/'
-    };
-  },
-  setup() {
-    const $q = useQuasar();
-
-    return {
-      emailSent(msg) {
-        $q.notify({
-          message: msg,
-          color: "green",
-          badgeStyle: "opacity: 0",
-        });
-      },
-      emailError(msg) {
-        $q.notify({
-          message: msg,
-          color: "red",
-          badgeStyle: "opacity: 0",
-        });
-      },
-    };
-  },
-  methods: {
-    loadCurso() {
-      let cursos;
-      api
-        .get("/curso/" + this.id)
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
-            cursos = response.data.curso;
-            this.curso = cursos;
-            console.log(this.curso);
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
+    name: "RegisterPage",
+    data() {
+        return {
+            id: "",
+            curso: {},
+            show: true,
+            isDisabled: true,
+            defaultValues: {
+                nombre: "",
+                apellidos: "",
+                rol: "",
+            },
+            material: {},
+            server: "http://localhost:3000/public/"
+        };
     },
-
-    goBack() {
-      this.$router.push("/curso/");
+    setup() {
+        const $q = useQuasar();
+        return {
+            emailSent(msg) {
+                $q.notify({
+                    message: msg,
+                    color: "green",
+                    badgeStyle: "opacity: 0",
+                });
+            },
+            emailError(msg) {
+                $q.notify({
+                    message: msg,
+                    color: "red",
+                    badgeStyle: "opacity: 0",
+                });
+            },
+        };
     },
-
-    goAddMaterial() {
-      this.$router.push("/curso/" + this.id + "/material/add");
+    methods: {
+        loadCurso() {
+            let cursos;
+            api
+                .get("/curso/" + this.id)
+                .then((response) => {
+                console.log("conexion correcta");
+                if (response.status == 200) {
+                    console.log("conexion correcta2");
+                    console.log(response.data);
+                    cursos = response.data.curso;
+                    this.curso = cursos;
+                    console.log(this.curso);
+                }
+            })
+                .catch((e) => {
+                console.log("error de conexion");
+                console.log(e);
+            });
+        },
+        goBack() {
+            this.$router.push("/curso/");
+        },
+        goAddMaterial() {
+            this.$router.push("/curso/" + this.id + "/material/add");
+        },
+        goAddExamen() {
+            this.$router.push("/curso/" + this.id + "/examen/add");
+        },
+        goEdit(index) {
+            this.$router.push("/curso/" + this.id + "/material/" + index + "/edit");
+        },
     },
-
-    goAddExamen() {
-      this.$router.push("/curso/" + this.id + "/examen/add");
+    mounted() {
+        this.id = this.$router.currentRoute._value.params.id;
+        this.loadCurso();
     },
-
-    goEdit(index){
-      this.$router.push("/curso/"+ this.id +"/material/" + index + "/edit");
-    },
-    deleteMaterial(idmaterial){
-      console.log('Deleting material ' + idmaterial + 'from curso ' + this.id)
-      let data = {
-        cursoid: this.id,
-        materialid: idmaterial
-      }
-      api
-        .post("material/deletematerial/", data)
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
-    }
-  },
-
-  mounted() {
-    this.id = this.$router.currentRoute._value.params.id;
-    this.loadCurso();
-  },
+    components: { ListaIterable }
 });
 </script>
 

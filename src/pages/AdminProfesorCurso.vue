@@ -121,9 +121,9 @@
             <option
               v-for="(item, index) in courses"
               :key="index"
-              :value="index"
+              :value="item[0]"
             >
-              {{ item.nombre }}
+              {{ item[1].nombre }}
             </option>
           </select>
         </q-card-section>
