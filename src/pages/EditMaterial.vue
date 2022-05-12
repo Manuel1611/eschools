@@ -65,6 +65,7 @@ export default defineComponent({
       },
         cursoid: '',
         materialid: '',
+        bloqueid: '',
     }
   },
   setup() {
@@ -107,9 +108,14 @@ export default defineComponent({
         }
       }
 
+      let url = "/material/" + this.cursoid + '/' + this.materialid
+      if (this.bloqueid != ''){
+        url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
+      }
+
 
       api
-      .put("/material/" + this.cursoid + '/' + this.materialid, data )
+      .put(url , data )
       .then((response) => {
         this.registerOk(response.data.message)
       })
@@ -121,23 +127,28 @@ export default defineComponent({
     },
 
     loadMaterial(){
-    api
-      .get("/material/" + this.cursoid + '/' + this.materialid )
-      .then((response) => {
-        console.log('get material by id')
-        console.log(response.data)
-        this.material = response.data.material
-        console.log(this.material)
-      })
-      .catch((error) => {
-        console.log('erro de load material')
-        console.log(error)
-      });
+      let url = "/material/" + this.cursoid + '/' + this.materialid
+      if (this.bloqueid != '' && this.bloqueid != undefined){
+        url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
+      }
+      api
+        .get(url )
+        .then((response) => {
+          this.material = response.data.material
+        })
+        .catch((error) => {
+          console.log('erro de load material')
+          console.log(error)
+        });
     }
 
   },
 
   mounted(){
+    console.log(this.$route.query.bloqueid)
+    if (this.$route.query.bloqueid != '') {
+      this.bloqueid = this.$route.query.bloqueid
+    }
     this.cursoid = this.$router.currentRoute._value.params.id;
     this.materialid = this.$router.currentRoute._value.params.idmaterial;
     this.loadMaterial()

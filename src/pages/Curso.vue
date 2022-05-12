@@ -102,7 +102,9 @@ export default defineComponent({
   },
 
   mounted() {
+
     console.log("mounted");
+    //console.log($route.meta)
     this.loadCursos();
   },
 });

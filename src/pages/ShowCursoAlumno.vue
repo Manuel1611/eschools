@@ -20,7 +20,10 @@
     </div>
     <div class="items-list">
       <h4>Material del curso</h4>
-      <ListaIterable></ListaIterable>
+      <ListaIterable
+        :material="this.curso.material"
+        :cursoid="this.id"
+        />
       <h4>Examen</h4>
       <q-list bordered>
         <q-item v-for="(item, index) in curso.examen" :key="index"  clickable v-ripple>
