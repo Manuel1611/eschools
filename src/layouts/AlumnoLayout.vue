@@ -261,7 +261,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    //this.loadUserData();
+    this.loadUserData();
     //this.$router.push("/auth");
   },
 });
