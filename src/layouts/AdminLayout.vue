@@ -36,9 +36,13 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
         <q-toolbar-title>
-          E-Schools · Academia Online - Panel de administrador
+          E-Schools · Academia Online - &nbsp;<q-icon
+            color="white"
+            name="fa-solid fa-solar-panel"
+          />&nbsp;&nbsp;<span style="font-size: 0.8em"
+            >Panel de administrador</span
+          >
         </q-toolbar-title>
 
         <q-icon

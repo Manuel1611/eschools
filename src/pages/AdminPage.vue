@@ -9,15 +9,7 @@ import { useQuasar } from "quasar";
 export default defineComponent({
   name: "RegisterPage",
   data() {
-    return {
-      register: {
-        name: "",
-        surname: "",
-        email: "",
-        pass: "",
-        retypedPass: "",
-      },
-    };
+    return {};
   },
   setup() {
     const $q = useQuasar();
@@ -88,35 +80,12 @@ export default defineComponent({
     };
   },
   methods: {
-    submitForm() {
-      if (
-        this.register.name != "" &&
-        this.register.surname != "" &&
-        this.register.email != "" &&
-        this.register.pass != "" &&
-        this.register.retypedPass != ""
-      ) {
-        let data = {
-          nombre: this.register.name,
-          apellidos: this.register.surname,
-          email: this.register.email,
-          password: this.register.pass,
-        };
-        api
-          .post("/auth/register", data)
-          .then((response) => {
-            this.$router.push("/auth");
-          })
-          .catch(() => {
-            this.registerError("No se ha podido registrar");
-          });
-      } else {
-        this.registerError("Todos los campos son obligatorios");
-      }
-    },
     goLogin() {
       this.$router.push("/auth");
     },
+  },
+  mounted() {
+    this.$router.push("/admin/users");
   },
 });
 </script>

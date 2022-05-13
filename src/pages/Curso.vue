@@ -25,7 +25,12 @@
     </div>
 
     <q-list>
-      <q-item class="each-item" v-for="(item, index) in cursos" :key="index" @click="goCurso(index)">
+      <q-item
+        class="each-item"
+        v-for="(item, index) in cursos"
+        :key="index"
+        @click="goCurso(index)"
+      >
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
             item[1].nombre + " - " + item[1].precio + "€"
@@ -59,7 +64,7 @@ export default defineComponent({
   data() {
     return {
       cursos: {},
-      rol :'',
+      rol: "",
     };
   },
   setup() {
@@ -81,8 +86,8 @@ export default defineComponent({
             cursos = response.data.cursos;
             console.log(cursos);
             this.cursos = cursos;
-            console.log('adsdsdsadasd')
-            console.log(Object.values(this.cursos).length );
+            console.log("adsdsdsadasd");
+            console.log(Object.values(this.cursos).length);
           }
         })
         .catch((e) => {
@@ -106,33 +111,33 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
-            this.rol = response.data.user.rol
+            this.rol = response.data.user.rol;
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
@@ -140,10 +145,9 @@ export default defineComponent({
   },
 
   mounted() {
-
     console.log("mounted");
     //console.log($route.meta)
-    this.checkUserLogged()
+    this.checkUserLogged();
     this.loadCursos();
   },
 });

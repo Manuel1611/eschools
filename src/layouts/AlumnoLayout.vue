@@ -54,7 +54,6 @@
     >
       <div class="navega">Menú</div>
       <q-list bordered>
-
         <!--
           <q-item clickable v-ripple @click="goUsers">
           <q-item-section avatar>
@@ -69,41 +68,35 @@
         </q-item>
         -->
 
-        <q-item clickable v-ripple @click="goCursos">
+        <q-item
+          v-if="user.rol == 'alumno'"
+          clickable
+          v-ripple
+          @click="goAllCursos"
+        >
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
           </q-item-section>
 
-          <q-item-section class="color-white">Mis Cursos</q-item-section>
+          <q-item-section class="color-white">Todos los cursos</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="goMatricula">
+        <q-item clickable v-ripple @click="goCursos">
           <q-item-section avatar>
             <q-icon
               class="icon-drawer"
               color="white"
-              name="fa-solid fa-pencil"
+              name="fa-solid fa-book-bookmark"
             />
           </q-item-section>
 
-          <q-item-section class="color-white">Matrículas</q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple @click="goProfesores">
-          <q-item-section avatar>
-            <q-icon
-              class="icon-drawer"
-              color="white"
-              name="fa-solid fa-user-tie"
-            />
-          </q-item-section>
-
-          <q-item-section class="color-white">Profesores</q-item-section>
+          <q-item-section class="color-white">Mis cursos</q-item-section>
         </q-item>
 
         <div class="top-logout"></div>
         <div class="top-logout-two"></div>
-        <q-item class="q-item-user-info" @click="openLogoutDialog = true">
+
+        <q-item class="q-item-user-info" clickable v-ripple @click="goPerfil">
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-user" />
           </q-item-section>
@@ -117,6 +110,7 @@
             }}</q-item-section>
           </div>
         </q-item>
+
         <q-item
           class="q-item-logout"
           clickable
@@ -160,6 +154,8 @@ export default defineComponent({
       user: {
         nombre: "No has iniciado sesión",
         email: "No has iniciado sesión",
+        rol: "",
+        id: "",
       },
     };
   },
@@ -179,8 +175,17 @@ export default defineComponent({
     };
   },
   methods: {
+    goPerfil() {
+      this.$router.push({
+        name: "/perfil",
+        query: { id: this.user.id },
+      });
+    },
     goUsers() {
       this.$router.push("/admin/users");
+    },
+    goAllCursos() {
+      this.$router.push("/curso/");
     },
     goCursos() {
       this.$router.push("/curso/miscursos");
@@ -218,15 +223,14 @@ export default defineComponent({
       const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let data2 = {
-//        sessiontoken: token,
+        //        sessiontoken: token,
       };
 
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
-
+          "x-access-token": token,
+        },
+      };
 
       api
         .post("/auth/checksessiontoken", data2, config)
@@ -238,23 +242,25 @@ export default defineComponent({
             this.user.nombre =
               response.data.user.nombre + " " + response.data.user.apellidos;
             this.user.email = response.data.user.email;
+            this.user.rol = response.data.user.rol;
+            this.user.id = response.data.user.uid;
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch(() => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
-            message: 'Sesión caducada.',
-            icon: 'report_problem'
-          })
+            color: "negative",
+            position: "top",
+            message: "Sesión caducada.",
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
@@ -329,7 +335,7 @@ export default defineComponent({
 }
 
 .q-item-user-info:hover {
-  background-color: #2c6591 !important;
+  background-color: #5f9bc9 !important;
 }
 
 .q-item-logout:hover {
