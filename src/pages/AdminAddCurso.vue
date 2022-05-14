@@ -33,6 +33,10 @@
             <input type="number" name="price" v-model="curso.price" />
           </div>
           <div>
+            <label for="price">Id de Stripe</label>
+            <input type="text" name="priceid" v-model="curso.priceid" />
+          </div>
+          <div>
             <label for="description">Descripción</label>
             <textarea
               style="width: 40%; min-width: 300px"
@@ -69,6 +73,7 @@ export default defineComponent({
         name: "",
         description: "",
         price: "",
+        priceid : "",
       },
     };
   },
@@ -100,12 +105,14 @@ export default defineComponent({
       if (
         this.curso.name != "" &&
         this.curso.description != "" &&
+        this.curso.priceid != "" &&
         this.curso.price != ""
       ) {
         let data = {
           nombre: this.curso.name,
           descripcion: this.curso.description,
           precio: this.curso.price,
+          priceid: this.curso.priceid,
         };
         api
           .post("/curso/store", data)
@@ -114,6 +121,7 @@ export default defineComponent({
             this.curso.name = "";
             this.curso.description = "";
             this.curso.price = "";
+            this.curso.priceid = "";
           })
           .catch(() => {
             this.registerError("No se ha podido añadir el curso");

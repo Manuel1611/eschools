@@ -1,12 +1,38 @@
 <template>
   <q-page class="auth-container">
+    <q-dialog
+      v-model="openMatriculaDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Instrucciones de matriculacion</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-h7">Para matricularse haga una transferencia con el precio del curso y mande el justificante de pago al correo admin@eschools.com</div>
+          <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
+          <div class="text-h7">Beneficiario: E-Schools</div>
+          <div class="text-h7">Concepto: *Nombre apellidos usuario* * Nombre del curso *</div>
+        </q-card-section>
+
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="title">
       <q-icon
         class="icon-drawer"
         color="black"
         name="fa-solid fa-angle-right"
       />
-      <div>Cursos en E-Schools</div>
+      <div>Cursos en E-Schooless</div>
     </div>
     <div class="top-info">
       <div class="query-found">
@@ -34,7 +60,9 @@
             item[1].descripcion
           }}</q-item-label>
         </q-item-section>
-
+        <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
+        <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
+<!--
         <q-item-section side>
           <q-avatar
             style="cursor: pointer"
@@ -44,6 +72,7 @@
             text-color="white"
           />
         </q-item-section>
+-->
       </q-item>
     </q-list>
   </q-page>
@@ -60,6 +89,7 @@ export default defineComponent({
     return {
       cursos: {},
       rol :'',
+      openMatriculaDialog: false,
     };
   },
   setup() {
@@ -137,6 +167,25 @@ export default defineComponent({
           console.log("error de conexion sesion");
         });
     },
+
+    matriculacionDialog() {
+      this.openMatriculaDialog = true
+    },
+
+    matriculav2(priceid){
+      let data = {
+        cursopriceid: priceid
+      }
+      api
+        .post("/matricula/create-checkout-session", data)
+        .then((response) => {
+          console.log("conexion correcta createcheckout");
+          console.log(response)
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          }
+      })
+    }
   },
 
   mounted() {

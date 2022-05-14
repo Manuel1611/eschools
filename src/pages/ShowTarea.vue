@@ -1,7 +1,7 @@
 <template>
   <q-page class="auth-container">
     <div class="title">
-          <q-dialog
+    <q-dialog
       v-model="openCalificarDialog"
       persistent
       transition-show="scale"
@@ -43,7 +43,12 @@
         name="fa-solid fa-angle-right"
       />
       <div>Show Tarea Para el profesor</div>
+
     </div>
+      <div>
+        <h5> Nombre tarea</h5>
+        <h5> Desc tarea</h5>
+      </div>
     <q-list bordered>
       <q-item
         v-for="(item, index) in this.entregas"
@@ -53,6 +58,13 @@
         {{item[1].email}}
         <a :href="this.server +'/usuarios/' + item[0] + '/' +idtarea +'/' + item[1].entrega[idtarea].file" target="_blank">Entrega</a>
         <br>
+        <q-item-section v-if="item[1].entrega[idtarea].nota != undefined && item[1].entrega[idtarea].nota > -1">
+          Nota: {{item[1].entrega[idtarea].nota}}/10
+          Comentario: {{item[1].entrega[idtarea].comentario}}
+        </q-item-section>
+        <q-item-section v-else>
+          Tarea aún sin calificar
+        </q-item-section>
 
         <q-btn @click="calificarDialog(item[0], item[1])">
           Calificar entrega
@@ -105,6 +117,20 @@ export default defineComponent({
           }
         })
     },
+
+    loadTarea(){
+      console.log('loadtarea')
+      api.get("/material/" + this.idcurso + "/" + this.idtarea)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2 load tarea");
+            console.log(response.data);
+            this.entregas = response.data.usuarios
+          }
+        })
+    },
+
     calificarDialog(id, user){
       this.calificacion.nombre = user.nombre
       this.calificacion.apellidos = user.apellidos
@@ -142,6 +168,7 @@ export default defineComponent({
   mounted() {
     this.idtarea = this.$router.currentRoute._value.params.idtarea;
     this.loadEntregas()
+    this.loadTarea()
   },
 });
 </script>
