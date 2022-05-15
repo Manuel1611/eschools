@@ -9,17 +9,11 @@
       <div>Mis cursos</div>
     </div>
     <div class="top-info">
-      <div class="query-found">
-        <!--<q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />-->
-        <!--<div>{{ Object.values(this.cursos).length }} resultados</div>-->
-      </div>
-
-      <div class="search-container" style="height:50px">
-      </div>
+      <div class="search-container" style="height: 92px"></div>
     </div>
 
     <q-list>
-      <q-item class="each-item" v-for="(item, index) in cursos" :key="index" >
+      <q-item class="each-item" v-for="(item, index) in cursos" :key="index">
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
             item.nombre + " - " + item.precio + "€"
@@ -30,7 +24,6 @@
         </q-item-section>
 
         <q-item-section side>
-
           <q-avatar
             v-if="this.rol == 'Alumno' || this.rol == 'alumno'"
             style="cursor: pointer"
@@ -52,8 +45,17 @@
       </q-item>
     </q-list>
 
-    <q-card-section v-if=" this.cursos == undefined ||Object.values(this.cursos).length == 0">
-      <h4>Aún no te has matriculado en ningún curso.</h4>
+    <q-card-section
+      style="display: flex; align-items: center"
+      v-if="this.cursos == undefined || Object.values(this.cursos).length == 0"
+    >
+      <q-icon
+        style="margin-right: 10px"
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-right-long"
+      />
+      <p style="margin: 0">Aún no te has matriculado en ningún curso...</p>
     </q-card-section>
   </q-page>
 </template>
@@ -68,8 +70,8 @@ export default defineComponent({
   data() {
     return {
       cursos: {},
-      matriculas : {},
-      rol : '',
+      matriculas: {},
+      rol: "",
     };
   },
   setup() {
@@ -79,10 +81,10 @@ export default defineComponent({
   },
   methods: {
     loadCurso(index) {
-      console.log('CARGANDO CURSO' + index)
+      console.log("CARGANDO CURSO" + index);
       let cursos = [];
       api
-        .get("/curso/"+ index)
+        .get("/curso/" + index)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -92,9 +94,9 @@ export default defineComponent({
             let curso = response.data.curso;
             //console.log(curso);
             //this.cursos.push(curso);
-            this.cursos[index] = curso
-            console.log('this.cursos: ')
-            console.log(this.cursos)
+            this.cursos[index] = curso;
+            console.log("this.cursos: ");
+            console.log(this.cursos);
             //console.log(Object.values(this.cursos).length );
           }
         })
@@ -112,39 +114,38 @@ export default defineComponent({
     },
 
     loadAllCursos() {
-
       let cursos = [];
       api
-      .get("/curso/index")
-      .then((response) => {
-        console.log("conexion correcta");
-        if (response.status == 200) {
-          console.log("conexion correcta2");
-          console.log(response.data);
-          let cursos = response.data.cursos;
-          for (let i in cursos){
-            this.cursos[cursos[i][0]] = cursos[i][1]
-          }
+        .get("/curso/index")
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+            let cursos = response.data.cursos;
+            for (let i in cursos) {
+              this.cursos[cursos[i][0]] = cursos[i][1];
+            }
 
-          //console.log(curso);
-          //this.cursos.push(curso);
-          response.data.cursos
-          console.log('this.cursos: ')
-          console.log(this.cursos)
-          //console.log(Object.values(this.cursos).length );
-        }
-      })
-      .catch((e) => {
-        console.log("error de conexion");
-        console.log(e);
-        /*$q.notify({
+            //console.log(curso);
+            //this.cursos.push(curso);
+            response.data.cursos;
+            console.log("this.cursos: ");
+            console.log(this.cursos);
+            //console.log(Object.values(this.cursos).length );
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+          /*$q.notify({
             color: 'negative',
             position: 'top',
             message: 'Loading failed',
             icon: 'report_problem'
           })
           */
-      });
+        });
     },
 
     goCurso(index) {
@@ -154,11 +155,11 @@ export default defineComponent({
       this.$router.push("/curso/" + index);
     },
 
-    loadMatriculas(userid){
-      console.log('loading matriculas')
-      let matriculas
+    loadMatriculas(userid) {
+      console.log("loading matriculas");
+      let matriculas;
       api
-        .get("/matricula/getmatriculabyuser/"+ userid)
+        .get("/matricula/getmatriculabyuser/" + userid)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -169,12 +170,12 @@ export default defineComponent({
             console.log(matriculas);
             this.matriculas = matriculas;
             if (matriculas != undefined) {
-              console.log('Matriculas')
-              console.log(matriculas)
-              for(let i = 0; i < matriculas.length; i++){
-                console.log('curso: ')
-                console.log(matriculas[i].idcurso)
-                this.loadCurso(matriculas[i].idcurso)
+              console.log("Matriculas");
+              console.log(matriculas);
+              for (let i = 0; i < matriculas.length; i++) {
+                console.log("curso: ");
+                console.log(matriculas[i].idcurso);
+                this.loadCurso(matriculas[i].idcurso);
               }
             }
             //console.log(Object.values(this.cursos).length );
@@ -193,13 +194,13 @@ export default defineComponent({
         });
     },
 
-    loadCursosFromProfesor(profesor){
-      console.log('loading cursos from profesor')
-      console.log(profesor.cursos)
-      for(let i in profesor.cursos){
-        console.log('este es el curso')
-        console.log(profesor.cursos[i].curso)
-        this.loadCurso(profesor.cursos[i].curso)
+    loadCursosFromProfesor(profesor) {
+      console.log("loading cursos from profesor");
+      console.log(profesor.cursos);
+      for (let i in profesor.cursos) {
+        console.log("este es el curso");
+        console.log(profesor.cursos[i].curso);
+        this.loadCurso(profesor.cursos[i].curso);
       }
     },
 
@@ -208,60 +209,58 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
-            console.log(response.data.uid)
-            this.rol = response.data.user.rol
-            if (this.rol == 'Alumno' || this.rol == 'alumno'){
-              console.log('soy alumno')
+            console.log(response.data.uid);
+            this.rol = response.data.user.rol;
+            if (this.rol == "Alumno" || this.rol == "alumno") {
+              console.log("soy alumno");
               this.loadMatriculas(response.data.uid);
-
-            } else if(this.rol == 'Profesor' || this.rol == 'profesor') {
-
-              console.log('soy profesor')
+            } else if (this.rol == "Profesor" || this.rol == "profesor") {
+              console.log("soy profesor");
               this.loadCursosFromProfesor(response.data.user);
-              console.log('soy admin')
-            } else if(this.rol == 'Administrador' || this.rol == 'administrador'){
+              console.log("soy admin");
+            } else if (
+              this.rol == "Administrador" ||
+              this.rol == "administrador"
+            ) {
               this.loadAllCursos();
             } else {
-
-              console.log('no soy nada ' + this.rol)
+              console.log("no soy nada " + this.rol);
             }
-
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           //this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
     },
-
   },
 
   mounted() {
     console.log("mounted");
-    this.checkUserLogged()
+    this.checkUserLogged();
     //this.loadMatriculas("kmhHWDypPBcFTqErFSsFazwBpkt2");
   },
 });
