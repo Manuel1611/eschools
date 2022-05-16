@@ -106,8 +106,14 @@ export default defineComponent({
   },
   methods: {
     loadEntregas(){
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/tarea/getTareasEntregadas/" + this.idtarea)
+        .get("/tarea/getTareasEntregadas/" + this.idtarea, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -120,7 +126,13 @@ export default defineComponent({
 
     loadTarea(){
       console.log('loadtarea')
-      api.get("/material/" + this.idcurso + "/" + this.idtarea)
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api.get("/material/" + this.idcurso + "/" + this.idtarea, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -150,8 +162,14 @@ export default defineComponent({
         nota: this.calificacion.nota,
         comentario: this.calificacion.comentario,
       }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/tarea/calificarTarea/", data)
+        .post("/tarea/calificarTarea/", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

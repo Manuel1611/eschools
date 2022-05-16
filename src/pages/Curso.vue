@@ -183,8 +183,14 @@ export default defineComponent({
       let data = {
         cursopriceid: priceid
       }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/matricula/create-checkout-session", data)
+        .post("/matricula/create-checkout-session", data, config)
         .then((response) => {
           console.log("conexion correcta createcheckout");
           console.log(response)

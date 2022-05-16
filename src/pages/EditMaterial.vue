@@ -113,9 +113,14 @@ export default defineComponent({
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
       }
 
-
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-      .put(url , data )
+      .put(url , data, config )
       .then((response) => {
         this.registerOk(response.data.message)
       })
@@ -131,8 +136,14 @@ export default defineComponent({
       if (this.bloqueid != '' && this.bloqueid != undefined){
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
       }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get(url )
+        .get(url, config )
         .then((response) => {
           this.material = response.data.material
         })

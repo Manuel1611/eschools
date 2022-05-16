@@ -214,8 +214,14 @@ export default defineComponent({
         visible: this.examen.visible,
         idexamen: this.idexamen,
       };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/curso/" + this.idcurso + "/examen/" + this.idexamen, data)
+        .put("/curso/" + this.idcurso + "/examen/" + this.idexamen, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -228,8 +234,14 @@ export default defineComponent({
     loadExamen() {
       let examenes;
       console.log("/curso/" + this.idcurso + "/examen/" + this.idexamen);
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/" + this.idcurso + "/examen/" + this.idexamen)
+        .get("/curso/" + this.idcurso + "/examen/" + this.idexamen, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

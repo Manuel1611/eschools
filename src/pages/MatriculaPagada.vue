@@ -13,16 +13,7 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      openBajaDialog: false,
-      openAltaDialog: false,
-      correoBajaAlta: "",
-      idBajaAlta: "",
-      users: {},
-      search: "",
-      page: 1,
-      currentPage: 1,
-      nextPage: null,
-      totalPages: 8,
+
     };
   },
   setup() {
@@ -30,104 +21,9 @@ export default defineComponent({
     return {};
   },
   methods: {
-    loadUsers() {
-      let users;
-      api
-        .get("/user/alumnos")
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            users = response.data.usuarios;
-            this.users = users;
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
-    },
-    darBaja(id) {
-      let data = {
-        userid: id,
-      };
-      api
-        .post("/user/disableUser", data)
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            this.loadUsers();
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
-    },
-    darAlta(id) {
-      let data = {
-        userid: id,
-      };
-
-      api
-        .post("/user/enableUser", data)
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            this.loadUsers();
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
-    },
-    goFirstPage() {
-      console.log("aaaaaaaa");
-      this.currentPage = 1;
-    },
-    goAddUser() {
-      this.$router.push("/admin/users/add");
-    },
-
-    goUser(index) {
-      console.log("asdf " + index);
-      this.$router.push("/admin/users/" + index);
-    },
-
-    enableUser(id, email) {
-      this.confirmEnableUser(id, email);
-    },
-
-    disableUser(id, email) {
-      this.confirmDisableUser(id, email);
-    },
   },
   mounted() {
-    this.loadUsers();
-  },
-  computed: {
-    filteredUsers: function () {
-      return Object.values(this.users)
-        .filter(
-          (user) =>
-            String(user[1].nombre)
-              .toLowerCase()
-              .match(this.search.toLowerCase()) ||
-            String(user[1].apellidos)
-              .toLowerCase()
-              .match(this.search.toLowerCase()) ||
-            String(user[1].email).toLowerCase().match(this.search.toLowerCase())
-        )
-        .slice(
-          (this.page - 1) * this.totalPages,
-          (this.page - 1) * this.totalPages + this.totalPages
-        );
-    },
-  },
-  watch: {
-    search: function () {
-      this.page = 1;
-    },
+
   },
 });
 </script>

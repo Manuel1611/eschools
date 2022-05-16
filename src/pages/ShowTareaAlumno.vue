@@ -85,8 +85,14 @@ export default defineComponent({
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.tareaid
       }
       console.log('url: ' + url)
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get(url )
+        .get(url, config )
         .then((response) => {
           this.error = ''
           this.tarea = response.data.material
@@ -98,9 +104,15 @@ export default defineComponent({
     },
 
     checkEntregada(){
-      this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+      //this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid)
+        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid, config)
         .then((response) => {
           if (response.status == 200){
             console.log('checkentregada')

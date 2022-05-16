@@ -87,8 +87,14 @@ export default defineComponent({
     methods: {
         loadCurso() {
             let cursos;
+            let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+            let config = {
+              headers: {
+                'x-access-token' : token
+              }
+            }
             api
-                .get("/curso/" + this.id)
+                .get("/curso/" + this.id, config)
                 .then((response) => {
                 console.log("conexion correcta");
                 if (response.status == 200) {
