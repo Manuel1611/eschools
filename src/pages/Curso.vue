@@ -8,7 +8,7 @@
       />
       <div>Cursos en E-Schools</div>
     </div>
-    <div class="top-info">
+    <div class="top-info" style="min-height: 92px">
       <div class="query-found">
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
         <div>{{ Object.values(this.cursos).length }} resultados</div>
@@ -27,7 +27,7 @@
     <q-list>
       <q-item
         class="each-item"
-        v-for="(item, index) in cursos"
+        v-for="(item, index) in filteredCursos"
         :key="index"
         @click="goCurso(index)"
       >
@@ -51,6 +51,18 @@
         </q-item-section>
       </q-item>
     </q-list>
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination
+        v-if="Object.values(this.cursos).length >= 8"
+        v-model="page"
+        :min="currentPage"
+        :max="Math.ceil(Object.values(this.cursos).length / totalPages)"
+        :max-pages="3"
+        boundary-numbers
+        direction-links
+      >
+      </q-pagination>
+    </div>
   </q-page>
 </template>
 
@@ -65,6 +77,11 @@ export default defineComponent({
     return {
       cursos: {},
       rol: "",
+      search: "",
+      page: 1,
+      currentPage: 1,
+      nextPage: null,
+      totalPages: 8,
     };
   },
   setup() {
@@ -149,6 +166,23 @@ export default defineComponent({
     //console.log($route.meta)
     this.checkUserLogged();
     this.loadCursos();
+  },
+  computed: {
+    filteredCursos: function () {
+      return Object.values(this.cursos)
+        .filter((curso) =>
+          String(curso[1].nombre).toLowerCase().match(this.search.toLowerCase())
+        )
+        .slice(
+          (this.page - 1) * this.totalPages,
+          (this.page - 1) * this.totalPages + this.totalPages
+        );
+    },
+  },
+  watch: {
+    search: function () {
+      this.page = 1;
+    },
   },
 });
 </script>

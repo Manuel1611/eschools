@@ -1,43 +1,32 @@
 <template>
   <q-page class="auth-container">
-    <h3>Show Cursos Not Admin</h3>
-    <div>
-      <input
-        type="text"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        v-model="this.curso.nombre"
-        :disabled="this.isDisabled"
+    <div class="title">
+      <q-icon
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-angle-right"
       />
+      <div>{{ this.curso.nombre }}</div>
     </div>
-    <div></div>
-    <div>
-      <input
-        type="text"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        v-model="this.curso.descripcion"
-        :disabled="this.isDisabled"
-      />
+
+    <div class="desc">
+      {{ this.curso.descripcion }}
     </div>
-    <div class="items-list">
-      <h4>Material del curso</h4>
+    <div class="btns-curso">
+      <div class="btns-curso-inner btnsci1">
+        <div class="btn-addnew" @click="goAddMaterial">Añadir material</div>
+        <div class="btn-addnew" @click="goAddExamen">Añadir examen</div>
+      </div>
+      <div class="btns-curso-inner">
+        <div class="btn-addnew btn2" @click="goBack">Volver</div>
+      </div>
+    </div>
+    <div class="curso-container">
       <ListaIterable
         :profesor="true"
         :material="this.curso.material"
         :cursoid="this.id"
       />
-    </div>
-
-    <div class="btns-container">
-      <span class="volverbtn display-block" @click="goBack">Volver</span>
-      <br /><br />
-      <span class="volverbtn display-block" @click="goAddMaterial"
-        >Añadir Material</span
-      >
-      <br /><br />
-      <span class="volverbtn display-block" @click="goAddExamen"
-        >Añadir Examen</span
-      >
-      <br /><br />
     </div>
   </q-page>
 </template>
@@ -49,79 +38,79 @@ import { useQuasar } from "quasar";
 import ListaIterable from "src/components/ListaIterable.vue";
 
 export default defineComponent({
-    name: "RegisterPage",
-    data() {
-        return {
-            id: "",
-            curso: {},
-            show: true,
-            isDisabled: true,
-            defaultValues: {
-                nombre: "",
-                apellidos: "",
-                rol: "",
-            },
-            material: {},
-            server: "http://localhost:3000/public/"
-        };
+  name: "RegisterPage",
+  data() {
+    return {
+      id: "",
+      curso: {},
+      show: true,
+      isDisabled: true,
+      defaultValues: {
+        nombre: "",
+        apellidos: "",
+        rol: "",
+      },
+      material: {},
+      server: "http://localhost:3000/public/",
+    };
+  },
+  setup() {
+    const $q = useQuasar();
+    return {
+      emailSent(msg) {
+        $q.notify({
+          message: msg,
+          color: "green",
+          badgeStyle: "opacity: 0",
+        });
+      },
+      emailError(msg) {
+        $q.notify({
+          message: msg,
+          color: "red",
+          badgeStyle: "opacity: 0",
+        });
+      },
+    };
+  },
+  methods: {
+    loadCurso() {
+      let cursos;
+      api
+        .get("/curso/" + this.id)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+            cursos = response.data.curso;
+            this.curso = cursos;
+            console.log(this.curso);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
     },
-    setup() {
-        const $q = useQuasar();
-        return {
-            emailSent(msg) {
-                $q.notify({
-                    message: msg,
-                    color: "green",
-                    badgeStyle: "opacity: 0",
-                });
-            },
-            emailError(msg) {
-                $q.notify({
-                    message: msg,
-                    color: "red",
-                    badgeStyle: "opacity: 0",
-                });
-            },
-        };
+    goBack() {
+      this.$router.push("/curso/");
     },
-    methods: {
-        loadCurso() {
-            let cursos;
-            api
-                .get("/curso/" + this.id)
-                .then((response) => {
-                console.log("conexion correcta");
-                if (response.status == 200) {
-                    console.log("conexion correcta2");
-                    console.log(response.data);
-                    cursos = response.data.curso;
-                    this.curso = cursos;
-                    console.log(this.curso);
-                }
-            })
-                .catch((e) => {
-                console.log("error de conexion");
-                console.log(e);
-            });
-        },
-        goBack() {
-            this.$router.push("/curso/");
-        },
-        goAddMaterial() {
-            this.$router.push("/curso/" + this.id + "/material/add");
-        },
-        goAddExamen() {
-            this.$router.push("/curso/" + this.id + "/examen/add");
-        },
-        goEdit(index) {
-            this.$router.push("/curso/" + this.id + "/material/" + index + "/edit");
-        },
+    goAddMaterial() {
+      this.$router.push("/curso/" + this.id + "/material/add");
     },
-    mounted() {
-        this.id = this.$router.currentRoute._value.params.id;
-        this.loadCurso();
+    goAddExamen() {
+      this.$router.push("/curso/" + this.id + "/examen/add");
     },
-    components: { ListaIterable }
+    goEdit(index) {
+      this.$router.push("/curso/" + this.id + "/material/" + index + "/edit");
+    },
+  },
+  mounted() {
+    this.id = this.$router.currentRoute._value.params.id;
+    this.loadCurso();
+  },
+  components: { ListaIterable },
 });
 </script>
 
@@ -131,30 +120,6 @@ export default defineComponent({
 }
 .volverbtn {
   background-color: #1c5785;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.editbtn {
-  background-color: green;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.cancelbtn {
-  background-color: red;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.savebtn {
-  background-color: green;
   padding: 5px;
   margin-top: 10px;
   color: white;
@@ -206,5 +171,76 @@ input {
   margin: 10px;
   border: 2px solid green;
   outline: none;
+}
+
+.q-page {
+  padding: 20px;
+}
+
+.title {
+  margin-top: 20px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.icon-drawer {
+  margin: 15px 0;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.desc {
+  margin-top: 15px;
+  padding: 20px 0;
+  border-bottom: 2px solid #525252;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.btns-curso {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.btnsci1 {
+  display: flex;
+}
+
+.btn-addnew {
+  background-color: #21ba45;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 10px;
+}
+
+.btn-addnew:hover {
+  background-color: #30c954;
+}
+
+.btn2 {
+  background-color: #05beed;
+  color: black;
+}
+
+.btn2:hover {
+  background-color: #12ccfc;
+}
+
+.curso-container {
+  background-color: #f5f5f5;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-bottom: -20px;
+  margin-top: 20px;
+  padding: 25px;
 }
 </style>

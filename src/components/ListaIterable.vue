@@ -1,117 +1,199 @@
 <template>
-  <div>My component</div>
+  <q-dialog
+    v-model="openBorrarMaterial"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card class="background-myblue text-white" style="width: 400px">
+      <q-card-section>
+        <div class="text-h6">Estás a punto de mandar algo a la basura...</div>
+      </q-card-section>
 
+      <q-card-section style="font-size: 1.1em" class="q-pt-none">
+        {{ this.nombreMat }}
+      </q-card-section>
 
-      <q-list bordered>
+      <q-card-actions
+        align="right"
+        class="bg-white text-teal logoutModal-margins"
+      >
+        <div class="logout-btn-no" v-close-popup>Cancelar</div>
+        <div
+          class="logout-btn-yes"
+          v-close-popup
+          @click="deleteMaterial(this.indexToDelete)"
+        >
+          Aceptar
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <q-list>
+    <q-item
+      v-for="(item, index) in material"
+      :key="index"
+      class="item-container"
+    >
+      <q-item v-if="item.tipo == 'enlace'" class="tipo">
+        <q-item-section avatar class="logo-item">
+          <q-icon class="icon-drawer" color="grey-6" name="fa-solid fa-link" />
+        </q-item-section>
 
-        <q-item v-for="(item, index) in material" :key="index"  clickable v-ripple>
-          <q-item  v-if="item.tipo == 'enlace'">
-            <q-item-section avatar>
-              <q-avatar color="teal" text-color="white" icon="bluetooth" />
-            </q-item-section>
+        <q-item-section
+          ><a class="enlace width-quetoca" :href="item.data" target="_blank">
+            {{ item.nombre }}
+          </a>
+          <span class="masinfo">(Haz click arriba para acceder al enlace)</span>
+        </q-item-section>
+      </q-item>
 
+      <q-item v-else-if="item.tipo == 'PDF'" class="tipo">
+        <q-item-section avatar class="logo-item">
+          <q-icon class="icon-drawer" color="grey-6" name="fa-solid fa-file" />
+        </q-item-section>
 
-            <q-item-section><a :href="item.data" target="_blank"> {{ item.nombre }} </a> </q-item-section>
-          </q-item>
+        <q-item-section>
+          <a
+            class="enlace width-quetoca"
+            :href="this.server + this.cursoid + '/' + item.file"
+            target="_blank"
+          >
+            {{ item.nombre }}</a
+          >
+          <span class="masinfo"
+            >(Haz click arriba para ver el documento o descargarlo)</span
+          >
+        </q-item-section>
+      </q-item>
 
-          <q-item  v-else-if="item.tipo == 'PDF'">
-            <q-item-section avatar>
-              <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
-            </q-item-section>
-
-            <q-item-section>
-
-
-              <a :href="this.server + this.cursoid + '/' + item.file" target="_blank"> {{ item.nombre }}</a>
-            </q-item-section>
-
-          </q-item>
-
-          <q-item  v-else-if="item.tipo == 'bloque'">
-            <q-item-section avatar>
-              <q-icon class="icon-drawer" color="white" name="fa-solid fa-chess-knight" />
-            </q-item-section>
-
-            <q-item-section>
-              <h4>{{ item.nombre }} </h4>
-            </q-item-section>
-            <ListaIterable
-              :profesor="this.profesor"
-              :material="item.material"
-              :cursoid="this.cursoid"
-              :bloque="index"
-            />
-          </q-item>
-          <q-item  v-else-if="item.tipo =='tarea'">
-            <q-item-section avatar>
+      <q-item class="bloque-container" v-else-if="item.tipo == 'bloque'">
+        <q-item-section class="nombre-bloque-container">
+          <q-icon
+            class="icon-drawer"
+            color="black"
+            name="fa-solid fa-angle-right"
+          />
+          <p class="nombre-bloque">{{ item.nombre }}</p>
+        </q-item-section>
+        <div class="dentro-bloque">
+          <div class="dentro-bloque-flecha">
             <q-icon
-              class="icon-drawer"
-              color="white"
-              name="fa-solid fa-pencil"
+              class="icon-drawer rotar"
+              color="grey-6"
+              name="fa-solid fa-arrow-turn-up"
             />
-            </q-item-section>
+          </div>
+          <ListaIterable
+            style="background-color: red"
+            :profesor="this.profesor"
+            :material="item.material"
+            :cursoid="this.cursoid"
+            :bloque="index"
+          />
+        </div>
+      </q-item>
+      <q-item v-else-if="item.tipo == 'tarea'" class="tipo">
+        <q-item-section avatar class="logo-item">
+          <q-icon
+            class="icon-drawer"
+            color="grey-6"
+            name="fa-solid fa-file-pen"
+          />
+        </q-item-section>
 
-            <q-item-section v-if="this.profesor == true"><a @click="goTareaProfesor(index)"> {{ item.nombre }} </a> </q-item-section>
-            <q-item-section v-else><a @click="goTarea(index)"> {{ item.nombre }} </a> </q-item-section>
-          </q-item>
-          <q-item-section v-if="this.profesor == true">
-            <br> <br>
-            <q-item-section @click="goEdit(index)">Editar </q-item-section>
-            <br><br>
-            <q-item-section @click="deleteMaterial(index)">Borrar </q-item-section>
-            <q-item-section v-if="item.visible === 'false' || item.visible == false"> {{ item.visible}} Material no visible para los alumnos</q-item-section>
-          </q-item-section>
-        </q-item>
-      </q-list>
-
+        <q-item-section v-if="this.profesor == true"
+          ><a class="enlace" @click="goTareaProfesor(index)">
+            {{ item.nombre }}
+          </a>
+        </q-item-section>
+        <q-item-section v-else
+          ><a class="enlace" @click="goTarea(index)"> {{ item.nombre }} </a>
+        </q-item-section>
+      </q-item>
+      <q-item-section side v-if="this.profesor == true" class="btns-prof">
+        <q-item-section>
+          <q-avatar
+            style="cursor: pointer"
+            @click="goEdit(index)"
+            icon="fa-solid fa-pencil"
+            color="primary"
+            text-color="white"
+          />
+        </q-item-section>
+        <q-item-section>
+          <q-avatar
+            style="cursor: pointer"
+            @click="
+              this.indexToDelete = index;
+              openBorrarMaterial = true;
+              this.nombreMat = item.nombre;
+            "
+            icon="fa-solid fa-trash-can"
+            color="negative"
+            text-color="white"
+          />
+        </q-item-section>
+        <q-item-section
+          v-if="item.visible === 'false' || item.visible == false"
+        >
+          Material no visible para los alumnos
+        </q-item-section>
+      </q-item-section>
+    </q-item>
+  </q-list>
 </template>
 
 <script>
-
 import { api } from "boot/axios";
 export default {
-  name: 'ListaIterable',
-  setup () {
-    return {}
+  name: "ListaIterable",
+  setup() {
+    return {};
   },
-
-  props :{
+  data() {
+    return {
+      openBorrarMaterial: false,
+      indexToDelete: 0,
+      nombreMat: "",
+    };
+  },
+  props: {
     material: {
       type: Array,
-      required: true
+      required: true,
     },
-    profesor : {
+    profesor: {
       type: Boolean,
-      default: false
+      default: false,
     },
     cursoid: {
       type: String,
-      required: true
+      required: true,
     },
     server: {
       type: String,
-      default: "http://localhost:3000/public/"
+      default: "http://localhost:3000/public/",
     },
     bloque: {
       type: String,
-      default : '',
-    }
-
+      default: "",
+    },
   },
-  methods :{
+  methods: {
     goTarea(id) {
       this.$router.push({
         path: "/curso/miscursos/" + this.cursoid + "/" + id,
         query: {
-          bloqueid: this.bloque
+          bloqueid: this.bloque,
         },
       });
     },
-    goTareaProfesor(id){
+    goTareaProfesor(id) {
       this.$router.push({
         path: "/curso/tarea/" + this.cursoid + "/" + id,
         query: {
-          bloqueid: this.bloque
+          bloqueid: this.bloque,
         },
       });
     },
@@ -119,30 +201,185 @@ export default {
       this.$router.push({
         path: "/curso/" + this.cursoid + "/material/" + id + "/edit",
         query: {
-          bloqueid: this.bloque
+          bloqueid: this.bloque,
         },
       });
     },
     deleteMaterial(idmaterial) {
       let data = {
-          cursoid: this.cursoid,
-          materialid: idmaterial,
-          bloqueid: this.bloque,
+        cursoid: this.cursoid,
+        materialid: idmaterial,
+        bloqueid: this.bloque,
       };
       api
-          .post("material/deletematerial/", data)
-          .then((response) => {
+        .post("material/deletematerial/", data)
+        .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
-              console.log("conexion correcta2");
-              console.log(response.data);
+            console.log("conexion correcta2");
+            console.log(response.data);
+            // this.$parent.loadCurso();
+            window.location.reload();
           }
-      })
-          .catch((e) => {
+        })
+        .catch((e) => {
           console.log("error de conexion");
           console.log(e);
-      });
-    }
-  }
-}
+        });
+    },
+  },
+};
 </script>
+
+<style scoped>
+.item-container {
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid #e8e8e8;
+  padding: 15px;
+  padding-bottom: 40px;
+  padding-top: 40px;
+  margin: 5px 0;
+}
+
+.btns-prof {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
+  align-items: center;
+  position: relative;
+}
+
+.btns-prof::before {
+  content: "";
+  position: absolute;
+  height: calc(100% + 80px);
+  width: 2px;
+  background-color: #e8e8e8;
+  left: -20px;
+}
+
+.btns-prof > div {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin: 0 8px;
+}
+
+.logo-item {
+  position: relative;
+  top: -40px;
+  left: -20px;
+}
+
+.logo-item::before {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 2px;
+  background-color: #e8e8e8;
+  transform: rotate(90deg);
+  top: 15px;
+  left: 25px;
+}
+
+.enlace {
+  font-size: 1.1em;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
+
+.masinfo {
+  font-size: 0.9em;
+  color: rgba(1, 1, 1, 0.6);
+}
+
+.bloque-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.nombre-bloque-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.nombre-bloque {
+  margin: 0;
+  font-size: 1.5em;
+  margin-left: 10px;
+}
+
+.dentro-bloque {
+  display: flex;
+}
+
+.dentro-bloque-flecha {
+  width: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.rotar {
+  transform: rotate(90deg);
+  font-size: 1.8em;
+}
+
+.width-quetoca {
+  width: fit-content;
+}
+
+.background-myblue {
+  background-color: #226294;
+}
+
+.logoutModal-margins {
+  margin: 20px 0;
+  border-radius: 0 !important;
+  padding: 0;
+}
+
+.logout-btn-no,
+.logout-btn-yes {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
+.logout-btn-no {
+  background-color: #d42c2c;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes {
+  background-color: #21ba45;
+  transition: 0.2s ease;
+}
+
+.logout-btn-no:hover {
+  background-color: #f24141;
+}
+
+.logout-btn-yes:hover {
+  background-color: #30c954;
+}
+
+.dentro-bloque .q-list {
+  width: 100%;
+}
+</style>
