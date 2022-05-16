@@ -93,43 +93,79 @@ export default defineComponent({
   },
   methods: {
       loadCurso() {
-          let cursos;
-          let token = this.$q.localStorage.getItem("eschoolssessiontoken");
-          let config = {
-            headers: {
-              'x-access-token' : token
-            }
+        let cursos;
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
           }
-          api
-            .get("/curso/" + this.id, config)
-            .then((response) => {
-            console.log("conexion correcta");
-            if (response.status == 200) {
-                console.log("conexion correcta2");
-                console.log(response.data);
-                cursos = response.data.curso;
-                this.curso = cursos;
-                console.log(this.curso);
-            }
-          })
-            .catch((e) => {
-            console.log("error de conexion");
-            console.log(e);
-          });
+        }
+        api
+          .get("/curso/" + this.id, config)
+          .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+              console.log("conexion correcta2");
+              console.log(response.data);
+              cursos = response.data.curso;
+              this.curso = cursos;
+              console.log(this.curso);
+          }
+        })
+          .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
       },
       goBack() {
-          this.$router.push("/curso/miscursos");
+        this.$router.push("/curso/miscursos");
       },
       goTarea(id) {
-          console.log("go tarea: " + id);
-          this.$router.push("/curso/miscursos/" + this.id + "/" + id);
+        console.log("go tarea: " + id);
+        this.$router.push("/curso/miscursos/" + this.id + "/" + id);
       },
       goExamen(id) {
-          console.log("go examen: " + id);
-          //this.$router.push("/curso/miscursos");
+        console.log("go examen: " + id);
+        //this.$router.push("/curso/miscursos");
+      },
+      checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
       }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
   },
   mounted() {
+      this.checkUserLogged()
       this.id = this.$router.currentRoute._value.params.id;
       this.loadCurso();
   },
