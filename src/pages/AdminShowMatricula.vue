@@ -295,7 +295,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .editbtn {
@@ -303,7 +303,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .cancelbtn {
@@ -311,7 +311,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .savebtn {
@@ -319,7 +319,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .display-none {
@@ -335,7 +335,7 @@ input {
 }
 
 .isShow {
-  matricular: default !important;
+  cursor: default !important;
   background-color: transparent;
   border: none;
   outline: none;
@@ -358,7 +358,7 @@ input {
   border: 0;
   border: 2px solid transparent;
   margin: 10px;
-  matricular: default !important;
+  cursor: default !important;
   opacity: 1 !important;
   outline: none;
 }
