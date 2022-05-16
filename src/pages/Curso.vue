@@ -100,10 +100,17 @@ export default defineComponent({
   methods: {
     loadCursos() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
-          console.log("conexion correcta");
+          console.log("conexion correcta load cursos");
           if (response.status == 200) {
             console.log("conexion correcta2");
             console.log(response.data);
@@ -116,7 +123,7 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log("error de conexion");
+          console.log("error de conexion load cursos");
           console.log(e);
           /*$q.notify({
               color: 'negative',

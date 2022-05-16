@@ -322,8 +322,14 @@ export default defineComponent({
   methods: {
     loadUsers() {
       let users;
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/profesores")
+        .get("/user/profesores",config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -345,8 +351,15 @@ export default defineComponent({
     },
     loadCourses() {
       let cursos;
+            const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
           console.log("conexion correcta cursos");
           if (response.status == 200) {
@@ -371,8 +384,15 @@ export default defineComponent({
           profesorId: idprofesor,
           cursoId: this.matricula.curso,
         };
+              const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
         api
-          .post("/user/addcursotoprofesor", data)
+          .post("/user/addcursotoprofesor", data, config)
           .then((response) => {
             console.log(response);
             this.cursoAddedToProfesor(
@@ -390,8 +410,14 @@ export default defineComponent({
       let data = {
         userid: id,
       };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/user/disableUser", data)
+        .post("/user/disableUser", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -407,8 +433,15 @@ export default defineComponent({
       let data = {
         userid: id,
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/user/enableUser", data)
+        .post("/user/enableUser", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -441,8 +474,16 @@ export default defineComponent({
       let data = {
         email : this.invitedUser
       }
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+
       api
-        .post("/auth/inviteUser", data)
+        .post("/auth/inviteUser", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

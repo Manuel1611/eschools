@@ -273,8 +273,15 @@ export default defineComponent({
         apellidos: this.user.apellidos,
         rol: this.user.rol,
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/user/" + this.id, data)
+        .put("/user/" + this.id, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -287,14 +294,17 @@ export default defineComponent({
     },
     loadUser() {
       let user;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/" + this.id)
+        .get("/user/" + this.id, config)
         .then((response) => {
-          console.log("conexion correcta");
           if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
-            console.log("aaa" + user);
             user = response.data.usuario;
             this.user = user;
             this.nombreDelUser = this.user.nombre;
@@ -319,8 +329,15 @@ export default defineComponent({
         email: this.user.email,
         userid: this.id,
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/user/resetPassword", data)
+        .post("/user/resetPassword", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

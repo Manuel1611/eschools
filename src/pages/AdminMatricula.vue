@@ -171,8 +171,15 @@ export default defineComponent({
     loadmatriculas() {
       console.log('cargando matricula')
       let matriculas;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/matricula/index")
+        .get("/matricula/index", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -209,8 +216,15 @@ export default defineComponent({
 
     loadUser(userId) {
       //console.log(userId);
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/" + userId)
+        .get("/user/" + userId, config)
         .then((response) => {
           if (response.status == 200) {
             //console.log(response.data);
@@ -228,8 +242,15 @@ export default defineComponent({
 
     loadCurso(cursoId) {
       console.log(cursoId);
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/" + cursoId)
+        .get("/curso/" + cursoId. config)
         .then((response) => {
           if (response.status == 200) {
             //console.log(response.data);

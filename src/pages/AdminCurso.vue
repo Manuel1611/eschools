@@ -95,8 +95,15 @@ export default defineComponent({
   methods: {
     loadCursos() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

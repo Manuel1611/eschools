@@ -187,8 +187,15 @@ export default defineComponent({
   methods: {
     loadUsers() {
       let users;
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/alumnos")
+        .get("/user/alumnos", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -202,11 +209,18 @@ export default defineComponent({
         });
     },
     darBaja(id) {
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       let data = {
         userid: id,
       };
       api
-        .post("/user/disableUser", data)
+        .post("/user/disableUser", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -222,9 +236,15 @@ export default defineComponent({
       let data = {
         userid: id,
       };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
 
       api
-        .post("/user/enableUser", data)
+        .post("/user/enableUser", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

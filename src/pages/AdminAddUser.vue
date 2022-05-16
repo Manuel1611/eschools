@@ -130,8 +130,15 @@ export default defineComponent({
           password: this.register.pass,
           rol: this.register.rol,
         };
+        const $q = useQuasar();
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/user/store", data)
+          .post("/user/store", data, config)
           .then((response) => {
             this.registerOk("Usuario añadido correctamente");
             this.register.name = "";

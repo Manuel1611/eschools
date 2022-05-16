@@ -117,8 +117,15 @@ export default defineComponent({
         fechafin: this.matricula.fechafin,
         fechainicio: this.matricula.fechainicio,
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/matricula/" + this.id, data)
+        .put("/matricula/" + this.id, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -130,8 +137,15 @@ export default defineComponent({
     },
     loadmatricula() {
       let matriculas;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/matricula/" + this.id)
+        .get("/matricula/" + this.id, config)
         .then((response) => {
           //console.log("conexion correcta");
           if (response.status == 200) {
@@ -149,8 +163,15 @@ export default defineComponent({
     },
     loadStudents() {
       let students;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/alumnos")
+        .get("/user/alumnos", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -179,8 +200,15 @@ export default defineComponent({
     },
     loadCourses() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
           console.log("conexion correcta cursos");
           if (response.status == 200) {

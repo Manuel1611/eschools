@@ -264,8 +264,15 @@ export default defineComponent({
         descripcion: this.curso.descripcion,
         priceid: this.curso.priceid
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/curso/" + this.id, data)
+        .put("/curso/" + this.id, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -280,8 +287,15 @@ export default defineComponent({
     },
     loadCurso() {
       let cursos;
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/" + this.id)
+        .get("/curso/" + this.id, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

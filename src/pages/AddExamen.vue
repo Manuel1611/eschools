@@ -171,8 +171,15 @@ export default defineComponent({
           visible: this.examen.visible,
           curso: this.id,
         };
+        const $q = useQuasar();
+        let token = $q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/examen/store", data)
+          .post("/examen/store", data, config)
           .then((response) => {
             //this.$router.push("/auth");
             this.registerOk("examen añadido");

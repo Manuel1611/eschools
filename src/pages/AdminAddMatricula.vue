@@ -113,9 +113,15 @@ export default defineComponent({
           nombreAlumno: nombreAlumno,
           nombreCurso: nombreCurso,
         };
-
+        const $q = useQuasar();
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/matricula/store", data)
+          .post("/matricula/store", data, config)
           .then((response) => {
             console.log(response);
           })
@@ -131,8 +137,15 @@ export default defineComponent({
 
     loadStudents() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/alumnos")
+        .get("/user/alumnos", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -162,8 +175,15 @@ export default defineComponent({
 
     loadCourses() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
           console.log("conexion correcta cursos");
           if (response.status == 200) {

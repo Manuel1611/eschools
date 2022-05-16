@@ -200,8 +200,15 @@ export default defineComponent({
         } else if (this.material.type.value == 'tarea'){
           formData.append('descripcion', this.descripcion);
         }
+        const $q = useQuasar();
+        let token = $q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/material/store", formData)
+          .post("/material/store", formData, config)
           .then((response) => {
             //this.$router.push("/auth");
             this.registerOk("Material añadido");
@@ -221,8 +228,15 @@ export default defineComponent({
     },
 
     loadBloques(){
+        const $q = useQuasar();
+        let token = $q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
       api
-        .get("/material/"+this.id +"/bloques")
+        .get("/material/"+this.id +"/bloques", config)
         .then((response) => {
           console.log('get bloques')
           console.log(response.data)

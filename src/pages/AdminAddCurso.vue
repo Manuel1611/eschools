@@ -75,6 +75,7 @@ export default defineComponent({
         price: "",
         priceid : "",
       },
+      $q : '',
     };
   },
   setup() {
@@ -114,8 +115,16 @@ export default defineComponent({
           precio: this.curso.price,
           priceid: this.curso.priceid,
         };
+        const $q = useQuasar();
+
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/curso/store", data)
+          .post("/curso/store", data, config)
           .then((response) => {
             this.registerOk("Curso añadido correctamente");
             this.curso.name = "";
