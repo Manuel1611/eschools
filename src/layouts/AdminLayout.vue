@@ -104,6 +104,17 @@
 
           <q-item-section class="color-white">Profesores</q-item-section>
         </q-item>
+        <q-item clickable v-ripple @click="leaveAdminArea">
+          <q-item-section avatar>
+            <q-icon
+              class="icon-drawer"
+              color="white"
+              name="fa-solid fa-arrow-left-long"
+            />
+          </q-item-section>
+
+          <q-item-section class="color-white">Salir del panel de administrador</q-item-section>
+        </q-item>
 
         <div class="top-logout"></div>
         <div class="top-logout-two"></div>
@@ -194,6 +205,9 @@ export default defineComponent({
     },
     goProfesores() {
       this.$router.push("/admin/profesor");
+    },
+    leaveAdminArea() {
+      this.$router.push("/curso");
     },
     logout() {
       console.log("logout");
