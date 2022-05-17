@@ -15,10 +15,9 @@
             Para matricularse haga una transferencia con el precio del curso y
             mande el justificante de pago al correo "admin@eschools.com"
           </div>
-          <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
-          <div class="text-h7">Beneficiario: E-Schools</div>
           <div class="text-h7">
-            Concepto: *Nombre Apellidos Usuario* *Nombre del curso*
+            Concepto: *Nombre Apellidos Usuario* *Nombre del curso* El importe
+            será de {{ this.cursoSeleccionado.precio }} €
           </div>
         </q-card-section>
 
@@ -26,7 +25,14 @@
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
-          <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+          <div
+            class="logout-btn-yes"
+            v-close-popup
+            @click="matriculav2(this.cursoSeleccionado.priceid)"
+          >
+            Aceptar
+          </div>
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -117,6 +123,7 @@ export default defineComponent({
       currentPage: 1,
       nextPage: null,
       totalPages: 8,
+      cursoSeleccionado: {},
     };
   },
   setup() {
@@ -205,7 +212,8 @@ export default defineComponent({
         });
     },
 
-    matriculacionDialog() {
+    matriculacionDialog(item) {
+      this.cursoSeleccionado = item;
       this.openMatriculaDialog = true;
     },
 
@@ -225,7 +233,7 @@ export default defineComponent({
           console.log("conexion correcta createcheckout");
           console.log(response);
           if (response.status == 200) {
-            console.log("conexion correcta token 22222");
+            window.location.href = response.data.url;
           }
         });
     },

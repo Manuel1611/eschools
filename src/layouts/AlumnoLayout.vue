@@ -93,6 +93,17 @@
           <q-item-section class="color-white">Mis cursos</q-item-section>
         </q-item>
 
+        <q-item clickable v-ripple @click="goAdminArea" v-if="this.user.rol == 'Administrador'">
+          <q-item-section avatar>
+            <q-icon
+              class="icon-drawer"
+              color="white"
+              name="fa-solid fa-solar-panel"
+            />
+          </q-item-section>
+
+          <q-item-section class="color-white">Panel de administrador</q-item-section>
+        </q-item>
         <div class="top-logout"></div>
         <div class="top-logout-two"></div>
 
@@ -176,10 +187,7 @@ export default defineComponent({
   },
   methods: {
     goPerfil() {
-      this.$router.push({
-        name: "/perfil",
-        query: { id: this.user.id },
-      });
+      this.$router.push("/perfil");
     },
     goUsers() {
       this.$router.push("/admin/users");
@@ -195,6 +203,9 @@ export default defineComponent({
     },
     goProfesores() {
       this.$router.push("/admin/profesor");
+    },
+    goAdminArea(){
+      this.$router.push("/admin/users");
     },
     logout() {
       console.log("logout");
