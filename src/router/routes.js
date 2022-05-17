@@ -10,7 +10,10 @@ const routes = [
     children: [
       { path: "", name: "/login", component: () => import("pages/Login.vue") },
       { path: "register", component: () => import("pages/Register.vue") },
-      { path: "registerProfesor/:tokenRegistro", component: () => import("pages/RegisterProfesor.vue") },
+      {
+        path: "registerProfesor/:tokenRegistro",
+        component: () => import("pages/RegisterProfesor.vue"),
+      },
     ],
   },
   {
@@ -62,12 +65,27 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/Curso.vue") },
       { path: "miscursos", component: () => import("pages/MisCursos.vue") },
-      { path: "miscursos/:id", component: () => import("pages/ShowCursoAlumno.vue") },
-      { path: "miscursos/:id/:idtarea", component: () => import("pages/ShowTareaAlumno.vue") },
-      { path: "matriculapagada", component: () => import("pages/MatriculaPagada.vue") },
-      { path: "pagocancelado", component: () => import("pages/PagoCancelado.vue") },
+      {
+        path: "miscursos/:id",
+        component: () => import("pages/ShowCursoAlumno.vue"),
+      },
+      {
+        path: "miscursos/:id/:idtarea",
+        component: () => import("pages/ShowTareaAlumno.vue"),
+      },
+      {
+        path: "matriculapagada",
+        component: () => import("pages/MatriculaPagada.vue"),
+      },
+      {
+        path: "pagocancelado",
+        component: () => import("pages/PagoCancelado.vue"),
+      },
 
-      { path: "tarea/:idcurso/:idtarea", component: () => import("pages/ShowTarea.vue") },
+      {
+        path: "tarea/:idcurso/:idtarea",
+        component: () => import("pages/ShowTarea.vue"),
+      },
 
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       {
@@ -82,8 +100,17 @@ const routes = [
         path: ":idcurso/examen/:idexamen",
         component: () => import("pages/ShowExamen.vue"),
       },
-      { path: ":id/material/:idmaterial/edit", component: () => import("pages/EditMaterial.vue") },
-    ]
+      {
+        path: ":id/material/:idmaterial/edit",
+        component: () => import("pages/EditMaterial.vue"),
+      },
+    ],
+  },
+  {
+    path: "/perfil",
+    name: "/perfil",
+    component: () => import("layouts/AlumnoLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Perfil.vue") }],
   },
   // Always leave this as last one,
   // but you can also remove it
@@ -94,4 +121,3 @@ const routes = [
 ];
 
 export default routes;
-

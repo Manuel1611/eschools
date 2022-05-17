@@ -11,12 +11,16 @@
           <div class="text-h6">Instrucciones de matriculacion</div>
         </q-card-section>
         <q-card-section>
-          <div class="text-h7">Para matricularse haga una transferencia con el precio del curso y mande el justificante de pago al correo admin@eschools.com</div>
+          <div class="text-h7">
+            Para matricularse haga una transferencia con el precio del curso y
+            mande el justificante de pago al correo admin@eschools.com
+          </div>
           <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
           <div class="text-h7">Beneficiario: E-Schools</div>
-          <div class="text-h7">Concepto: *Nombre apellidos usuario* * Nombre del curso *</div>
+          <div class="text-h7">
+            Concepto: *Nombre apellidos usuario* * Nombre del curso *
+          </div>
         </q-card-section>
-
 
         <q-card-actions
           align="right"
@@ -34,7 +38,7 @@
       />
       <div>Cursos en E-Schooless</div>
     </div>
-    <div class="top-info">
+    <div class="top-info" style="min-height: 92px">
       <div class="query-found">
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
         <div>{{ Object.values(this.cursos).length }} resultados</div>
@@ -51,7 +55,12 @@
     </div>
 
     <q-list>
-      <q-item class="each-item" v-for="(item, index) in cursos" :key="index" @click="goCurso(index)">
+      <q-item
+        class="each-item"
+        v-for="(item, index) in filteredCursos"
+        :key="index"
+        @click="goCurso(index)"
+      >
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
             item[1].nombre + " - " + item[1].precio + "€"
@@ -62,18 +71,24 @@
         </q-item-section>
         <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
 
-
-        <div v-if="checkMatricula(item[0])">
-        calvo
-
-        </div>
+        <div v-if="checkMatricula(item[0])">calvo</div>
         <div v-else>
           <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
         </div>
-
-
       </q-item>
     </q-list>
+    <div class="q-pa-lg flex flex-center">
+      <q-pagination
+        v-if="Object.values(this.cursos).length >= 8"
+        v-model="page"
+        :min="currentPage"
+        :max="Math.ceil(Object.values(this.cursos).length / totalPages)"
+        :max-pages="3"
+        boundary-numbers
+        direction-links
+      >
+      </q-pagination>
+    </div>
   </q-page>
 </template>
 
@@ -87,10 +102,15 @@ export default defineComponent({
   data() {
     return {
       cursos: {},
-      rol :'',
+      rol: "",
       openMatriculaDialog: false,
-      matriculas : {},
-      userid: '',
+      matriculas: {},
+      userid: "",
+      search: "",
+      page: 1,
+      currentPage: 1,
+      nextPage: null,
+      totalPages: 8,
     };
   },
   setup() {
@@ -105,9 +125,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/curso/index", config)
         .then((response) => {
@@ -119,8 +139,8 @@ export default defineComponent({
             cursos = response.data.cursos;
             console.log(cursos);
             this.cursos = cursos;
-            console.log('adsdsdsadasd')
-            console.log(Object.values(this.cursos).length );
+            console.log("adsdsdsadasd");
+            console.log(Object.values(this.cursos).length);
           }
         })
         .catch((e) => {
@@ -144,9 +164,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -154,101 +174,101 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
             //this.rol = response.data.user.rol
-            this.userid = response.data.uid
-            this.getMatriculasFromUser()
+            this.userid = response.data.uid;
+            this.getMatriculasFromUser();
+            this.rol = response.data.user.rol;
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
     },
 
     matriculacionDialog() {
-      this.openMatriculaDialog = true
+      this.openMatriculaDialog = true;
     },
 
-    matriculav2(priceid){
+    matriculav2(priceid) {
       let data = {
-        cursopriceid: priceid
-      }
+        cursopriceid: priceid,
+      };
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/matricula/create-checkout-session", data, config)
         .then((response) => {
           console.log("conexion correcta createcheckout");
-          console.log(response)
+          console.log(response);
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
           }
-      })
+        });
     },
 
-    getMatriculasFromUser(){
+    getMatriculasFromUser() {
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
-      console.log("url: /matricula/getmatriculabyuser/"+ this.userid)
+          "x-access-token": token,
+        },
+      };
+      console.log("url: /matricula/getmatriculabyuser/" + this.userid);
       api
-      .get("/matricula/getmatriculabyuser/"+ this.userid, config)
-      .then((response) => {
-        console.log("conexion correcta load matriculas from user");
-        if (response.status == 200) {
-          console.log("conexion correcta2");
-          console.log(response.data);
+        .get("/matricula/getmatriculabyuser/" + this.userid, config)
+        .then((response) => {
+          console.log("conexion correcta load matriculas from user");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
 
-          let matriculas = response.data.matricula;
-          console.log(matriculas);
-          this.matriculas = matriculas;
-          console.log('adsdsdsadasd')
-          console.log(Object.values(this.matriculas).length );
-        }
-      })
-      .catch((e) => {
-        console.log("error de conexion load matriculas from user");
-        console.log(e);
-        /*$q.notify({
+            let matriculas = response.data.matricula;
+            console.log(matriculas);
+            this.matriculas = matriculas;
+            console.log("adsdsdsadasd");
+            console.log(Object.values(this.matriculas).length);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion load matriculas from user");
+          console.log(e);
+          /*$q.notify({
             color: 'negative',
             position: 'top',
             message: 'Loading failed',
             icon: 'report_problem'
           })
           */
-      });
+        });
     },
 
-    checkMatricula(matriculaid){
-
-      for(let aux in this.matriculas){
-        if (this.matriculas[aux].idcurso == matriculaid){
-          return true
+    checkMatricula(matriculaid) {
+      for (let aux in this.matriculas) {
+        if (this.matriculas[aux].idcurso == matriculaid) {
+          return true;
         }
       }
-      return false
+      return false;
 
-/*
+      /*
       const match = this.matriculas.find(element => {
       if (element.includes(matriculaid)) {
         return true;
@@ -262,16 +282,31 @@ export default defineComponent({
       }
 
       */
-    }
+    },
   },
 
   mounted() {
-
     console.log("mounted");
     //console.log($route.meta)
-    this.checkUserLogged()
+    this.checkUserLogged();
     this.loadCursos();
-
+  },
+  computed: {
+    filteredCursos: function () {
+      return Object.values(this.cursos)
+        .filter((curso) =>
+          String(curso[1].nombre).toLowerCase().match(this.search.toLowerCase())
+        )
+        .slice(
+          (this.page - 1) * this.totalPages,
+          (this.page - 1) * this.totalPages + this.totalPages
+        );
+    },
+  },
+  watch: {
+    search: function () {
+      this.page = 1;
+    },
   },
 });
 </script>
