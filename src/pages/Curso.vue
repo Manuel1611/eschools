@@ -219,7 +219,7 @@ export default defineComponent({
           console.log("conexion correcta createcheckout");
           console.log(response);
           if (response.status == 200) {
-            console.log("conexion correcta token 22222");
+            window.location.href = response.data.url
           }
         });
     },
