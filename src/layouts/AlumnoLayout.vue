@@ -68,12 +68,7 @@
         </q-item>
         -->
 
-        <q-item
-          v-if="user.rol == 'alumno'"
-          clickable
-          v-ripple
-          @click="goAllCursos"
-        >
+        <q-item clickable v-ripple @click="goAllCursos">
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-book" />
           </q-item-section>
@@ -93,7 +88,12 @@
           <q-item-section class="color-white">Mis cursos</q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="goAdminArea" v-if="this.user.rol == 'Administrador'">
+        <q-item
+          clickable
+          v-ripple
+          @click="goAdminArea"
+          v-if="this.user.rol == 'Administrador'"
+        >
           <q-item-section avatar>
             <q-icon
               class="icon-drawer"
@@ -102,7 +102,9 @@
             />
           </q-item-section>
 
-          <q-item-section class="color-white">Panel de administrador</q-item-section>
+          <q-item-section class="color-white"
+            >Panel de administrador</q-item-section
+          >
         </q-item>
         <div class="top-logout"></div>
         <div class="top-logout-two"></div>
@@ -204,7 +206,7 @@ export default defineComponent({
     goProfesores() {
       this.$router.push("/admin/profesor");
     },
-    goAdminArea(){
+    goAdminArea() {
       this.$router.push("/admin/users");
     },
     logout() {

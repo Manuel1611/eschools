@@ -1,6 +1,10 @@
 <template>
   <q-page>
     <h2>Pago cancelado</h2>
+    <p>
+      Has cancelado el pago. Si crees que se debe a un error, vuelve a
+      intentarlo
+    </p>
   </q-page>
 </template>
 
@@ -12,19 +16,14 @@ import { useQuasar } from "quasar";
 export default defineComponent({
   name: "RegisterPage",
   data() {
-    return {
-
-    };
+    return {};
   },
   setup() {
     const $q = useQuasar();
     return {};
   },
-  methods: {
-  },
-  mounted() {
-
-  },
+  methods: {},
+  mounted() {},
 });
 </script>
 

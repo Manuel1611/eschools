@@ -79,12 +79,17 @@
             item[1].descripcion
           }}</q-item-label>
         </q-item-section>
-        <div class="yaestoymat" v-if="checkMatricula(item[0])">
-          Ya estás en este curso
-        </div>
-        <div v-else style="display: flex; align-items: center">
-          <div class="btnMatricularse" @click="matriculav2(item[1].priceid)">
-            Matricularse
+        <div
+          style="display: flex; align-items: center"
+          v-if="this.rol == 'alumno'"
+        >
+          <div class="yaestoymat" v-if="checkMatricula(item[0])">
+            Ya estás en este curso
+          </div>
+          <div v-else style="display: flex; align-items: center">
+            <div class="btnMatricularse" @click="matriculav2(item[1].priceid)">
+              Matricularse
+            </div>
           </div>
         </div>
       </q-item>

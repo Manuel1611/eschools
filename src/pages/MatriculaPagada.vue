@@ -1,6 +1,9 @@
 <template>
   <q-page>
     <h2>Matricula pagada</h2>
+    <p>
+      Tu pago se ha realizado correctamente. Gracias por confiar en nosotros
+    </p>
   </q-page>
 </template>
 
@@ -12,19 +15,14 @@ import { useQuasar } from "quasar";
 export default defineComponent({
   name: "RegisterPage",
   data() {
-    return {
-
-    };
+    return {};
   },
   setup() {
     const $q = useQuasar();
     return {};
   },
-  methods: {
-  },
-  mounted() {
-
-  },
+  methods: {},
+  mounted() {},
 });
 </script>
 
