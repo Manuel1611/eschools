@@ -74,32 +74,15 @@ export default defineComponent({
     };
   },
   methods: {
-    loadCurso() {
-      let cursos;
-      api
-        .get("/curso/" + this.id)
-        .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            console.log("conexion correcta2");
-            console.log(response.data);
-            cursos = response.data.curso;
-            this.curso = cursos;
-            console.log(this.curso);
-          }
-        })
-        .catch((e) => {
-          console.log("error de conexion");
-          console.log(e);
-        });
-    },
     goBack() {
       this.$router.push("/curso/");
     },
-    methods: {
-      loadCurso() {
+
+    loadCurso() {
         let cursos;
         let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        console.log('token load curso')
+        console.log(token)
         let config = {
           headers: {
             "x-access-token": token,
@@ -122,9 +105,6 @@ export default defineComponent({
             console.log(e);
           });
       },
-      goBack() {
-        this.$router.push("/curso/");
-      },
       goAddMaterial() {
         this.$router.push("/curso/" + this.id + "/material/add");
       },
@@ -134,6 +114,7 @@ export default defineComponent({
       goEdit(index) {
         this.$router.push("/curso/" + this.id + "/material/" + index + "/edit");
       },
+
       checkUserLogged() {
         const $q = useQuasar();
         let token = $q.localStorage.getItem("eschoolssessiontoken");
@@ -169,17 +150,9 @@ export default defineComponent({
             console.log("error de conexion sesion");
           });
       },
-    },
-    mounted() {
-      this.checkUserLogged();
-      this.id = this.$router.currentRoute._value.params.id;
-      this.loadCurso();
-    },
-    goEdit(index) {
-      this.$router.push("/curso/" + this.id + "/material/" + index + "/edit");
-    },
   },
   mounted() {
+    this.checkUserLogged()
     this.id = this.$router.currentRoute._value.params.id;
     this.loadCurso();
   },

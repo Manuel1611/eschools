@@ -104,13 +104,14 @@ export default defineComponent({
     },
 
     checkEntregada(){
-      //this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           'x-access-token' : token
         }
       }
+      console.log('checkiing entregada' + this.userid)
       api
         .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid, config)
         .then((response) => {
@@ -177,7 +178,9 @@ export default defineComponent({
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
+            console.log(response.data.uid)
             this.userid = response.data.uid
+            this.checkEntregada();
           } else {
             q.notify({
               color: 'negative',
@@ -212,7 +215,7 @@ export default defineComponent({
     this.cursoid = this.$router.currentRoute._value.params.id;
     this.tareaid = this.$router.currentRoute._value.params.idtarea;
     this.loadTarea();
-    this.checkEntregada();
+
   },
 });
 </script>
