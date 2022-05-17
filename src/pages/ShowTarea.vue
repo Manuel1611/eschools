@@ -46,8 +46,8 @@
 
     </div>
       <div>
-        <h5> Nombre tarea</h5>
-        <h5> Desc tarea</h5>
+        <h5> {{ this.tarea.nombre }}</h5>
+        <h5> {{ this.tarea.descripcion }}</h5>
       </div>
     <q-list bordered>
       <q-item
@@ -96,7 +96,8 @@ export default defineComponent({
         id: '',
         nota: '',
         comentario: '',
-      }
+      },
+      tarea : {},
     };
   },
   setup() {
@@ -138,7 +139,7 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta2 load tarea");
             console.log(response.data);
-            this.entregas = response.data.usuarios
+            this.tarea = response.data.material
           }
         })
     },
@@ -221,6 +222,7 @@ export default defineComponent({
   mounted() {
     this.checkUserLogged()
     this.idtarea = this.$router.currentRoute._value.params.idtarea;
+    this.idcurso = this.$router.currentRoute._value.params.idcurso;
     this.loadEntregas()
     this.loadTarea()
 
