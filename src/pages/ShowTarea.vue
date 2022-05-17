@@ -97,6 +97,7 @@ export default defineComponent({
         nota: '',
         comentario: '',
       },
+      bloqueid: '',
       tarea : {},
     };
   },
@@ -126,22 +127,30 @@ export default defineComponent({
     },
 
     loadTarea(){
-      console.log('loadtarea')
+      let url = "/material/" + this.idcurso + '/' + this.idtarea
+      if (this.bloqueid != '' && this.bloqueid != undefined){
+        console.log('change url' + this.bloqueid)
+        url = "/material/" + this.idcurso + '/' + this.bloqueid + '/' +  this.idtarea
+      }
+      console.log('url: ' + url)
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           'x-access-token' : token
         }
       }
-      api.get("/material/" + this.idcurso + "/" + this.idtarea, config)
+      api
+        .get(url, config )
         .then((response) => {
-          console.log("conexion correcta");
-          if (response.status == 200) {
-            console.log("conexion correcta2 load tarea");
-            console.log(response.data);
-            this.tarea = response.data.material
-          }
+          console.log('todo ok')
+          console.log(response)
+          this.error = ''
+          this.tarea = response.data.material
         })
+        .catch((error) => {
+          console.log('erro de load material')
+          console.log(error)
+        });
     },
 
     calificarDialog(id, user){
@@ -221,6 +230,11 @@ export default defineComponent({
   },
   mounted() {
     this.checkUserLogged()
+    if (this.$route.query.bloqueid != '') {
+      console.log(' a v c')
+      console.log(this.$route)
+      this.bloqueid = this.$route.query.bloqueid
+    }
     this.idtarea = this.$router.currentRoute._value.params.idtarea;
     this.idcurso = this.$router.currentRoute._value.params.idcurso;
     this.loadEntregas()
