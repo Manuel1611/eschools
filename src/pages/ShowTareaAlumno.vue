@@ -135,7 +135,7 @@ export default defineComponent({
     submitForm(){
       if(this.file != ''){
         let formData = new FormData()
-        formData.append('userid', 'kmhHWDypPBcFTqErFSsFazwBpkt2')
+        formData.append('userid', this.userid)
         formData.append('tarea', this.tareaid);
         formData.append('entrega', this.file)
         api
@@ -177,6 +177,7 @@ export default defineComponent({
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
+            this.userid = response.data.uid
           } else {
             q.notify({
               color: 'negative',
@@ -202,6 +203,7 @@ export default defineComponent({
   },
 
   mounted() {
+    this.checkUserLogged()
     if (this.$route.query.bloqueid != '') {
       console.log(' a v c')
       console.log(this.$route)
@@ -211,7 +213,6 @@ export default defineComponent({
     this.tareaid = this.$router.currentRoute._value.params.idtarea;
     this.loadTarea();
     this.checkEntregada();
-    this.checkUserLogged()
   },
 });
 </script>

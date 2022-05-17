@@ -61,18 +61,17 @@
           }}</q-item-label>
         </q-item-section>
         <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
-        <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
-<!--
-        <q-item-section side>
-          <q-avatar
-            style="cursor: pointer"
-            @click="goCurso(item[0])"
-            icon="fa-solid fa-pencil"
-            color="primary"
-            text-color="white"
-          />
-        </q-item-section>
--->
+
+
+        <div v-if="checkMatricula(item[0])">
+        calvo
+
+        </div>
+        <div v-else>
+          <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
+        </div>
+
+
       </q-item>
     </q-list>
   </q-page>
@@ -90,6 +89,8 @@ export default defineComponent({
       cursos: {},
       rol :'',
       openMatriculaDialog: false,
+      matriculas : {},
+      userid: '',
     };
   },
   setup() {
@@ -152,7 +153,9 @@ export default defineComponent({
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
-            this.rol = response.data.user.rol
+            //this.rol = response.data.user.rol
+            this.userid = response.data.uid
+            this.getMatriculasFromUser()
           } else {
             q.notify({
               color: 'negative',
@@ -198,6 +201,67 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           }
       })
+    },
+
+    getMatriculasFromUser(){
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      console.log("url: /matricula/getmatriculabyuser/"+ this.userid)
+      api
+      .get("/matricula/getmatriculabyuser/"+ this.userid, config)
+      .then((response) => {
+        console.log("conexion correcta load matriculas from user");
+        if (response.status == 200) {
+          console.log("conexion correcta2");
+          console.log(response.data);
+
+          let matriculas = response.data.matricula;
+          console.log(matriculas);
+          this.matriculas = matriculas;
+          console.log('adsdsdsadasd')
+          console.log(Object.values(this.matriculas).length );
+        }
+      })
+      .catch((e) => {
+        console.log("error de conexion load matriculas from user");
+        console.log(e);
+        /*$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Loading failed',
+            icon: 'report_problem'
+          })
+          */
+      });
+    },
+
+    checkMatricula(matriculaid){
+
+      for(let aux in this.matriculas){
+        if (this.matriculas[aux].idcurso == matriculaid){
+          return true
+        }
+      }
+      return false
+
+/*
+      const match = this.matriculas.find(element => {
+      if (element.includes(matriculaid)) {
+        return true;
+      }
+      });
+      if (match !== undefined) {
+        // array contains substring match
+        return true
+      } else {
+        return false
+      }
+
+      */
     }
   },
 
@@ -207,6 +271,7 @@ export default defineComponent({
     //console.log($route.meta)
     this.checkUserLogged()
     this.loadCursos();
+
   },
 });
 </script>
