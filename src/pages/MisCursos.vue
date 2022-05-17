@@ -16,7 +16,7 @@
       <q-item class="each-item" v-for="(item, index) in cursos" :key="index">
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
-            item.nombre + " - " + item.precio + "€"
+            item.nombre
           }}</q-item-label>
           <q-item-label style="font-size: 1em" caption>{{
             item.descripcion

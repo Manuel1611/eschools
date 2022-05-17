@@ -48,7 +48,7 @@
         </q-item-section>
       </q-item>
 
-      <q-item v-else-if="item.tipo == 'PDF'" class="tipo">
+      <q-item v-else-if="item.tipo == 'archivo'" class="tipo">
         <q-item-section avatar class="logo-item">
           <q-icon class="icon-drawer" color="grey-6" name="fa-solid fa-file" />
         </q-item-section>
@@ -114,7 +114,7 @@
       <q-item-section side v-if="this.profesor == true" class="btns-prof">
         <q-item-section>
           <q-avatar
-            style="cursor: pointer"
+            style="cursor: pointer; font-size: 2em"
             @click="goEdit(index)"
             icon="fa-solid fa-pencil"
             color="primary"
@@ -123,7 +123,7 @@
         </q-item-section>
         <q-item-section>
           <q-avatar
-            style="cursor: pointer"
+            style="cursor: pointer; font-size: 2em"
             @click="
               this.indexToDelete = index;
               openBorrarMaterial = true;
@@ -135,9 +135,14 @@
           />
         </q-item-section>
         <q-item-section
+          class="novisibleaalumnos"
           v-if="item.visible === 'false' || item.visible == false"
         >
-          Material no visible para los alumnos
+          <q-icon
+            class="icon-drawer"
+            color="grey-8"
+            name="fa-solid fa-eye-slash"
+          />
         </q-item-section>
       </q-item-section>
     </q-item>
@@ -381,5 +386,11 @@ export default {
 
 .dentro-bloque .q-list {
   width: 100%;
+}
+
+.novisibleaalumnos {
+  position: absolute;
+  top: -25px;
+  right: -5px;
 }
 </style>

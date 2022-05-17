@@ -8,17 +8,17 @@
     >
       <q-card class="background-myblue text-white" style="width: 400px">
         <q-card-section>
-          <div class="text-h6">Instrucciones de matriculacion</div>
+          <div class="text-h6">Instrucciones de matriculación</div>
         </q-card-section>
         <q-card-section>
           <div class="text-h7">
             Para matricularse haga una transferencia con el precio del curso y
-            mande el justificante de pago al correo admin@eschools.com
+            mande el justificante de pago al correo "admin@eschools.com"
           </div>
           <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
           <div class="text-h7">Beneficiario: E-Schools</div>
           <div class="text-h7">
-            Concepto: *Nombre apellidos usuario* * Nombre del curso *
+            Concepto: *Nombre Apellidos Usuario* *Nombre del curso*
           </div>
         </q-card-section>
 
@@ -36,7 +36,7 @@
         color="black"
         name="fa-solid fa-angle-right"
       />
-      <div>Cursos en E-Schooless</div>
+      <div>Cursos en E-Schools</div>
     </div>
     <div class="top-info" style="min-height: 92px">
       <div class="query-found">
@@ -61,19 +61,25 @@
         :key="index"
         @click="goCurso(index)"
       >
+        <q-item-section side class="precio-container">
+          <div class="precio">{{ item[1].precio }}</div>
+          <div class="euros">€</div>
+        </q-item-section>
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
-            item[1].nombre + " - " + item[1].precio + "€"
+            item[1].nombre
           }}</q-item-label>
           <q-item-label style="font-size: 1em" caption>{{
             item[1].descripcion
           }}</q-item-label>
         </q-item-section>
-        <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
-
-        <div v-if="checkMatricula(item[0])">calvo</div>
-        <div v-else>
-          <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
+        <div class="yaestoymat" v-if="checkMatricula(item[0])">
+          Ya estás en este curso
+        </div>
+        <div v-else style="display: flex; align-items: center">
+          <div class="btnMatricularse" @click="matriculav2(item[1].priceid)">
+            Matricularse
+          </div>
         </div>
       </q-item>
     </q-list>
@@ -460,5 +466,55 @@ export default defineComponent({
   border: 0;
   font-size: 1.1em;
   border-radius: 3px;
+}
+
+.precio-container {
+  width: 160px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  color: #c92804;
+  position: relative;
+}
+
+.precio-container::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  bottom: -10px;
+  width: 15px;
+  height: 2px;
+  background-color: #c92804;
+}
+
+.precio {
+  font-size: 2.25em;
+}
+
+.euros {
+  font-size: 1em;
+  align-self: flex-end;
+  margin-bottom: 8px;
+  margin-left: 5px;
+  text-shadow: 1px 1px 1px rgba(1, 1, 1, 0.3);
+}
+
+.btnMatricularse {
+  background-color: #05beed;
+  padding: 10px;
+  color: black;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.btnMatricularse:hover {
+  background-color: #12ccfc;
+}
+
+.yaestoymat {
+  display: flex;
+  align-items: center;
 }
 </style>

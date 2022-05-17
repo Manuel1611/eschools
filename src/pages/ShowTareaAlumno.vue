@@ -2,8 +2,8 @@
   <q-page class="auth-container">
     <h3>Tarea</h3>
     <div class="items-list">
-      <h4>{{ this.tarea.nombre}}</h4>
-      <h5>{{ this.tarea.descripcion}}</h5>
+      <h4>{{ this.tarea.nombre }}</h4>
+      <h5>{{ this.tarea.descripcion }}</h5>
       <q-section v-if="this.entregada == 'true' || this.entregada == true">
         <h5>Esta tarea ya ha sido entregada</h5>
         <q-section v-if="this.nota < 0">
@@ -24,13 +24,17 @@
           :factory="setFile"
           @rejected="onRejected"
         />
-
       </q-section>
     </div>
 
     <div class="btns-container">
       <span class="volverbtn display-block" @click="goBack">Volver</span>
-      <span class="volverbtn display-block" style="margin-left:20px" @click="submitForm">Subir tarea</span>
+      <span
+        class="volverbtn display-block"
+        style="margin-left: 20px"
+        @click="submitForm"
+        >Subir tarea</span
+      >
     </div>
   </q-page>
 </template>
@@ -46,15 +50,15 @@ export default defineComponent({
     return {
       cursoid: "",
       tareaid: "",
-      tarea : {},
-      file : '',
-      server : 'http://localhost:3000/public/',
-      error: 'no carga',
-      bloqueid : '',
-      userid : '',
-      entregada : false,
+      tarea: {},
+      file: "",
+      server: "http://localhost:3000/public/",
+      error: "no carga",
+      bloqueid: "",
+      userid: "",
+      entregada: false,
       nota: -1,
-      comentario: '',
+      comentario: "",
     };
   },
   setup() {
@@ -78,89 +82,96 @@ export default defineComponent({
     };
   },
   methods: {
-    loadTarea(){
-      let url = "/material/" + this.cursoid + '/' + this.tareaid
-      if (this.bloqueid != '' && this.bloqueid != undefined){
-        console.log('change url' + this.bloqueid)
-        url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.tareaid
+    loadTarea() {
+      let url = "/material/" + this.cursoid + "/" + this.tareaid;
+      if (this.bloqueid != "" && this.bloqueid != undefined) {
+        console.log("change url" + this.bloqueid);
+        url =
+          "/material/" +
+          this.cursoid +
+          "/" +
+          this.bloqueid +
+          "/" +
+          this.tareaid;
       }
-      console.log('url: ' + url)
+      console.log("url: " + url);
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
-        .get(url, config )
+        .get(url, config)
         .then((response) => {
-          this.error = ''
-          this.tarea = response.data.material
+          this.error = "";
+          this.tarea = response.data.material;
         })
         .catch((error) => {
-          console.log('erro de load material')
-          console.log(error)
+          console.log("erro de load material");
+          console.log(error);
         });
     },
 
-    checkEntregada(){
-      //this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+    checkEntregada() {
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
+      console.log("checkiing entregada" + this.userid);
       api
-        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid, config)
+        .get(
+          "/material/checkuploadedtarea/" + this.userid + "/" + this.tareaid,
+          config
+        )
         .then((response) => {
-          if (response.status == 200){
-            console.log('checkentregada')
-            console.log(response)
-            this.entregada = response.data.entregada
-            this.nota = response.data.nota
-            this.comentario = response.data.comentario
+          if (response.status == 200) {
+            console.log("checkentregada");
+            console.log(response);
+            this.entregada = response.data.entregada;
+            this.nota = response.data.nota;
+            this.comentario = response.data.comentario;
           }
         })
         .catch((error) => {
-          console.log('erro de check entregada.')
-          console.log(error)
+          console.log("erro de check entregada.");
+          console.log(error);
         });
     },
 
     goBack() {
-      this.$router.push("/curso/miscursos/"+ this.id);
+      this.$router.push("/curso/miscursos/" + this.id);
     },
 
-    submitForm(){
-      if(this.file != ''){
-        let formData = new FormData()
-        formData.append('userid', this.userid)
-        formData.append('tarea', this.tareaid);
-        formData.append('entrega', this.file)
+    submitForm() {
+      if (this.file != "") {
+        let formData = new FormData();
+        formData.append("userid", this.userid);
+        formData.append("tarea", this.tareaid);
+        formData.append("entrega", this.file);
         api
-        .post('/material/uploadTarea', formData )
-        .then((response) => {
-          if (response.status == 200){
-            console.log('Subida la tarea')
-            console.log(response)
-          } else {
-            console.log('NO SE HA SUBIDO')
-          }
-        })
-        .catch((error) => {
-          console.log('erro de load material')
-          console.log(error)
-        });
-
+          .post("/material/uploadTarea", formData)
+          .then((response) => {
+            if (response.status == 200) {
+              console.log("Subida la tarea");
+              console.log(response);
+            } else {
+              console.log("NO SE HA SUBIDO");
+            }
+          })
+          .catch((error) => {
+            console.log("erro de load material");
+            console.log(error);
+          });
       }
-
     },
-    setFile(files){
-      console.log('a b c')
-      console.log(files)
+    setFile(files) {
+      console.log("a b c");
+      console.log(files);
       //console.log(e)
-      this.file = files[0]
+      this.file = files[0];
     },
 
     checkUserLogged() {
@@ -168,51 +179,51 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
-            this.userid = response.data.uid
+            console.log(response.data.uid);
+            this.userid = response.data.uid;
+            this.checkEntregada();
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
     },
-
   },
 
   mounted() {
-    this.checkUserLogged()
-    if (this.$route.query.bloqueid != '') {
-      console.log(' a v c')
-      console.log(this.$route)
-      this.bloqueid = this.$route.query.bloqueid
+    this.checkUserLogged();
+    if (this.$route.query.bloqueid != "") {
+      console.log(" a v c");
+      console.log(this.$route);
+      this.bloqueid = this.$route.query.bloqueid;
     }
     this.cursoid = this.$router.currentRoute._value.params.id;
     this.tareaid = this.$router.currentRoute._value.params.idtarea;
     this.loadTarea();
-    this.checkEntregada();
   },
 });
 </script>
