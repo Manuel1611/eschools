@@ -1,65 +1,5 @@
 <template>
   <q-page class="auth-container">
-    <q-dialog
-      v-model="openBajaDialog"
-      persistent
-      transition-show="scale"
-      transition-hide="scale"
-    >
-      <q-card class="background-myblue text-white" style="width: 400px">
-        <q-card-section>
-          <div class="text-h6">¿Quieres dar de baja a...?</div>
-        </q-card-section>
-
-        <q-card-section style="font-size: 1.1em" class="q-pt-none">
-          {{ correoBajaAlta }}
-        </q-card-section>
-
-        <q-card-actions
-          align="right"
-          class="bg-white text-teal logoutModal-margins"
-        >
-          <div class="logout-btn-no" v-close-popup>Cancelar</div>
-          <div
-            class="logout-btn-yes"
-            v-close-popup
-            @click="darBaja(idBajaAlta)"
-          >
-            Aceptar
-          </div>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog
-      v-model="openAltaDialog"
-      persistent
-      transition-show="scale"
-      transition-hide="scale"
-    >
-      <q-card class="background-myblue text-white" style="width: 400px">
-        <q-card-section>
-          <div class="text-h6">¿Quieres dar de alta a...?</div>
-        </q-card-section>
-
-        <q-card-section style="font-size: 1.1em" class="q-pt-none">
-          {{ correoBajaAlta }}
-        </q-card-section>
-
-        <q-card-actions
-          align="right"
-          class="bg-white text-teal logoutModal-margins"
-        >
-          <div class="logout-btn-no" v-close-popup>Cancelar</div>
-          <div
-            class="logout-btn-yes"
-            v-close-popup
-            @click="darAlta(idBajaAlta)"
-          >
-            Aceptar
-          </div>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
     <div class="title">
       <q-icon
         class="icon-drawer"
@@ -90,31 +30,6 @@
         v-for="(item, index) in matriculas"
         :key="index"
       >
-        <q-item-section avatar top>
-          <q-avatar
-            style="cursor: pointer"
-            v-if="item.activa"
-            @click="
-              openAltaDialog = true;
-              idBajaAlta = item;
-            "
-            icon="fa-solid fa-arrow-up"
-            color="positive"
-            text-color="white"
-          />
-          <q-avatar
-            style="cursor: pointer"
-            v-else
-            @click="
-              openBajaDialog = true;
-              idBajaAlta = item;
-            "
-            icon="fa-solid fa-arrow-down"
-            color="negative"
-            text-color="white"
-          />
-        </q-item-section>
-
         <q-item-section>
           <q-item-label lines="1" style="font-size: 1.1em">{{
             item.nombreAlumno + " - " + item.nombreCurso
@@ -122,12 +37,6 @@
           <q-item-label style="font-size: 1em" caption>{{
             item.fechafin + " - " + item.fechainicio
           }}</q-item-label>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon class="activate-bubble" name="info" color="green" />
-          <div v-if="item.activa" class="bubble">Activo</div>
-          <div v-else class="bubble">Inactivo</div>
         </q-item-section>
 
         <q-item-section side>
@@ -153,9 +62,6 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      openBajaDialog: false,
-      openAltaDialog: false,
-      idBajaAlta: "",
       matriculas: {},
 
       cursos: {},
@@ -169,7 +75,7 @@ export default defineComponent({
   },
   methods: {
     loadmatriculas() {
-      console.log('cargando matricula')
+      console.log("cargando matricula");
       let matriculas;
       const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");

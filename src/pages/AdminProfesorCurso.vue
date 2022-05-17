@@ -69,31 +69,36 @@
     >
       <q-card class="background-myblue text-white" style="width: 400px">
         <q-card-section>
-          <div class="text-h6">Invitar Profesor</div>
+          <div class="text-h6">Invitar profesor</div>
         </q-card-section>
 
         <q-card-section style="font-size: 1.1em" class="q-pt-none">
-          Escribe el correo de la persona a la que quieres invitar
+          Escribe el correo electrónico de la persona a la que quieres invitar
         </q-card-section>
         <q-card-section style="font-size: 1.1em" class="q-pt-none">
-          <input type="text" v-model="invitedUser">
+          <input class="input-invitarprof" type="text" v-model="invitedUser" />
         </q-card-section>
         <q-card-actions
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
-          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+          <div class="logout-btn-no" @click="invitedUser = ''" v-close-popup>
+            Cancelar
+          </div>
           <div
-            class="logout-btn-yes"
-            v-close-popup
-            @click="invitarUsuario(idBajaAlta)"
+            :class="
+              invitedUser == '' ? 'logout-btn-yes-disabled' : 'logout-btn-yes'
+            "
+            @click="
+              invitarUsuario(idBajaAlta);
+              invitedUser = '';
+            "
           >
-            Aceptar
+            Invitar
           </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
-
 
     <q-dialog
       v-model="openAddCursoProfesor"
@@ -154,12 +159,17 @@
       </q-card>
     </q-dialog>
     <div class="title">
-      <q-icon
-        class="icon-drawer"
-        color="black"
-        name="fa-solid fa-angle-right"
-      />
-      <div>Profesores en E-Schools</div>
+      <div style="display: flex; align-items: center">
+        <q-icon
+          class="icon-drawer"
+          color="black"
+          name="fa-solid fa-angle-right"
+        />
+        <div>Profesores en E-Schools</div>
+      </div>
+      <div class="invitarprof-btn" @click="openAddDialog = true">
+        Invitar profesor
+      </div>
     </div>
 
     <div class="top-info">
@@ -219,8 +229,44 @@
             item[1].email
           }}</q-item-label>
 
-          <q-item-label style="font-size: 1em" caption>
-            calvo toxico
+          <q-item-label
+            class="cursosParaProfesores"
+            v-if="item[1].cursos != null"
+            style="font-size: 1em"
+            caption
+          >
+            <div class="cursos-prof-container">
+              <q-icon
+                class="icon-drawer"
+                color="black"
+                name="fa-solid fa-angle-right"
+              />Cursos:
+              <p>
+                <q-list class="listaCursos">
+                  <q-item-label
+                    v-for="(item2, index2) in item[1].cursos"
+                    :key="index2"
+                    style="font-size: 1em"
+                    caption
+                  >
+                    {{ loadCourseName(item2.curso) }}
+                  </q-item-label>
+                </q-list>
+              </p>
+            </div>
+          </q-item-label>
+          <q-item-label
+            class="cursosParaProfesores"
+            v-else
+            style="font-size: 1em"
+            caption
+          >
+            <q-icon
+              class="icon-drawer"
+              color="black"
+              name="fa-solid fa-angle-right"
+            />
+            <p>En ningún curso todavía...</p>
           </q-item-label>
         </q-item-section>
 
@@ -268,9 +314,6 @@
       >
       </q-pagination>
     </div>
-    <p
-    @click="openAddDialog = true"
-    >Añadir profesor</p>
   </q-page>
 </template>
 
@@ -320,16 +363,24 @@ export default defineComponent({
     };
   },
   methods: {
+    loadCourseName(id) {
+      for (var i in this.courses) {
+        if (this.courses[i][0] == id) {
+          return this.courses[i][1].nombre;
+        }
+      }
+      return "kekw";
+    },
     loadUsers() {
       let users;
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
-        .get("/user/profesores",config)
+        .get("/user/profesores", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -337,9 +388,7 @@ export default defineComponent({
             console.log(response.data.usuarios);
             console.log("aaa" + users);
             users = response.data.usuarios;
-
             console.log("bbb" + users);
-
             this.users = users;
             console.log(this.users);
           }
@@ -351,13 +400,13 @@ export default defineComponent({
     },
     loadCourses() {
       let cursos;
-            const $q = useQuasar();
+      const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/curso/index", config)
         .then((response) => {
@@ -384,13 +433,13 @@ export default defineComponent({
           profesorId: idprofesor,
           cursoId: this.matricula.curso,
         };
-              const $q = useQuasar();
-      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
-      let config = {
-        headers: {
-          'x-access-token' : token
-        }
-      }
+        const $q = useQuasar();
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            "x-access-token": token,
+          },
+        };
         api
           .post("/user/addcursotoprofesor", data, config)
           .then((response) => {
@@ -413,9 +462,9 @@ export default defineComponent({
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/user/disableUser", data, config)
         .then((response) => {
@@ -437,9 +486,9 @@ export default defineComponent({
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/user/enableUser", data, config)
         .then((response) => {
@@ -470,17 +519,35 @@ export default defineComponent({
       this.confirmDisableUser(id, email);
     },
 
-    invitarUsuario(){
-      let data = {
-        email : this.invitedUser
+    invitarUsuario() {
+      if (this.invitedUser == "") {
+        this.openAddDialog = true;
+      } else {
+        this.openAddDialog = false;
+        let data = {
+          email: this.invitedUser,
+        };
+        api
+          .post("/auth/inviteUser", data)
+          .then((response) => {
+            console.log("conexion correcta");
+            if (response.status == 200) {
+              this.loadUsers();
+              this.cursoAddedToProfesor("Se ha enviado un correo electrónico");
+            }
+          })
+          .catch((e) => {
+            console.log("error de conexion");
+            console.log(e);
+          });
       }
       const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
 
       api
         .post("/auth/inviteUser", data, config)
@@ -500,9 +567,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -511,28 +578,28 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
     },
   },
   mounted() {
-    this.checkUserLogged()
+    this.checkUserLogged();
     this.loadUsers();
     this.loadCourses();
   },
@@ -568,6 +635,7 @@ export default defineComponent({
   font-size: 1.5em;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .icon-drawer {
@@ -724,5 +792,80 @@ export default defineComponent({
   border: 0;
   font-size: 1.1em;
   border-radius: 3px;
+}
+
+.cursosParaProfesores {
+  display: flex;
+  align-items: center;
+  margin-left: -3px;
+  margin-top: -5px;
+}
+
+.cursosParaProfesores p {
+  margin: 0;
+}
+
+.invitarprof-btn {
+  background-color: #4287f5;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.7em;
+  transition: 0.2s ease;
+  margin-right: 10px;
+}
+
+.invitarprof-btn:hover {
+  background-color: #5f9bfa;
+}
+
+.input-invitarprof {
+  border: 0;
+  outline: none;
+  width: 100%;
+  padding: 5px;
+}
+
+.listaCursos {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  border-left: 2px solid rgba(1, 1, 1, 0.2);
+  padding-left: 10px;
+  position: relative;
+}
+
+.listaCursos::before {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 8px;
+  background-color: rgba(1, 1, 1, 0.2);
+  transform: rotate(135deg);
+  left: -2px;
+  top: -4px;
+}
+
+.listaCursos::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  width: 8px;
+  background-color: rgba(1, 1, 1, 0.2);
+  transform: rotate(45deg);
+  left: -2px;
+  bottom: -4px;
+}
+
+.listaCursos > div {
+  margin: 0;
+}
+
+.cursos-prof-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
 }
 </style>
