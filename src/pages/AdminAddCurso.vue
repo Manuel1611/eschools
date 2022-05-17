@@ -106,9 +106,12 @@ export default defineComponent({
       if (
         this.curso.name != "" &&
         this.curso.description != "" &&
-        this.curso.priceid != "" &&
-        this.curso.price != ""
+        //this.curso.priceid != "" &&
+        (this.curso.price != "" || this.curso.price == 0)
       ) {
+        if(this.curso.price == ""){
+          this.curso.price = 0
+        }
         let data = {
           nombre: this.curso.name,
           descripcion: this.curso.description,

@@ -28,6 +28,33 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog
+      v-model="openMatriculaGratisDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Instrucciones de matriculacion</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-h7">
+            Matricularse en CURSO GRATIS
+          </div>
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-yes" v-close-popup @click="matriculaGratis(this.cursoSeleccionado)">Aceptar</div>
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <div class="title">
       <q-icon
         class="icon-drawer"
@@ -103,6 +130,7 @@ export default defineComponent({
       cursos: {},
       rol: "",
       openMatriculaDialog: false,
+      openMatriculaGratisDialog: false,
       matriculas: {},
       userid: "",
       search: "",
@@ -201,7 +229,12 @@ export default defineComponent({
 
     matriculacionDialog(item) {
       this.cursoSeleccionado = item
-      this.openMatriculaDialog = true;
+      if (item.precio > 0){
+        this.openMatriculaDialog = true;
+      }else {
+        this.openMatriculaGratisDialog = true;
+      }
+
     },
 
     matriculav2(priceid) {
@@ -284,6 +317,9 @@ export default defineComponent({
 
       */
     },
+    matriculaGratis(curso){
+      console.log('matricula gratis')
+    }
   },
 
   mounted() {
