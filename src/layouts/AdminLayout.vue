@@ -123,7 +123,7 @@
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-user" />
           </q-item-section>
 
-          <div class="user-info-container">
+          <div class="user-info-container" >
             <q-item-section class="color-white">{{
               user.nombre
             }}</q-item-section>
@@ -194,6 +194,9 @@ export default defineComponent({
     };
   },
   methods: {
+    goPerfil() {
+      this.$router.push("/perfil");
+    },
     goUsers() {
       this.$router.push("/admin/users");
     },

@@ -187,10 +187,7 @@ export default defineComponent({
   },
   methods: {
     goPerfil() {
-      this.$router.push({
-        name: "/perfil",
-        query: { id: this.user.id },
-      });
+      this.$router.push("/perfil");
     },
     goUsers() {
       this.$router.push("/admin/users");
