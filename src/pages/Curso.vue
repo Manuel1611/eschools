@@ -12,13 +12,10 @@
         </q-card-section>
         <q-card-section>
           <div class="text-h7">
-            Para matricularse haga una transferencia con el precio del curso y
-            mande el justificante de pago al correo admin@eschools.com
+            Va a ser redireccionado al pago del curso {{ this.cursoSeleccionado.nombre}}
           </div>
-          <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
-          <div class="text-h7">Beneficiario: E-Schools</div>
           <div class="text-h7">
-            Concepto: *Nombre apellidos usuario* * Nombre del curso *
+            El importe será de {{ this.cursoSeleccionado.precio}} €
           </div>
         </q-card-section>
 
@@ -26,7 +23,8 @@
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
-          <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+          <div class="logout-btn-yes" v-close-popup @click="matriculav2(this.cursoSeleccionado.priceid)">Aceptar</div>
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -69,11 +67,12 @@
             item[1].descripcion
           }}</q-item-label>
         </q-item-section>
-        <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
+
 
         <div v-if="checkMatricula(item[0])">calvo</div>
         <div v-else>
-          <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
+          <q-btn @click="matriculacionDialog(item[1])">Matricularte</q-btn>
+          <!--<q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>-->
         </div>
       </q-item>
     </q-list>
@@ -111,6 +110,7 @@ export default defineComponent({
       currentPage: 1,
       nextPage: null,
       totalPages: 8,
+      cursoSeleccionado : {},
     };
   },
   setup() {
@@ -199,7 +199,8 @@ export default defineComponent({
         });
     },
 
-    matriculacionDialog() {
+    matriculacionDialog(item) {
+      this.cursoSeleccionado = item
       this.openMatriculaDialog = true;
     },
 
