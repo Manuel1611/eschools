@@ -81,8 +81,14 @@ export default defineComponent({
     loadCurso(index) {
       console.log('CARGANDO CURSO' + index)
       let cursos = [];
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/"+ index)
+        .get("/curso/"+ index, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -114,8 +120,14 @@ export default defineComponent({
     loadAllCursos() {
 
       let cursos = [];
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-      .get("/curso/index")
+      .get("/curso/index", config)
       .then((response) => {
         console.log("conexion correcta");
         if (response.status == 200) {
@@ -157,8 +169,14 @@ export default defineComponent({
     loadMatriculas(userid){
       console.log('loading matriculas')
       let matriculas
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/matricula/getmatriculabyuser/"+ userid)
+        .get("/matricula/getmatriculabyuser/"+ userid, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

@@ -33,6 +33,10 @@
             <input type="number" name="price" v-model="curso.price" />
           </div>
           <div>
+            <label for="price">Id de Stripe</label>
+            <input type="text" name="priceid" v-model="curso.priceid" />
+          </div>
+          <div>
             <label for="description">Descripción</label>
             <textarea
               style="width: 40%; min-width: 300px"
@@ -69,7 +73,9 @@ export default defineComponent({
         name: "",
         description: "",
         price: "",
+        priceid : "",
       },
+      $q : '',
     };
   },
   setup() {
@@ -100,20 +106,31 @@ export default defineComponent({
       if (
         this.curso.name != "" &&
         this.curso.description != "" &&
+        this.curso.priceid != "" &&
         this.curso.price != ""
       ) {
         let data = {
           nombre: this.curso.name,
           descripcion: this.curso.description,
           precio: this.curso.price,
+          priceid: this.curso.priceid,
         };
+        const $q = useQuasar();
+
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            'x-access-token' : token
+          }
+        }
         api
-          .post("/curso/store", data)
+          .post("/curso/store", data, config)
           .then((response) => {
             this.registerOk("Curso añadido correctamente");
             this.curso.name = "";
             this.curso.description = "";
             this.curso.price = "";
+            this.curso.priceid = "";
           })
           .catch(() => {
             this.registerError("No se ha podido añadir el curso");
@@ -122,9 +139,46 @@ export default defineComponent({
         this.registerError("Todos los campos son obligatorios");
       }
     },
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
   },
 
-  mounted() {},
+  mounted() {
+    this.checkUserLogged()
+  },
 });
 </script>
 

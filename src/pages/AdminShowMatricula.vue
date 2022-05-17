@@ -117,8 +117,15 @@ export default defineComponent({
         fechafin: this.matricula.fechafin,
         fechainicio: this.matricula.fechainicio,
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/matricula/" + this.id, data)
+        .put("/matricula/" + this.id, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -130,8 +137,15 @@ export default defineComponent({
     },
     loadmatricula() {
       let matriculas;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/matricula/" + this.id)
+        .get("/matricula/" + this.id, config)
         .then((response) => {
           //console.log("conexion correcta");
           if (response.status == 200) {
@@ -149,8 +163,15 @@ export default defineComponent({
     },
     loadStudents() {
       let students;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/user/alumnos")
+        .get("/user/alumnos", config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -179,8 +200,15 @@ export default defineComponent({
     },
     loadCourses() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
           console.log("conexion correcta cursos");
           if (response.status == 200) {
@@ -211,9 +239,45 @@ export default defineComponent({
     goBack() {
       this.$router.push("/admin/matricula/");
     },
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
   },
 
   mounted() {
+    this.checkUserLogged()
     this.id = this.$router.currentRoute._value.params.id;
     this.loadmatricula();
     this.loadCourses();
@@ -231,7 +295,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .editbtn {
@@ -239,7 +303,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .cancelbtn {
@@ -247,7 +311,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .savebtn {
@@ -255,7 +319,7 @@ export default defineComponent({
   padding: 5px;
   margin-top: 10px;
   color: white;
-  matricular: pointer;
+  cursor: pointer;
 }
 
 .display-none {
@@ -271,7 +335,7 @@ input {
 }
 
 .isShow {
-  matricular: default !important;
+  cursor: default !important;
   background-color: transparent;
   border: none;
   outline: none;
@@ -294,7 +358,7 @@ input {
   border: 0;
   border: 2px solid transparent;
   margin: 10px;
-  matricular: default !important;
+  cursor: default !important;
   opacity: 1 !important;
   outline: none;
 }

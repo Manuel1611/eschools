@@ -113,9 +113,14 @@ export default defineComponent({
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
       }
 
-
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-      .put(url , data )
+      .put(url , data, config )
       .then((response) => {
         this.registerOk(response.data.message)
       })
@@ -131,8 +136,14 @@ export default defineComponent({
       if (this.bloqueid != '' && this.bloqueid != undefined){
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.materialid
       }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get(url )
+        .get(url, config )
         .then((response) => {
           this.material = response.data.material
         })
@@ -140,11 +151,47 @@ export default defineComponent({
           console.log('erro de load material')
           console.log(error)
         });
-    }
+    },
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
 
   },
 
   mounted(){
+    this.checkUserLogged()
     console.log(this.$route.query.bloqueid)
     if (this.$route.query.bloqueid != '') {
       this.bloqueid = this.$route.query.bloqueid

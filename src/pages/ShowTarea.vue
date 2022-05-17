@@ -1,7 +1,7 @@
 <template>
   <q-page class="auth-container">
     <div class="title">
-          <q-dialog
+    <q-dialog
       v-model="openCalificarDialog"
       persistent
       transition-show="scale"
@@ -43,7 +43,12 @@
         name="fa-solid fa-angle-right"
       />
       <div>Show Tarea Para el profesor</div>
+
     </div>
+      <div>
+        <h5> Nombre tarea</h5>
+        <h5> Desc tarea</h5>
+      </div>
     <q-list bordered>
       <q-item
         v-for="(item, index) in this.entregas"
@@ -53,6 +58,13 @@
         {{item[1].email}}
         <a :href="this.server +'/usuarios/' + item[0] + '/' +idtarea +'/' + item[1].entrega[idtarea].file" target="_blank">Entrega</a>
         <br>
+        <q-item-section v-if="item[1].entrega[idtarea].nota != undefined && item[1].entrega[idtarea].nota > -1">
+          Nota: {{item[1].entrega[idtarea].nota}}/10
+          Comentario: {{item[1].entrega[idtarea].comentario}}
+        </q-item-section>
+        <q-item-section v-else>
+          Tarea aún sin calificar
+        </q-item-section>
 
         <q-btn @click="calificarDialog(item[0], item[1])">
           Calificar entrega
@@ -94,8 +106,14 @@ export default defineComponent({
   },
   methods: {
     loadEntregas(){
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/tarea/getTareasEntregadas/" + this.idtarea)
+        .get("/tarea/getTareasEntregadas/" + this.idtarea, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -105,6 +123,26 @@ export default defineComponent({
           }
         })
     },
+
+    loadTarea(){
+      console.log('loadtarea')
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api.get("/material/" + this.idcurso + "/" + this.idtarea, config)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2 load tarea");
+            console.log(response.data);
+            this.entregas = response.data.usuarios
+          }
+        })
+    },
+
     calificarDialog(id, user){
       this.calificacion.nombre = user.nombre
       this.calificacion.apellidos = user.apellidos
@@ -124,8 +162,14 @@ export default defineComponent({
         nota: this.calificacion.nota,
         comentario: this.calificacion.comentario,
       }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("/tarea/calificarTarea/", data)
+        .post("/tarea/calificarTarea/", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -137,11 +181,49 @@ export default defineComponent({
           console.log('error calificando')
           console.log(error)
         })
-    }
+    },
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
   },
   mounted() {
+    this.checkUserLogged()
     this.idtarea = this.$router.currentRoute._value.params.idtarea;
     this.loadEntregas()
+    this.loadTarea()
+
   },
 });
 </script>

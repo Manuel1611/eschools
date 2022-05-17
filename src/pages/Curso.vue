@@ -1,12 +1,38 @@
 <template>
   <q-page class="auth-container">
+    <q-dialog
+      v-model="openMatriculaDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Instrucciones de matriculacion</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-h7">Para matricularse haga una transferencia con el precio del curso y mande el justificante de pago al correo admin@eschools.com</div>
+          <div class="text-h7">IBAN: ES12 1234 1234 1212 3456 7890</div>
+          <div class="text-h7">Beneficiario: E-Schools</div>
+          <div class="text-h7">Concepto: *Nombre apellidos usuario* * Nombre del curso *</div>
+        </q-card-section>
+
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="title">
       <q-icon
         class="icon-drawer"
         color="black"
         name="fa-solid fa-angle-right"
       />
-      <div>Cursos en E-Schools</div>
+      <div>Cursos en E-Schooless</div>
     </div>
     <div class="top-info">
       <div class="query-found">
@@ -34,16 +60,18 @@
             item[1].descripcion
           }}</q-item-label>
         </q-item-section>
+        <!--<q-btn @click="matriculacionDialog">Matricularte</q-btn>-->
 
-        <q-item-section side>
-          <q-avatar
-            style="cursor: pointer"
-            @click="goCurso(item[0])"
-            icon="fa-solid fa-pencil"
-            color="primary"
-            text-color="white"
-          />
-        </q-item-section>
+
+        <div v-if="checkMatricula(item[0])">
+        calvo
+
+        </div>
+        <div v-else>
+          <q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>
+        </div>
+
+
       </q-item>
     </q-list>
   </q-page>
@@ -60,6 +88,9 @@ export default defineComponent({
     return {
       cursos: {},
       rol :'',
+      openMatriculaDialog: false,
+      matriculas : {},
+      userid: '',
     };
   },
   setup() {
@@ -70,10 +101,17 @@ export default defineComponent({
   methods: {
     loadCursos() {
       let cursos;
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/index")
+        .get("/curso/index", config)
         .then((response) => {
-          console.log("conexion correcta");
+          console.log("conexion correcta load cursos");
           if (response.status == 200) {
             console.log("conexion correcta2");
             console.log(response.data);
@@ -86,7 +124,7 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log("error de conexion");
+          console.log("error de conexion load cursos");
           console.log(e);
           /*$q.notify({
               color: 'negative',
@@ -115,7 +153,9 @@ export default defineComponent({
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
-            this.rol = response.data.user.rol
+            //this.rol = response.data.user.rol
+            this.userid = response.data.uid
+            this.getMatriculasFromUser()
           } else {
             q.notify({
               color: 'negative',
@@ -137,6 +177,92 @@ export default defineComponent({
           console.log("error de conexion sesion");
         });
     },
+
+    matriculacionDialog() {
+      this.openMatriculaDialog = true
+    },
+
+    matriculav2(priceid){
+      let data = {
+        cursopriceid: priceid
+      }
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/matricula/create-checkout-session", data, config)
+        .then((response) => {
+          console.log("conexion correcta createcheckout");
+          console.log(response)
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          }
+      })
+    },
+
+    getMatriculasFromUser(){
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      console.log("url: /matricula/getmatriculabyuser/"+ this.userid)
+      api
+      .get("/matricula/getmatriculabyuser/"+ this.userid, config)
+      .then((response) => {
+        console.log("conexion correcta load matriculas from user");
+        if (response.status == 200) {
+          console.log("conexion correcta2");
+          console.log(response.data);
+
+          let matriculas = response.data.matricula;
+          console.log(matriculas);
+          this.matriculas = matriculas;
+          console.log('adsdsdsadasd')
+          console.log(Object.values(this.matriculas).length );
+        }
+      })
+      .catch((e) => {
+        console.log("error de conexion load matriculas from user");
+        console.log(e);
+        /*$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Loading failed',
+            icon: 'report_problem'
+          })
+          */
+      });
+    },
+
+    checkMatricula(matriculaid){
+
+      for(let aux in this.matriculas){
+        if (this.matriculas[aux].idcurso == matriculaid){
+          return true
+        }
+      }
+      return false
+
+/*
+      const match = this.matriculas.find(element => {
+      if (element.includes(matriculaid)) {
+        return true;
+      }
+      });
+      if (match !== undefined) {
+        // array contains substring match
+        return true
+      } else {
+        return false
+      }
+
+      */
+    }
   },
 
   mounted() {
@@ -145,6 +271,7 @@ export default defineComponent({
     //console.log($route.meta)
     this.checkUserLogged()
     this.loadCursos();
+
   },
 });
 </script>

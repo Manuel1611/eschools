@@ -85,8 +85,14 @@ export default defineComponent({
         url = "/material/" + this.cursoid + '/' + this.bloqueid + '/' +  this.tareaid
       }
       console.log('url: ' + url)
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get(url )
+        .get(url, config )
         .then((response) => {
           this.error = ''
           this.tarea = response.data.material
@@ -98,9 +104,15 @@ export default defineComponent({
     },
 
     checkEntregada(){
-      this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+      //this.userid = "kmhHWDypPBcFTqErFSsFazwBpkt2"
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid)
+        .get('/material/checkuploadedtarea/' + this.userid+'/'+this.tareaid, config)
         .then((response) => {
           if (response.status == 200){
             console.log('checkentregada')
@@ -123,7 +135,7 @@ export default defineComponent({
     submitForm(){
       if(this.file != ''){
         let formData = new FormData()
-        formData.append('userid', 'kmhHWDypPBcFTqErFSsFazwBpkt2')
+        formData.append('userid', this.userid)
         formData.append('tarea', this.tareaid);
         formData.append('entrega', this.file)
         api
@@ -151,9 +163,47 @@ export default defineComponent({
       this.file = files[0]
     },
 
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+            this.userid = response.data.uid
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
+
   },
 
   mounted() {
+    this.checkUserLogged()
     if (this.$route.query.bloqueid != '') {
       console.log(' a v c')
       console.log(this.$route)

@@ -111,7 +111,12 @@ export default defineComponent({
               this.loginOk(response.data.message);
               console.log(response.data.token)
               this.saveLocalStorage('eschoolssessiontoken', response.data.token)
-              this.$router.push("/curso");
+              if (response.data.rol == 'Administrador') {
+                this.$router.push("/admin");
+              } else {
+                this.$router.push("/curso");
+              }
+
             } else {
               this.loginError(response.data.message);
             }

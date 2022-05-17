@@ -79,6 +79,42 @@
           />
         </div>
       </div>
+
+      <div>
+        <label for="price">Price Id</label>
+        <div>
+          <q-icon
+            v-if="this.show"
+            class="icon-drawer"
+            color="black"
+            name="fa-solid fa-angle-right"
+          />
+          <q-icon
+            v-else
+            class="icon-drawer ml"
+            color="white"
+            name="fa-solid fa-angle-right"
+          />
+          <input
+            v-if="this.show"
+            type="text"
+            :class="this.show ? 'remove-opacity' : 'isEdit'"
+            name="priceid"
+            v-model="this.curso.priceid"
+            :disabled="this.isDisabled"
+          />
+          <input
+            v-else
+            type="text"
+            :class="this.show ? 'remove-opacity' : 'isEdit'"
+            name="priceid"
+            v-model="this.curso.priceid"
+            :disabled="this.isDisabled"
+          />
+        </div>
+      </div>
+
+
       <div>
         <label for="desc">Descripción</label>
         <div>
@@ -177,6 +213,7 @@ export default defineComponent({
         nombre: "",
         apellidos: "",
         rol: "",
+        priceid: ""
       },
       nombreDelCurso: "",
       cursoConEuro: "",
@@ -208,6 +245,7 @@ export default defineComponent({
       this.defaultValues.nombre = this.curso.nombre;
       this.defaultValues.precio = this.curso.precio;
       this.defaultValues.descripcion = this.curso.descripcion;
+      this.defaultValues.priceid = this.curso.priceid
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
@@ -215,6 +253,7 @@ export default defineComponent({
       this.curso.nombre = this.defaultValues.nombre;
       this.curso.precio = this.defaultValues.precio;
       this.curso.descripcion = this.defaultValues.descripcion;
+      this.curso.priceid = this.defaultValues.priceid
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
@@ -223,9 +262,17 @@ export default defineComponent({
         nombre: this.curso.nombre,
         precio: this.curso.precio,
         descripcion: this.curso.descripcion,
+        priceid: this.curso.priceid
       };
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .put("/curso/" + this.id, data)
+        .put("/curso/" + this.id, data, config)
         .then((response) => {
           console.log("edit OK");
           this.show = !this.show;
@@ -240,8 +287,15 @@ export default defineComponent({
     },
     loadCurso() {
       let cursos;
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .get("/curso/" + this.id)
+        .get("/curso/" + this.id, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -265,9 +319,45 @@ export default defineComponent({
     goBack() {
       this.$router.push("/admin/cursos/");
     },
+    checkUserLogged() {
+      const $q = useQuasar();
+      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/auth/checksessiontoken", {}, config)
+        .then((response) => {
+          console.log("conexion correcta token");
+          if (response.status == 200) {
+            console.log("conexion correcta token 22222");
+          } else {
+            q.notify({
+              color: 'negative',
+              position: 'top',
+              message: 'Sesión caducada.',
+              icon: 'report_problem'
+            })
+            this.$router.push("/auth");
+          }
+        })
+        .catch((e) => {
+          $q.notify({
+            color: 'negative',
+            position: 'top',
+            message: e,
+            icon: 'report_problem'
+          })
+          this.$router.push("/auth");
+          console.log("error de conexion sesion");
+        });
+    },
   },
 
   mounted() {
+    this.checkUserLogged()
     this.id = this.$router.currentRoute._value.params.id;
     this.loadCurso();
     console.log("aaaa" + this.nombreDelCurso);

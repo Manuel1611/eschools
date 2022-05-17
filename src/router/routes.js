@@ -64,6 +64,8 @@ const routes = [
       { path: "miscursos", component: () => import("pages/MisCursos.vue") },
       { path: "miscursos/:id", component: () => import("pages/ShowCursoAlumno.vue") },
       { path: "miscursos/:id/:idtarea", component: () => import("pages/ShowTareaAlumno.vue") },
+      { path: "matriculapagada", component: () => import("pages/MatriculaPagada.vue") },
+      { path: "pagocancelado", component: () => import("pages/PagoCancelado.vue") },
 
       { path: "tarea/:idcurso/:idtarea", component: () => import("pages/ShowTarea.vue") },
 
