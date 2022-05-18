@@ -210,12 +210,19 @@ export default defineComponent({
     },
 
     resetPass() {
+      const $q = useQuasar();
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
       let data = {
         email: this.user.email,
         userid: this.id,
       };
       api
-        .post("/user/resetPassword", data)
+        .post("/user/resetPassword", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {
@@ -238,7 +245,6 @@ export default defineComponent({
           "x-access-token": token,
         },
       };
-      console.log('calvo toxico')
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
