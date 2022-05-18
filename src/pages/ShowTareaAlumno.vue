@@ -215,8 +215,14 @@ export default defineComponent({
         formData.append("userid", this.userid);
         formData.append("tarea", this.tareaid);
         formData.append("entrega", this.file);
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            "x-access-token": token,
+          },
+        };
         api
-          .post("/material/uploadTarea", formData)
+          .post("/material/uploadTarea", formData, config)
           .then((response) => {
             if (response.status == 200) {
               console.log("Subida la tarea");
