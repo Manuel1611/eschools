@@ -520,11 +520,12 @@ export default defineComponent({
     },
 
     invitarUsuario() {
+      let data = {}
       if (this.invitedUser == "") {
         this.openAddDialog = true;
       } else {
         this.openAddDialog = false;
-        let data = {
+        data = {
           email: this.invitedUser,
         };
         api
@@ -542,7 +543,7 @@ export default defineComponent({
           });
       }
       const $q = useQuasar();
-      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           "x-access-token": token,
@@ -564,7 +565,7 @@ export default defineComponent({
     },
     checkUserLogged() {
       const $q = useQuasar();
-      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           "x-access-token": token,

@@ -12,12 +12,11 @@
         </q-card-section>
         <q-card-section>
           <div class="text-h7">
-            Para matricularse haga una transferencia con el precio del curso y
-            mande el justificante de pago al correo "admin@eschools.com"
+            Va a ser redireccionado al pago del curso
+            {{ this.cursoSeleccionado[1].nombre }}
           </div>
           <div class="text-h7">
-            Concepto: *Nombre Apellidos Usuario* *Nombre del curso* El importe
-            será de {{ this.cursoSeleccionado.precio }} €
+            El importe será de {{ this.cursoSeleccionado[1].precio }} €
           </div>
         </q-card-section>
 
@@ -28,7 +27,7 @@
           <div
             class="logout-btn-yes"
             v-close-popup
-            @click="matriculav2(this.cursoSeleccionado.priceid)"
+            @click="matriculav2(this.cursoSeleccionado[1].priceid)"
           >
             Aceptar
           </div>
@@ -36,6 +35,37 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog
+      v-model="openMatriculaGratisDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Instrucciones de matriculacion</div>
+        </q-card-section>
+        <q-card-section>
+          <div class="text-h7">Matricularse en CURSO GRATIS</div>
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div
+            class="logout-btn-yes"
+            v-close-popup
+            @click="matriculaGratis(this.cursoSeleccionado)"
+          >
+            Aceptar
+          </div>
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
     <div class="title">
       <q-icon
         class="icon-drawer"
@@ -121,6 +151,7 @@ export default defineComponent({
       cursos: {},
       rol: "",
       openMatriculaDialog: false,
+      openMatriculaGratisDialog: false,
       matriculas: {},
       userid: "",
       search: "",
@@ -129,6 +160,7 @@ export default defineComponent({
       nextPage: null,
       totalPages: 8,
       cursoSeleccionado: {},
+      username: "",
     };
   },
   setup() {
@@ -140,7 +172,7 @@ export default defineComponent({
     loadCursos() {
       let cursos;
       const $q = useQuasar();
-      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           "x-access-token": token,
@@ -195,6 +227,8 @@ export default defineComponent({
             this.userid = response.data.uid;
             this.getMatriculasFromUser();
             this.rol = response.data.user.rol;
+            this.username =
+              response.data.user.nombre + " " + response.data.user.apellidos;
           } else {
             q.notify({
               color: "negative",
@@ -219,7 +253,11 @@ export default defineComponent({
 
     matriculacionDialog(item) {
       this.cursoSeleccionado = item;
-      this.openMatriculaDialog = true;
+      if (item[1].precio > 0) {
+        this.openMatriculaDialog = true;
+      } else {
+        this.openMatriculaGratisDialog = true;
+      }
     },
 
     matriculav2(priceid) {
@@ -286,21 +324,51 @@ export default defineComponent({
         }
       }
       return false;
+    },
+    matriculaGratis() {
+      console.log("cursoseleccionado");
+      console.log(this.cursoSeleccionado);
+      let data = {
+        idalumno: this.userid,
+        idcurso: this.cursoSeleccionado[0],
+        nombreAlumno: this.username,
+        nombreCurso: this.cursoSeleccionado[1].nombre,
+      };
+      console.log("datas");
+      console.log(data);
 
-      /*
-      const match = this.matriculas.find(element => {
-      if (element.includes(matriculaid)) {
-        return true;
-      }
-      });
-      if (match !== undefined) {
-        // array contains substring match
-        return true
-      } else {
-        return false
-      }
-
-      */
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .post("/matricula/storeFree/", data, config)
+        .then((response) => {
+          console.log("conexion correcta add matricula free");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            window.location.reload();
+            this.$q.notify({
+              color: "positive",
+              position: "top",
+              message: "Matricula añadida",
+              icon: "report_problem",
+            });
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion matricula gratis");
+          console.log(e);
+          /*$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Loading failed',
+            icon: 'report_problem'
+          })
+          */
+        });
     },
   },
 

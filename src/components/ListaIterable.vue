@@ -90,6 +90,7 @@
             :material="item.material"
             :cursoid="this.cursoid"
             :bloque="index"
+            :uid="this.uid"
           />
         </div>
       </q-item>
@@ -184,6 +185,10 @@ export default {
       type: String,
       default: "",
     },
+    uid: {
+      type: String,
+      default : "",
+    }
   },
   methods: {
     goTarea(id) {
@@ -212,12 +217,18 @@ export default {
     },
     deleteMaterial(idmaterial) {
       let data = {
-        cursoid: this.cursoid,
+        curso: this.cursoid,
         materialid: idmaterial,
         bloqueid: this.bloque,
       };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
       api
-        .post("material/deletematerial/", data)
+        .post("material/deletematerial/", data, config)
         .then((response) => {
           console.log("conexion correcta");
           if (response.status == 200) {

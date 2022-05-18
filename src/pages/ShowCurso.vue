@@ -26,6 +26,7 @@
         :profesor="true"
         :material="this.curso.material"
         :cursoid="this.id"
+        :uid="this.uid"
       />
     </div>
   </q-page>
@@ -52,6 +53,7 @@ export default defineComponent({
       },
       material: {},
       server: "http://localhost:3000/public/",
+      uid: "",
     };
   },
   setup() {
@@ -75,7 +77,7 @@ export default defineComponent({
   },
   methods: {
     goBack() {
-      this.$router.push("/curso/miscursos");
+      this.$router.push("/curso/");
     },
 
     loadCurso() {
@@ -129,6 +131,7 @@ export default defineComponent({
           console.log("conexion correcta token");
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
+            this.uid = response.data.uid;
           } else {
             q.notify({
               color: "negative",
