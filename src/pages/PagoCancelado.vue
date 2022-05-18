@@ -1,10 +1,18 @@
 <template>
   <q-page>
-    <h2>Pago cancelado</h2>
-    <p>
+    <div class="title">
+      <q-icon
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-angle-right"
+      />
+      <div>Pago cancelado</div>
+    </div>
+    <p class="desc">
       Has cancelado el pago. Si crees que se debe a un error, vuelve a
-      intentarlo
+      intentarlo...
     </p>
+    <div class="btn-addnew" @click="goBack">Vuelve a tus cursos</div>
   </q-page>
 </template>
 
@@ -22,7 +30,11 @@ export default defineComponent({
     const $q = useQuasar();
     return {};
   },
-  methods: {},
+  methods: {
+    goBack() {
+      this.$router.push("/curso/miscursos");
+    },
+  },
   mounted() {},
 });
 </script>
@@ -34,7 +46,7 @@ export default defineComponent({
 
 .title {
   margin-top: 20px;
-  font-size: 1.5em;
+  font-size: 1.75em;
   display: flex;
   align-items: center;
 }
@@ -45,11 +57,16 @@ export default defineComponent({
   margin-right: 5px;
 }
 
+.desc {
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
 .btn-addnew {
-  background-color: #21ba45;
+  background-color: #05beed;
   display: inline-block;
   padding: 10px;
-  color: white;
+  color: black;
   margin: 25px 0;
   cursor: pointer;
   border-radius: 3px;
@@ -58,123 +75,7 @@ export default defineComponent({
   margin-right: 10px;
 }
 
-.each-item {
-  margin: 25px 0;
-  padding: 16px 0;
-  border-bottom: 1px solid #ebebeb;
-  padding-bottom: 40px;
-}
-
-.background-myblue {
-  background-color: #226294;
-}
-
-.logoutModal-margins {
-  margin: 20px 0;
-  border-radius: 0 !important;
-  padding: 0;
-}
-
 .btn-addnew:hover {
-  background-color: #30c954;
-}
-
-.logout-btn-no,
-.logout-btn-yes {
-  margin: 0 !important;
-  width: 100px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  padding: 10px 0;
-  font-size: 1.1em;
-}
-
-.logout-btn-no {
-  background-color: #d42c2c;
-  transition: 0.2s ease;
-}
-
-.logout-btn-yes {
-  background-color: #21ba45;
-  transition: 0.2s ease;
-}
-
-.logout-btn-no:hover {
-  background-color: #f24141;
-}
-
-.logout-btn-yes:hover {
-  background-color: #30c954;
-}
-
-.bubble {
-  position: absolute;
-  top: -15px;
-  width: 100px;
-  height: 25px;
-  background-color: #d6d6d6;
-  border-radius: 3px;
-  box-shadow: 1px 1px 2px rgba(1, 1, 1, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: 0.2s ease;
-  font-size: 1.1em;
-  color: black;
-}
-
-.bubble::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 78%;
-  widows: 0;
-  height: 0;
-  border: 10px solid transparent;
-  border-top-color: #d6d6d6;
-  border-bottom: 0;
-  border-right: 0;
-  margin-left: 0;
-  margin-bottom: -10px;
-}
-
-.activate-bubble {
-  cursor: pointer;
-}
-
-.activate-bubble:hover ~ .bubble {
-  opacity: 1;
-}
-
-.top-info {
-  background-color: #525252;
-  margin-left: -20px;
-  margin-right: -20px;
-  margin-top: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.query-found {
-  position: absolute;
-  left: 0;
-  padding-left: 25px;
-  font-size: 1.1em;
-  color: white;
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  margin-right: 20px;
-  padding: 10px 5px;
-  width: 250px;
-  outline: none;
-  border: 0;
-  font-size: 1.1em;
-  border-radius: 3px;
+  background-color: #12ccfc;
 }
 </style>
