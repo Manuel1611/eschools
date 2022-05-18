@@ -106,14 +106,14 @@ export default defineComponent({
       if (
         this.curso.name != "" &&
         this.curso.description != "" &&
-        this.curso.priceid != "" &&
-        this.curso.price != ""
+        //this.curso.priceid != "" &&
+        (this.curso.price != "" || this.curso.price == 0)
       ) {
+        if(this.curso.price == ""){
+          this.curso.price = 0
+        }
         let data = {
           nombre: this.curso.name,
-          descripcion: this.curso.description,
-          precio: this.curso.price,
-          priceid: this.curso.priceid,
         };
         const $q = useQuasar();
 
@@ -124,13 +124,14 @@ export default defineComponent({
           }
         }
         api
-          .post("/curso/store", data, config)
+          .post("/curso/verifyName", data, config)
           .then((response) => {
-            this.registerOk("Curso añadido correctamente");
-            this.curso.name = "";
-            this.curso.description = "";
-            this.curso.price = "";
-            this.curso.priceid = "";
+            //this.registerOk("Curso añadido correctamente");
+            if(response.status == 200){
+              this.addCurso()
+            } else {
+              this.registerError("Ese curso ya existe");
+            }
           })
           .catch(() => {
             this.registerError("No se ha podido añadir el curso");
@@ -138,6 +139,35 @@ export default defineComponent({
       } else {
         this.registerError("Todos los campos son obligatorios");
       }
+    },
+
+    addCurso(){
+      let data = {
+        nombre: this.curso.name,
+        descripcion: this.curso.description,
+        precio: this.curso.price,
+        priceid: this.curso.priceid,
+      };
+      const $q = useQuasar();
+
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          'x-access-token' : token
+        }
+      }
+      api
+        .post("/curso/store", data, config)
+        .then((response) => {
+          this.registerOk("Curso añadido correctamente");
+          this.curso.name = "";
+          this.curso.description = "";
+          this.curso.price = "";
+          this.curso.priceid = "";
+        })
+        .catch(() => {
+          this.registerError("No se ha podido añadir el curso");
+        });
     },
     checkUserLogged() {
       const $q = useQuasar();
