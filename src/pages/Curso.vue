@@ -12,8 +12,9 @@
         </q-card-section>
         <q-card-section>
           <div class="text-h7">
-            Va a ser redireccionado al pago del curso
-            {{ this.cursoSeleccionado[1].nombre }}
+            Va a ser redireccionado al pago del curso "{{
+              this.cursoSeleccionado[1].nombre
+            }}".
           </div>
           <div class="text-h7">
             El importe será de {{ this.cursoSeleccionado[1].precio }} €
@@ -24,6 +25,7 @@
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
           <div
             class="logout-btn-yes"
             v-close-popup
@@ -31,7 +33,6 @@
           >
             Aceptar
           </div>
-          <div class="logout-btn-no" v-close-popup>Cancelar</div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -44,16 +45,19 @@
     >
       <q-card class="background-myblue text-white" style="width: 400px">
         <q-card-section>
-          <div class="text-h6">Instrucciones de matriculacion</div>
+          <div class="text-h6">Instrucciones de matriculación</div>
         </q-card-section>
         <q-card-section>
-          <div class="text-h7">Matricularse en CURSO GRATIS</div>
+          <div class="text-h7">
+            ¿Quieres matricularte en este curso gratuito?
+          </div>
         </q-card-section>
 
         <q-card-actions
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
           <div
             class="logout-btn-yes"
             v-close-popup
@@ -61,7 +65,6 @@
           >
             Aceptar
           </div>
-          <div class="logout-btn-no" v-close-popup>Cancelar</div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -117,7 +120,7 @@
             Ya estás en este curso
           </div>
           <div v-else style="display: flex; align-items: center">
-            <div class="btnMatricularse" @click="matriculav2(item[1].priceid)">
+            <div class="btnMatricularse" @click="matriculacionDialog(item)">
               Matricularse
             </div>
           </div>
@@ -350,12 +353,6 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta2");
             window.location.reload();
-            this.$q.notify({
-              color: "positive",
-              position: "top",
-              message: "Matricula añadida",
-              icon: "report_problem",
-            });
           }
         })
         .catch((e) => {

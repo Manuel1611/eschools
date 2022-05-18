@@ -118,7 +118,7 @@
           >
         </q-item>
 
-        <q-item class="q-item-user-info" @click="openLogoutDialog = true">
+        <q-item class="q-item-user-info" clickable @click="goPerfil">
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-user" />
           </q-item-section>
@@ -351,7 +351,7 @@ export default defineComponent({
 }
 
 .q-item-user-info:hover {
-  background-color: #2c6591 !important;
+  background-color: #5f9bc9 !important;
 }
 
 .q-item-logout:hover {
