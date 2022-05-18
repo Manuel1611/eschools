@@ -15,7 +15,7 @@
               <input type="text" name="surname" v-model="register.surname" />
             </div>
             <div>
-              <label for="">Correo electrónico (buscarque tiene que estar ya escrito)</label>
+              <label for="">Correo electrónico</label>
               <input type="email" disabled name="email" v-model="register.email" />
             </div>
             <div>
