@@ -2,7 +2,7 @@
   <q-page class="auth-container">
     <div class="form-container">
       <div>
-        <div class="title">Dar de alta a profesor</div>
+        <div class="title">Dar de alta a un profesor</div>
         <div class="bar"></div>
         <div class="form">
           <form ref="form">
@@ -15,14 +15,19 @@
               <input type="text" name="surname" v-model="register.surname" />
             </div>
             <div>
-              <label for="">Correo electrónico (buscarque tiene que estar ya escrito)</label>
-              <input type="email" disabled name="email" v-model="register.email" />
+              <label for="">Correo electrónico</label>
+              <input
+                type="email"
+                disabled
+                name="email"
+                v-model="register.email"
+              />
             </div>
             <div>
               <label for="">Contraseña</label>
               <input
                 type="password"
-                maxlength="8"
+                minlength="8"
                 name="pass"
                 v-model="register.pass"
               />
@@ -32,7 +37,7 @@
               <input
                 type="password"
                 name="retypedPass"
-                maxlength="8"
+                minlength="8"
                 v-model="register.retypedPass"
               />
             </div>
@@ -82,7 +87,7 @@ export default defineComponent({
         pass: "",
         retypedPass: "",
       },
-      tokenRegistro : ''
+      tokenRegistro: "",
     };
   },
   setup() {
@@ -114,18 +119,15 @@ export default defineComponent({
         this.register.retypedPass != ""
       ) {
         if (this.validateEmail(this.register.email)) {
-          if (
-            this.register.pass.length >= 3 &&
-            this.register.pass.length <= 8
-          ) {
+          if (this.register.pass.length >= 8) {
             if (this.register.pass == this.register.retypedPass) {
               let data = {
                 nombre: this.register.name,
                 apellidos: this.register.surname,
                 email: this.register.email,
                 password: this.register.pass,
-                repassword : this.register.retypedPass,
-                tokenRegistro : this.tokenRegistro
+                repassword: this.register.retypedPass,
+                tokenRegistro: this.tokenRegistro,
               };
               api
                 .post("/auth/registerProfesor", data)
@@ -161,26 +163,30 @@ export default defineComponent({
     goLogin() {
       this.$router.push("/auth");
     },
-    verifyInvitacion(){
-    api
-      .get("/auth/getInvitacion/"+ this.tokenRegistro )
-      .then((response) => {
-        console.log(response)
-        if (response.status == 200){
-          this.register.email = response.data.email
-        } else {
-          this.registerError("No se ha encontrado la invitacion, contacte con el administrador");
-        }
-      })
-      .catch(() => {
-        this.registerError("No se ha encontrado la invitacion, contacte con el administrador");
-      });
-    }
+    verifyInvitacion() {
+      api
+        .get("/auth/getInvitacion/" + this.tokenRegistro)
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200) {
+            this.register.email = response.data.email;
+          } else {
+            this.registerError(
+              "No se ha encontrado la invitación, contacte con el administrador..."
+            );
+          }
+        })
+        .catch(() => {
+          this.registerError(
+            "No se ha encontrado la invitación, contacte con el administrador..."
+          );
+        });
+    },
   },
-  mounted(){
+  mounted() {
     this.tokenRegistro = this.$router.currentRoute._value.params.tokenRegistro;
-    this.verifyInvitacion()
-  }
+    this.verifyInvitacion();
+  },
 });
 </script>
 

@@ -22,7 +22,7 @@
               <label for="">Contraseña</label>
               <input
                 type="password"
-                maxlength="8"
+                minlength="8"
                 name="pass"
                 v-model="register.pass"
               />
@@ -32,7 +32,7 @@
               <input
                 type="password"
                 name="retypedPass"
-                maxlength="8"
+                minlength="8"
                 v-model="register.retypedPass"
               />
             </div>
@@ -113,10 +113,7 @@ export default defineComponent({
         this.register.retypedPass != ""
       ) {
         if (this.validateEmail(this.register.email)) {
-          if (
-            this.register.pass.length >= 3 &&
-            this.register.pass.length <= 8
-          ) {
+          if (this.register.pass.length >= 8) {
             if (this.register.pass == this.register.retypedPass) {
               let data = {
                 nombre: this.register.name,

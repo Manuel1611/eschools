@@ -91,9 +91,9 @@ export default defineComponent({
         });
       },
 
-      saveLocalStorage(key, value){
-        $q.localStorage.set(key, value)
-      }
+      saveLocalStorage(key, value) {
+        $q.localStorage.set(key, value);
+      },
     };
   },
   methods: {
@@ -106,24 +106,23 @@ export default defineComponent({
         api
           .post("/auth/login", data)
           .then((response) => {
-
-            if(response.status == 200){
-              this.loginOk(response.data.message);
-              console.log(response.data.token)
-              this.saveLocalStorage('eschoolssessiontoken', response.data.token)
-              if (response.data.rol == 'Administrador') {
+            if (response.status == 200) {
+              console.log(response.data.token);
+              this.saveLocalStorage(
+                "eschoolssessiontoken",
+                response.data.token
+              );
+              if (response.data.rol == "Administrador") {
                 this.$router.push("/admin");
               } else {
                 this.$router.push("/curso");
               }
-
             } else {
               this.loginError(response.data.message);
             }
-
           })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
             this.loginError("El correo o la contraseña son incorrectos");
           });
       } else {
