@@ -269,11 +269,13 @@ export default defineComponent({
     sendCalification() {
       if (this.calificacion.nota != "" && this.calificacion.nota != null) {
         console.log("Enviando calificacion al servidor");
+        console.log(this.idcurso)
         let data = {
           idtarea: this.idtarea,
           iduser: this.calificacion.id,
           nota: this.calificacion.nota,
           comentario: this.calificacion.comentario,
+          curso: this.idcurso
         };
         let token = this.$q.localStorage.getItem("eschoolssessiontoken");
         let config = {
