@@ -12,10 +12,10 @@
         </q-card-section>
         <q-card-section>
           <div class="text-h7">
-            Va a ser redireccionado al pago del curso {{ this.cursoSeleccionado.nombre}}
+            Va a ser redireccionado al pago del curso {{ this.cursoSeleccionado[1].nombre}}
           </div>
           <div class="text-h7">
-            El importe será de {{ this.cursoSeleccionado.precio}} €
+            El importe será de {{ this.cursoSeleccionado[1].precio}} €
           </div>
         </q-card-section>
 
@@ -23,7 +23,7 @@
           align="right"
           class="bg-white text-teal logoutModal-margins"
         >
-          <div class="logout-btn-yes" v-close-popup @click="matriculav2(this.cursoSeleccionado.priceid)">Aceptar</div>
+          <div class="logout-btn-yes" v-close-popup @click="matriculav2(this.cursoSeleccionado[1].priceid)">Aceptar</div>
           <div class="logout-btn-no" v-close-popup>Cancelar</div>
         </q-card-actions>
       </q-card>
@@ -98,7 +98,7 @@
 
         <div v-if="checkMatricula(item[0])">calvo</div>
         <div v-else>
-          <q-btn @click="matriculacionDialog(item[1])">Matricularte</q-btn>
+          <q-btn @click="matriculacionDialog(item)">Matricularte</q-btn>
           <!--<q-btn @click="matriculav2(item[1].priceid)">Matricularte v2</q-btn>-->
         </div>
       </q-item>
@@ -139,6 +139,7 @@ export default defineComponent({
       nextPage: null,
       totalPages: 8,
       cursoSeleccionado : {},
+      username: "",
     };
   },
   setup() {
@@ -150,7 +151,7 @@ export default defineComponent({
     loadCursos() {
       let cursos;
       const $q = useQuasar();
-      let token = $q.localStorage.getItem("eschoolssessiontoken");
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
           "x-access-token": token,
@@ -205,6 +206,7 @@ export default defineComponent({
             this.userid = response.data.uid;
             this.getMatriculasFromUser();
             this.rol = response.data.user.rol;
+            this.username = response.data.user.nombre + ' ' + response.data.user.apellidos;
           } else {
             q.notify({
               color: "negative",
@@ -229,7 +231,7 @@ export default defineComponent({
 
     matriculacionDialog(item) {
       this.cursoSeleccionado = item
-      if (item.precio > 0){
+      if (item[1].precio > 0){
         this.openMatriculaDialog = true;
       }else {
         this.openMatriculaGratisDialog = true;
@@ -301,24 +303,52 @@ export default defineComponent({
         }
       }
       return false;
-
-      /*
-      const match = this.matriculas.find(element => {
-      if (element.includes(matriculaid)) {
-        return true;
-      }
-      });
-      if (match !== undefined) {
-        // array contains substring match
-        return true
-      } else {
-        return false
-      }
-
-      */
     },
-    matriculaGratis(curso){
-      console.log('matricula gratis')
+    matriculaGratis(){
+      console.log('cursoseleccionado')
+      console.log(this.cursoSeleccionado)
+      let data = {
+        idalumno: this.userid,
+        idcurso: this.cursoSeleccionado[0],
+        nombreAlumno: this.username,
+        nombreCurso: this.cursoSeleccionado[1].nombre,
+      }
+      console.log('datas')
+      console.log(data)
+
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .post("/matricula/storeFree/", data, config)
+        .then((response) => {
+          console.log("conexion correcta add matricula free");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            window.location.reload()
+            this.$q.notify({
+            color: 'positive',
+            position: 'top',
+            message: 'Matricula añadida',
+            icon: 'report_problem'
+          })
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion matricula gratis");
+          console.log(e);
+          /*$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: 'Loading failed',
+            icon: 'report_problem'
+          })
+          */
+        });
+
     }
   },
 
