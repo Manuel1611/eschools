@@ -102,12 +102,8 @@
             />
           </q-item-section>
 
-          <q-item-section class="color-white"
-            >Panel de administrador</q-item-section
-          >
+          <q-item-section class="color-white">Panel de admin.</q-item-section>
         </q-item>
-        <div class="top-logout"></div>
-        <div class="top-logout-two"></div>
 
         <q-item class="q-item-user-info" clickable v-ripple @click="goPerfil">
           <q-item-section avatar>

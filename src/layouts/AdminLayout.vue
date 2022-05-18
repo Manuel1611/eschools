@@ -113,17 +113,17 @@
             />
           </q-item-section>
 
-          <q-item-section class="color-white">Salir del panel de administrador</q-item-section>
+          <q-item-section class="color-white"
+            >Salir del panel de admin.</q-item-section
+          >
         </q-item>
 
-        <div class="top-logout"></div>
-        <div class="top-logout-two"></div>
         <q-item class="q-item-user-info" @click="openLogoutDialog = true">
           <q-item-section avatar>
             <q-icon class="icon-drawer" color="white" name="fa-solid fa-user" />
           </q-item-section>
 
-          <div class="user-info-container" >
+          <div class="user-info-container">
             <q-item-section class="color-white">{{
               user.nombre
             }}</q-item-section>
