@@ -56,7 +56,7 @@
         <q-item-section>
           <a
             class="enlace width-quetoca"
-            :href="this.server + this.cursoid + '/' + item.file"
+            :href="this.$serverapi + this.cursoid + '/' + item.file"
             target="_blank"
           >
             {{ item.nombre }}</a
@@ -177,10 +177,10 @@ export default {
       type: String,
       required: true,
     },
-    server: {
-      type: String,
-      default: "http://localhost:3000/public/",
-    },
+    //server: {
+    //  type: String,
+    //  default: "http://localhost:3000/public/",
+    //},
     bloque: {
       type: String,
       default: "",
