@@ -120,6 +120,7 @@ export default defineComponent({
                 apellidos: this.register.surname,
                 email: this.register.email,
                 password: this.register.pass,
+                repassword: this.register.retypedPass,
               };
               api
                 .post("/auth/register", data)
