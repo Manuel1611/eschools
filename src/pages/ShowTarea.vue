@@ -110,7 +110,7 @@
           <div class="entrega-container">
             <a
               :href="
-                this.server +
+                this.$serverapi +
                 '/usuarios/' +
                 item[0] +
                 '/' +
@@ -179,7 +179,7 @@ export default defineComponent({
       entregas: {},
       idcurso: "",
       idtarea: "",
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
       openCalificarDialog: false,
       calificacion: {
         nombre: "",

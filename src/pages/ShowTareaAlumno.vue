@@ -28,7 +28,7 @@
           Ya has entregado esta tarea
           <a
             :href="
-              this.server +
+              this.$serverapi +
               '/usuarios/' +
               this.userid +
               '/' +
@@ -115,7 +115,7 @@ export default defineComponent({
       tareaid: "",
       tarea: {},
       file: "",
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
       error: "no carga",
       bloqueid: "",
       userid: "",

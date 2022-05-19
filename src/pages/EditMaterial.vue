@@ -51,7 +51,7 @@
           <div v-if="this.material.tipo == 'archivo'">
             <a
               target="_blank"
-              :href="this.server + this.cursoid + '/' + material.file"
+              :href="this.$serverapi + this.cursoid + '/' + material.file"
               class="pinchaparaver"
               >Pincha aquí para ver el archivo</a
             >
@@ -110,7 +110,7 @@ export default defineComponent({
       cursoid: "",
       materialid: "",
       bloqueid: "",
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
     };
   },
   setup() {
