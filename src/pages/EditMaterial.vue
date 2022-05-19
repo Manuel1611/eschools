@@ -390,6 +390,7 @@ textarea {
   width: 16px;
   height: 16px;
   outline: none;
+  cursor: pointer;
 }
 
 .uploader {
