@@ -25,12 +25,7 @@
       <div class="items-list">
         <q-section v-if="this.realizado == 'true' || this.realizado == true">
           <p class="yahasentregado">Ya has entregado este examen</p>
-          <q-section v-if="this.nota < 0">
-            <div class="esperando">
-              Esperando calificación<span class="puntos-suspensivos">....</span>
-            </div>
-          </q-section>
-          <q-section v-else>
+          <q-section>
             <span class="nota-container"
               ><span :class="this.nota < 5 ? 'color-red' : 'color-green'">{{
                 this.nota
@@ -54,6 +49,67 @@
                     color="grey-8"
                     name="fa-solid fa-comment"
                   />No hay comentarios...
+                </div>
+              </div>
+              <div
+                class="btn-addnew2"
+                style="margin-left: 20px"
+                @click="mostrarExamen"
+              >
+                Ver examen
+              </div>
+
+              <div v-if="this.mostrar == 'true' || this.mostrar == true">
+                <div v-for="(find, index) in examen.preguntas" :key="index">
+                  <label>Pregunta</label>
+                  <input v-model="find.pregunta" disabled />
+                  <div v-for="(find2, index2) in find.respuesta" :key="index2">
+                    <input
+                      v-if="
+                        find.solucion ==
+                          this.examenNuevo.preguntasNuevas[index].solucion &&
+                        find.solucion == index2
+                      "
+                      type="radio"
+                      :name="'respuestas' + index"
+                      :value="index2"
+                      class="azul"
+                      @change="onChange($event, index, index2)"
+                    />
+                    <input
+                      v-else-if="find.solucion == index2"
+                      type="radio"
+                      :name="'respuestas' + index"
+                      :value="index2"
+                      class="verde"
+                      @change="onChange($event, index, index2)"
+                    />
+                    <input
+                      v-else-if="
+                        this.examenNuevo.preguntasNuevas[index].solucion ==
+                        index2
+                      "
+                      type="radio"
+                      :name="'respuestas' + index"
+                      :value="index2"
+                      class="rojo"
+                      @change="onChange($event, index, index2)"
+                    />
+                    <input
+                      v-else
+                      type="radio"
+                      :name="'respuestas' + index"
+                      :value="index2"
+                      @change="onChange($event, index, index2)"
+                    />
+                    <input
+                      type="text"
+                      v-model="
+                        this.examen.preguntas[index].respuesta[index2].value
+                      "
+                      disabled
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -120,6 +176,7 @@ export default defineComponent({
       bloqueid: "",
       realizado: false,
       haciendo: false,
+      mostrar: false,
       nota: -1,
       comentario: "",
       fileName: "",
@@ -175,11 +232,38 @@ export default defineComponent({
     },
 
     newExamen(examen2) {
-      this.examenNuevo = JSON.parse(JSON.stringify(examen2));
-      console.log(this.examenNuevo.preguntas.length);
-      for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
-        this.examenNuevo.preguntas[i].respuesta = "";
-        this.examenNuevo.preguntas[i].solucion = -1;
+      let examen;
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .get("/user/" + this.userid + "/realizado/" + this.examenid, config)
+        .then((response) => {
+          console.log("conexion correcta");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+            examen = response.data.examen;
+            console.log(examen);
+            this.examenNuevo = examen;
+            console.log(this.examenNuevo);
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
+
+      if (examen == "" || examen == "undefined") {
+        this.examenNuevo = JSON.parse(JSON.stringify(examen2));
+        console.log(this.examenNuevo.preguntas.length);
+        for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
+          this.examenNuevo.preguntas[i].respuesta = "";
+          this.examenNuevo.preguntas[i].solucion = -1;
+        }
       }
       console.log("original");
       console.log(this.examen);
@@ -223,6 +307,10 @@ export default defineComponent({
 
     realizarExamen() {
       this.haciendo = true;
+    },
+
+    mostrarExamen() {
+      this.mostrar = true;
     },
 
     onChange($event, indicePregunta, indiceRespuesta) {
@@ -317,6 +405,39 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.verde:after {
+  background-color: green;
+  border: 1px solid green;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  content: "";
+}
+.azul:after {
+  background-color: blue;
+  border: 1px solid blue;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  content: "";
+}
+.rojo:after {
+  background-color: red;
+  border: 1px solid red;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  content: "";
+}
 .btns-container {
   margin-top: 10px;
 }
