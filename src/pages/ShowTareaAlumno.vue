@@ -222,7 +222,7 @@ export default defineComponent({
           },
         };
         api
-          .post("/material/uploadTarea", formData, config)
+          .post("/tarea/uploadTarea", formData, config)
           .then((response) => {
             if (response.status == 200) {
               console.log("Subida la tarea");
