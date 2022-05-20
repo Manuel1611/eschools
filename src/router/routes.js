@@ -70,8 +70,12 @@ const routes = [
         component: () => import("pages/ShowCursoAlumno.vue"),
       },
       {
-        path: "miscursos/:id/:idtarea",
+        path: "miscursos/:id/tarea/:idtarea",
         component: () => import("pages/ShowTareaAlumno.vue"),
+      },
+      {
+        path: "miscursos/:id/examen/:idexamen",
+        component: () => import("pages/ShowExamenAlumno.vue"),
       },
       {
         path: "matriculapagada",
