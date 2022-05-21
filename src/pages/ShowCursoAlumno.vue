@@ -13,28 +13,72 @@
       {{ this.curso.descripcion }}
     </div>
     <div class="btns-curso">
-      <div class="btns-curso-inner btnsci1"></div>
+      <div class="btns-curso-inner btnsci1 border-move">
+        <div class="brd"></div>
+        <div class="btn-swap" @click="moveMats">Materiales</div>
+        <div class="btn-swap" @click="moveExams">Exámenes</div>
+      </div>
       <div class="btns-curso-inner">
         <div class="btn-addnew btn2" @click="goBack">Volver</div>
       </div>
     </div>
-    <div class="curso-container">
-      <ListaIterable :material="this.curso.material" :cursoid="this.id" />
+    <div
+      class="no-hay-mats-exams"
+      v-if="this.curso.material == null && cursoSelected"
+    >
+      Aún no hay materiales en este curso...
     </div>
-    <div class="items-list">
-      <h4>Examenes</h4>
-      <q-list bordered>
-        <q-item
-          v-for="(item, index) in curso.examen"
-          :key="index"
-          clickable
-          v-ripple
-        >
-          <q-item-section>
-            <a @click="goExamen(index, item)">{{ item.titulo }}</a>
-          </q-item-section>
-        </q-item>
-      </q-list>
+    <div
+      v-if="this.curso.material != null"
+      :class="
+        cursoSelected ? 'curso-container d-block' : 'curso-container d-none'
+      "
+    >
+      <div class="title-inside" v-if="this.curso.material != null">
+        <q-icon
+          class="icon-drawer"
+          color="grey-8"
+          name="fa-solid fa-database"
+        />
+        <div>Materiales</div>
+      </div>
+      <ListaIterable
+        v-if="this.curso.material != null"
+        :material="this.curso.material"
+        :cursoid="this.id"
+      />
+    </div>
+    <div
+      class="no-hay-mats-exams"
+      v-if="this.curso.examen == null && !cursoSelected"
+    >
+      Aún no se ha publicado ningún examen en este curso...
+    </div>
+    <div
+      v-if="this.curso.examen != null"
+      :class="
+        !cursoSelected ? 'curso-container d-block' : 'curso-container d-none'
+      "
+    >
+      <div class="curso-container-i" v-if="this.curso.examen != null">
+        <div class="title-inside">
+          <q-icon class="icon-drawer" color="grey-8" name="fa-solid fa-paste" />
+          <div>Exámenes</div>
+        </div>
+        <q-list class="exam-list">
+          <q-item
+            class="exam-item"
+            v-for="(item, index) in curso.examen"
+            :key="index"
+            clickable
+            v-ripple
+          >
+            <q-item-section>
+              <a @click="goExamen(index, item)">{{ item.titulo }}</a>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
     </div>
   </q-page>
 </template>
@@ -62,6 +106,7 @@ export default defineComponent({
         rol: "",
       },
       material: {},
+      cursoSelected: true,
       //server: "http://localhost:3000/public/",
     };
   },
@@ -85,6 +130,14 @@ export default defineComponent({
     };
   },
   methods: {
+    moveMats() {
+      this.cursoSelected = true;
+      document.getElementsByClassName("brd")[0].style.left = "0";
+    },
+    moveExams() {
+      this.cursoSelected = false;
+      document.getElementsByClassName("brd")[0].style.left = "100px";
+    },
     loadCurso() {
       let cursos;
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
@@ -334,6 +387,7 @@ input {
   width: 100%;
   justify-content: space-between;
   margin-top: 25px;
+  align-items: center;
 }
 
 .btnsci1 {
@@ -373,5 +427,76 @@ input {
   margin-bottom: -20px;
   margin-top: 20px;
   padding: 25px;
+}
+
+.btn-swap {
+  display: inline-block;
+  padding: 10px;
+  color: rgba(1, 1, 1, 0.7);
+  cursor: pointer;
+  font-size: 1.1em;
+  width: 100px;
+  height: fit-content;
+}
+
+.border-move {
+  position: relative;
+  height: fit-content;
+}
+
+.brd {
+  position: absolute;
+  width: 90px;
+  bottom: 0;
+  left: 0;
+  border-bottom: 3px solid rgb(95, 155, 201);
+  transition: 0.4s ease;
+}
+
+.btns-curso-inner {
+  margin-left: 30px;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-none {
+  display: none;
+}
+
+.title-inside {
+  margin-bottom: 25px;
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+}
+
+.title-inside .q-icon {
+  margin-right: 10px;
+}
+
+.exam-list {
+  border: 2px solid #e8e8e8;
+  padding: 15px;
+  padding-bottom: 40px;
+  padding-top: 40px;
+  margin: 5px 0;
+}
+
+.exam-item {
+  border: 2px solid #e8e8e8;
+  padding: 5px 15px;
+  margin-top: 20px;
+}
+
+.exam-item:first-of-type {
+  margin-top: 0 !important;
+}
+
+.no-hay-mats-exams {
+  font-size: 1.1em;
+  margin-top: 50px;
+  margin-left: 30px;
 }
 </style>

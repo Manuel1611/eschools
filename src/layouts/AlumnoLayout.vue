@@ -119,7 +119,7 @@
             }}</q-item-section>
           </div>
         </q-item>
-
+        <div class="perfil-cerrar-sep"></div>
         <q-item
           class="q-item-logout"
           clickable
@@ -338,7 +338,7 @@ export default defineComponent({
 
 .q-item-user-info {
   position: absolute;
-  bottom: 64px;
+  bottom: 67px;
   width: 100%;
   background-color: #2c6591;
 }
@@ -425,5 +425,13 @@ export default defineComponent({
 
 .user-info-container div:not(:first-of-type) {
   font-size: 0.9em;
+}
+
+.perfil-cerrar-sep {
+  height: 3px;
+  background-color: #acadad;
+  position: absolute;
+  bottom: 64px;
+  width: 100%;
 }
 </style>
