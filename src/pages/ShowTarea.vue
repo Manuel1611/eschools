@@ -110,7 +110,7 @@
           <div class="entrega-container">
             <a
               :href="
-                this.server +
+                this.$serverapi +
                 '/usuarios/' +
                 item[0] +
                 '/' +
@@ -179,7 +179,7 @@ export default defineComponent({
       entregas: {},
       idcurso: "",
       idtarea: "",
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
       openCalificarDialog: false,
       calificacion: {
         nombre: "",
@@ -269,11 +269,13 @@ export default defineComponent({
     sendCalification() {
       if (this.calificacion.nota != "" && this.calificacion.nota != null) {
         console.log("Enviando calificacion al servidor");
+        console.log(this.idcurso)
         let data = {
           idtarea: this.idtarea,
           iduser: this.calificacion.id,
           nota: this.calificacion.nota,
           comentario: this.calificacion.comentario,
+          curso: this.idcurso
         };
         let token = this.$q.localStorage.getItem("eschoolssessiontoken");
         let config = {

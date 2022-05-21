@@ -28,7 +28,7 @@
           Ya has entregado esta tarea
           <a
             :href="
-              this.server +
+              this.$serverapi +
               '/usuarios/' +
               this.userid +
               '/' +
@@ -115,7 +115,7 @@ export default defineComponent({
       tareaid: "",
       tarea: {},
       file: "",
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
       error: "no carga",
       bloqueid: "",
       userid: "",
@@ -215,8 +215,14 @@ export default defineComponent({
         formData.append("userid", this.userid);
         formData.append("tarea", this.tareaid);
         formData.append("entrega", this.file);
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            "x-access-token": token,
+          },
+        };
         api
-          .post("/material/uploadTarea", formData)
+          .post("/tarea/uploadTarea", formData, config)
           .then((response) => {
             if (response.status == 200) {
               console.log("Subida la tarea");

@@ -31,7 +31,7 @@
           v-ripple
         >
           <q-item-section>
-            <a @click="goExamen(index)">{{ item.titulo }}</a>
+            <a @click="goExamen(index, item)">{{ item.titulo }}</a>
           </q-item-section>
         </q-item>
       </q-list>
@@ -62,7 +62,7 @@ export default defineComponent({
         rol: "",
       },
       material: {},
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
     };
   },
   setup() {
@@ -113,12 +113,10 @@ export default defineComponent({
     goBack() {
       this.$router.push("/curso/miscursos");
     },
-    goTarea(id) {
-      console.log("go tarea: " + id);
-      this.$router.push("/curso/miscursos/" + this.id + "/" + id);
-    },
-    goExamen(id) {
+    goExamen(id, examen) {
       console.log("go examen: " + id);
+      console.log("/curso/miscursos/" + this.id + "/examen/" + id);
+      this.$router.push("/curso/miscursos/" + this.id + "/examen/" + id);
       //this.$router.push("/curso/miscursos");
     },
     checkUserLogged() {

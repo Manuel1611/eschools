@@ -56,7 +56,7 @@
         <q-item-section>
           <a
             class="enlace width-quetoca"
-            :href="this.server + this.cursoid + '/' + item.file"
+            :href="this.$serverapi + this.cursoid + '/' + item.file"
             target="_blank"
           >
             {{ item.nombre }}</a
@@ -177,23 +177,23 @@ export default {
       type: String,
       required: true,
     },
-    server: {
-      type: String,
-      default: "http://localhost:3000/public/",
-    },
+    //server: {
+    //  type: String,
+    //  default: "http://localhost:3000/public/",
+    //},
     bloque: {
       type: String,
       default: "",
     },
     uid: {
       type: String,
-      default : "",
-    }
+      default: "",
+    },
   },
   methods: {
     goTarea(id) {
       this.$router.push({
-        path: "/curso/miscursos/" + this.cursoid + "/" + id,
+        path: "/curso/miscursos/" + this.cursoid + "/tarea/" + id,
         query: {
           bloqueid: this.bloque,
         },
@@ -224,9 +224,9 @@ export default {
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("material/deletematerial/", data, config)
         .then((response) => {

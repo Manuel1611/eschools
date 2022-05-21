@@ -52,7 +52,7 @@ export default defineComponent({
         rol: "",
       },
       material: {},
-      server: "http://localhost:3000/public/",
+      //server: "http://localhost:3000/public/",
       uid: "",
     };
   },
