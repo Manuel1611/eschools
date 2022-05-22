@@ -8,27 +8,46 @@
       />
       <div>{{ this.examen.titulo }}</div>
     </div>
+
+    <div class="top-info">
+      <div class="query-found"></div>
+      <div class="btn-addnew" @click="goBack">Volver</div>
+    </div>
     <div v-if="this.haciendo == 'false' || this.haciendo == false">
-      <div class="top-info">
-        <div class="query-found">
-          <q-icon
-            class="icon-drawer"
-            color="white"
-            name="fa-solid fa-angle-right"
-          />
-          <div v-if="this.realizado == 'false' || this.realizado == false">
-            No has realizado todavía el examen. Pulsa el botón para realizarlo
-          </div>
-          <div v-else>{{ this.examen.descripcion }}</div>
+      <div class="aun-no-hecho">
+        <q-icon
+          v-if="this.realizado == 'false' || this.realizado == false"
+          class="icon-drawer"
+          color="black"
+          name="fa-solid fa-angle-right"
+        />
+        <div v-if="this.realizado == 'false' || this.realizado == false">
+          No has realizado el examen aún. Pulsa el botón de abajo para
+          hacerlo...
         </div>
+        <div v-else>{{ this.examen.descripcion }}</div>
       </div>
+      <div
+        v-if="this.realizado == 'false' || this.realizado == false"
+        class="reminder"
+      >
+        Recuerda que por cada pregunta errónea se resta una correcta
+      </div>
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
       <div class="items-list">
         <q-section v-if="this.realizado == 'true' || this.realizado == true">
-          <p class="yahasentregado">Ya has entregado este examen</p>
+          <div class="aun-no-hecho">
+            <div style="margin-bottom: 15px">Ya has realizado este examen</div>
+          </div>
+
           <q-section>
             <span class="nota-container"
               ><span :class="this.nota < 5 ? 'color-red' : 'color-green'">{{
-                this.nota
+                Math.round(this.nota * 10) / 10
               }}</span></span
             >
             <div class="com-container">
@@ -48,11 +67,12 @@
                     class="comment-icon icon-drawer"
                     color="grey-8"
                     name="fa-solid fa-comment"
-                  />No hay comentarios...
+                  />&nbsp;No hay comentarios...
                 </div>
               </div>
               <div
-                class="btn-addnew2"
+                v-if="this.mostrar == false"
+                class="btn-register2"
                 style="margin-left: 20px"
                 @click="mostrarExamen"
               >
@@ -60,56 +80,103 @@
               </div>
 
               <div v-if="this.mostrar == 'true' || this.mostrar == true">
-                <div v-for="(find, index) in examen.preguntas" :key="index">
-                  <label>Pregunta</label>
-                  <input v-model="find.pregunta" disabled />
-                  <div v-for="(find2, index2) in find.respuesta" :key="index2">
-                    <input
+                <div class="exam-bar"></div>
+                <div
+                  v-for="(find, index) in examen.preguntas"
+                  :key="index"
+                  class="pregunta-container"
+                >
+                  <div
+                    v-for="(find2, index2) in find.respuesta"
+                    :key="index2"
+                    style="position: relative"
+                  >
+                    <div
                       v-if="
                         find.solucion ==
                           this.examenNuevo.preguntasNuevas[index].solucion &&
                         find.solucion == index2
                       "
-                      type="radio"
-                      :name="'respuestas' + index"
-                      :value="index2"
+                      class="question-icon-mio2"
+                    >
+                      <q-icon
+                        class="icon-drawer no-margins2 question-m"
+                        color="white"
+                        name="fa-solid fa-check"
+                      />
+                    </div>
+                    <div
+                      v-if="
+                        find.solucion !=
+                          this.examenNuevo.preguntasNuevas[index].solucion &&
+                        find.solucion != index2
+                      "
+                      class="question-icon-mio3"
+                    >
+                      <q-icon
+                        class="icon-drawer no-margins2 question-m"
+                        color="white"
+                        name="fa-solid fa-xmark"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="pregunta-title">
+                    <div class="question-icon-mio">
+                      <q-icon
+                        class="icon-drawer no-margins2 question-m"
+                        color="white"
+                        name="fa-solid fa-question"
+                      />
+                    </div>
+
+                    <div>
+                      {{ find.pregunta
+                      }}<span
+                        class="sin-contestar"
+                        v-if="
+                          this.examenNuevo.preguntasNuevas[index].solucion == -1
+                        "
+                        >&nbsp;(Sin contestar)</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    v-for="(find2, index2) in find.respuesta"
+                    :key="index2"
+                    class="respuesta-container"
+                  >
+                    <div
+                      v-if="
+                        find.solucion ==
+                          this.examenNuevo.preguntasNuevas[index].solucion &&
+                        find.solucion == index2
+                      "
                       class="azul"
-                      @change="onChange($event, index, index2)"
-                    />
-                    <input
+                    ></div>
+                    <div
                       v-else-if="find.solucion == index2"
-                      type="radio"
-                      :name="'respuestas' + index"
-                      :value="index2"
                       class="verde"
-                      @change="onChange($event, index, index2)"
-                    />
-                    <input
+                    ></div>
+                    <div
                       v-else-if="
                         this.examenNuevo.preguntasNuevas[index].solucion ==
                         index2
                       "
-                      type="radio"
-                      :name="'respuestas' + index"
-                      :value="index2"
                       class="rojo"
-                      @change="onChange($event, index, index2)"
-                    />
-                    <input
-                      v-else
-                      type="radio"
-                      :name="'respuestas' + index"
-                      :value="index2"
-                      @change="onChange($event, index, index2)"
-                    />
-                    <input
-                      type="text"
-                      v-model="
-                        this.examen.preguntas[index].respuesta[index2].value
-                      "
-                      disabled
-                    />
+                    ></div>
+                    <div v-else class="sin-color"></div>
+                    <div>
+                      {{ this.examen.preguntas[index].respuesta[index2].value }}
+                    </div>
                   </div>
+                </div>
+                <div
+                  class="btn-register2"
+                  style="margin-left: 20px"
+                  @click="ocultarExamen"
+                >
+                  Ocultar examen
                 </div>
               </div>
             </div>
@@ -118,39 +185,55 @@
         <q-section v-else>
           <div
             v-if="this.realizado == 'false' || this.realizado == false"
-            class="btn-addnew2"
+            class="btn-register"
             style="margin-left: 20px"
             @click="realizarExamen"
           >
             Realizar examen
           </div>
         </q-section>
-
-        <div class="btn-addnew" @click="goBack">Volver</div>
       </div>
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
+      <!---------------------------------------------->
     </div>
-    <div v-else>
+    <div v-else style="margin-top: 50px">
       <q-section>
-        <div v-for="(find, index) in examen.preguntas" :key="index">
-          <label>Pregunta</label>
-          <input v-model="find.pregunta" disabled />
-          <div v-for="(find2, index2) in find.respuesta" :key="index2">
+        <div
+          v-for="(find, index) in examen.preguntas"
+          :key="index"
+          class="pregunta-container"
+        >
+          <div class="pregunta-title">
+            <div class="question-icon-mio">
+              <q-icon
+                class="icon-drawer no-margins2 question-m"
+                color="white"
+                name="fa-solid fa-question"
+              />
+            </div>
+
+            <div>{{ find.pregunta }}</div>
+          </div>
+          <div
+            v-for="(find2, index2) in find.respuesta"
+            :key="index2"
+            class="respuesta-container"
+          >
             <input
               type="radio"
               :name="'respuestas' + index"
               :value="index2"
               @change="onChange($event, index, index2)"
             />
-            <input
-              type="text"
-              v-model="this.examen.preguntas[index].respuesta[index2].value"
-              disabled
-            />
+            <div>
+              {{ this.examen.preguntas[index].respuesta[index2].value }}
+            </div>
           </div>
         </div>
-        <div class="btn-addnew2" style="margin-left: 20px" @click="submitForm">
-          Enviar examen
-        </div>
+        <div class="btn-register" @click="submitForm">Enviar examen</div>
       </q-section>
     </div>
   </q-page>
@@ -251,10 +334,9 @@ export default defineComponent({
             console.log(examen);
             this.examenNuevo = examen;
             console.log(this.examenNuevo);
+
             if (examen == "" || examen == "undefined" || examen == undefined) {
               this.examenNuevo = JSON.parse(JSON.stringify(examen2));
-              console.log("examen nuevo loaded");
-              console.log(this.examenNuevo);
               console.log(this.examenNuevo.preguntas.length);
               for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
                 this.examenNuevo.preguntas[i].respuesta = "";
@@ -314,7 +396,9 @@ export default defineComponent({
     mostrarExamen() {
       this.mostrar = true;
     },
-
+    ocultarExamen() {
+      this.mostrar = false;
+    },
     onChange($event, indicePregunta, indiceRespuesta) {
       console.log("indicepregunta:" + indicePregunta);
       console.log("indiceRespuesta:" + indiceRespuesta);
@@ -355,7 +439,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
-          console.log("erro de load examen");
+          console.log("error de load examen");
           console.log(error);
           this.emailError("No se ha podido enviar el examen");
         });
@@ -413,118 +497,347 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.verde:after {
-  background-color: green;
-  border: 1px solid green;
+.verde {
+  background-color: #038a24;
+  border: 1px solid #038a24;
   width: 15px;
   height: 15px;
-  border-radius: 15px;
-  top: -2px;
-  left: -1px;
-  position: relative;
-  content: "";
+  border-radius: 50%;
+  margin-right: 10px;
 }
-.azul:after {
-  background-color: blue;
-  border: 1px solid blue;
+
+.azul {
+  background-color: #038a24;
+  border: 1px solid #038a24;
   width: 15px;
   height: 15px;
-  border-radius: 15px;
-  top: -2px;
-  left: -1px;
-  position: relative;
-  content: "";
+  border-radius: 50%;
+  margin-right: 10px;
 }
-.rojo:after {
-  background-color: red;
-  border: 1px solid red;
+
+.rojo {
+  background-color: #db1512;
+  border: 1px solid #db1512;
   width: 15px;
   height: 15px;
-  border-radius: 15px;
-  top: -2px;
-  left: -1px;
-  position: relative;
-  content: "";
-}
-.btns-container {
-  margin-top: 10px;
-}
-.volverbtn {
-  background-color: #1c5785;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.editbtn {
-  background-color: green;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.cancelbtn {
-  background-color: red;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.savebtn {
-  background-color: green;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.display-none {
-  display: none;
-}
-
-.display-block {
-  display: inline;
-}
-
-input {
-  margin: 10px;
-}
-
-.isShow {
-  cursor: default !important;
+.sin-color {
   background-color: transparent;
-  border: none;
-  outline: none;
-  opacity: 1 !important;
-  border: 2px solid transparent;
+  border: 1px solid grey;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.isEdit {
-  background-color: transparent;
-  border: 2px solid green;
-  outline: none;
-  opacity: 1 !important;
+.q-page {
+  padding: 20px;
 }
 
-.isShowSelect {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-indent: 1px;
-  text-overflow: "";
+.title {
+  margin-top: 20px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.icon-drawer {
+  margin: 15px 0;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.top-info {
+  background-color: #525252;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.query-found {
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  color: white;
+}
+
+.btn-addnew {
+  background-color: #05beed;
+  display: inline-block;
+  padding: 10px 20px;
+  color: black;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 25px;
+  text-align: center;
+}
+
+.btn-addnew:hover {
+  background-color: #12ccfc;
+}
+
+.form-container {
+  margin-top: 50px;
+}
+
+.aun-no-hecho {
+  display: flex;
+  align-items: center;
+  margin-top: 25px;
+  font-size: 1.1em;
+}
+
+.btn-register {
+  background-color: #21ba45;
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 25px;
+  text-align: center;
+  outline: none;
   border: 0;
-  border: 2px solid transparent;
-  margin: 10px;
-  cursor: default !important;
-  opacity: 1 !important;
-  outline: none;
+  width: fit-content;
 }
 
-.isEditSelect {
-  margin: 10px;
-  border: 2px solid green;
+.btn-register:hover {
+  background-color: #30c954;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 40%;
+  min-width: 300px;
+  padding: 5px 0;
   outline: none;
+  border: 0;
+  border-bottom: 2px solid #226294;
+}
+
+label::before {
+  position: absolute;
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: #02afdb;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+label {
+  font-size: 1.1em;
+  margin-top: 20px;
+  position: relative;
+  margin-left: 20px;
+}
+
+.no-margins {
+  margin: 0;
+  margin-right: 6px;
+  margin-top: 4px;
+}
+
+.pregunta-container {
+  margin: 40px;
+  padding: 15px;
+  border: 2px solid #f5f5f5;
+  position: relative;
+}
+
+.pregunta-input {
+  width: 40%;
+  min-width: 300px;
+  padding: 5px 0;
+  outline: none;
+  border: 0;
+  border-bottom: 2px solid #226294;
+  margin-bottom: 15px;
+}
+
+.pregunta-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+.no-margins2 {
+  margin: 0;
+  margin-right: 6px;
+}
+
+.respuesta-container {
+  margin: 10px 0;
+  border: 2px solid #f5f5f5;
+  margin-left: 40px;
+  padding: 15px;
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.respuesta-title {
+  margin-left: 25px;
+  margin-bottom: 4px;
+}
+
+input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  outline: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.no-margins3 {
+  margin: 0;
+}
+
+.question-icon-mio {
+  position: absolute;
+  background-color: rgb(95, 155, 201);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -24px;
+  left: -24px;
+  transform: rotate(45deg);
+}
+
+.question-m {
+  position: absolute;
+  transform: rotate(315deg);
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.question-icon-mio2 {
+  position: absolute;
+  background-color: #038a24;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 32px;
+  left: -39px;
+  transform: rotate(45deg);
+}
+
+.question-icon-mio3 {
+  position: absolute;
+  background-color: #db1512;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 32px;
+  left: -39px;
+  transform: rotate(45deg);
+}
+
+.nota-container {
+  font-size: 3em;
+  position: relative;
+}
+
+.nota-container::before {
+  content: "/ 10";
+  position: absolute;
+  top: 35px;
+  right: -45px;
+  font-size: 0.6em;
+}
+
+.color-red {
+  color: #eb4034;
+}
+
+.color-green {
+  color: #21ba45;
+}
+
+.com-container {
+  margin-top: 50px;
+  border-top: 2px solid #ebebeb;
+  padding-top: 30px;
+}
+
+.com-1 {
+  font-size: 1.25em;
+  display: flex;
+  align-items: center;
+}
+
+.com-2 {
+  margin-top: 10px;
+  font-size: 1em;
+}
+
+.btn-register2 {
+  background-color: #4287f5;
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-left: 0 !important;
+  text-align: center;
+  outline: none;
+  border: 0;
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.btn-register2:hover {
+  background-color: #5f9bfa;
+}
+
+.reminder {
+  font-size: 1.1em;
+  margin-left: 18px;
+}
+
+.exam-bar {
+  margin-top: 30px;
+  border-top: 2px solid #ebebeb;
+  padding-top: 30px;
+}
+
+.sin-contestar {
+  color: rgba(1, 1, 1, 0.5);
 }
 </style>

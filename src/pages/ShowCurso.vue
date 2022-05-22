@@ -1,4 +1,30 @@
 <template>
+  <q-dialog
+    v-model="openBorrarExamen"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card class="background-myblue text-white" style="width: 400px">
+      <q-card-section>
+        <div class="text-h6">
+          Estás a punto de eliminar un examen del curso...
+        </div>
+      </q-card-section>
+
+      <q-card-section style="font-size: 1.1em" class="q-pt-none">
+        {{ this.nombreExam }}
+      </q-card-section>
+
+      <q-card-actions
+        align="right"
+        class="bg-white text-teal logoutModal-margins"
+      >
+        <div class="logout-btn-no" v-close-popup>Cancelar</div>
+        <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
   <q-page class="auth-container">
     <div class="title">
       <q-icon
@@ -13,7 +39,7 @@
       {{ this.curso.descripcion }}
     </div>
     <div class="btns-curso">
-      <div class="btns-curso-inner btnsci1">
+      <div class="btns-curso-inner btnsci1 border-move">
         <div class="btn-addnew" @click="goAddMaterial">Añadir material</div>
         <div class="btn-addnew" @click="goAddExamen">Añadir examen</div>
       </div>
@@ -21,8 +47,35 @@
         <div class="btn-addnew btn2" @click="goBack">Volver</div>
       </div>
     </div>
-    <div class="curso-container">
+    <div class="btns-curso" style="margin-bottom: 40px; padding-left: 27px">
+      <div class="btns-curso-inner btnsci1 border-move">
+        <div class="brd"></div>
+        <div class="btn-swap" @click="moveMats">Materiales</div>
+        <div class="btn-swap" @click="moveExams">Exámenes</div>
+      </div>
+    </div>
+    <div
+      class="no-hay-mats-exams"
+      v-if="this.curso.material == null && cursoSelected"
+    >
+      Aún no hay materiales en este curso...
+    </div>
+    <div
+      v-if="this.curso.material != null"
+      :class="
+        cursoSelected ? 'curso-container d-block' : 'curso-container d-none'
+      "
+    >
+      <div class="title-inside" v-if="this.curso.material != null">
+        <q-icon
+          class="icon-drawer"
+          color="grey-8"
+          name="fa-solid fa-database"
+        />
+        <div>Materiales</div>
+      </div>
       <ListaIterable
+        v-if="this.curso.material != null"
         :profesor="true"
         :material="this.curso.material"
         :cursoid="this.id"
@@ -64,6 +117,69 @@
         </q-list>
       </div>
     </div>
+    <div
+      class="no-hay-mats-exams"
+      v-if="this.curso.examen == null && !cursoSelected"
+    >
+      Aún no se ha publicado ningún examen en este curso...
+    </div>
+    <div
+      v-if="this.curso.examen != null"
+      :class="
+        !cursoSelected ? 'curso-container d-block' : 'curso-container d-none'
+      "
+    >
+      <div class="curso-container-i" v-if="this.curso.examen != null">
+        <div class="title-inside">
+          <q-icon class="icon-drawer" color="grey-8" name="fa-solid fa-paste" />
+          <div>Exámenes</div>
+        </div>
+        <q-list class="exam-list">
+          <q-item
+            class="exam-item"
+            v-for="(item, index) in curso.examen"
+            :key="index"
+          >
+            <q-item-section>
+              <p class="titulo-examen-inner">{{ item.titulo }}</p>
+            </q-item-section>
+            <q-item-section side class="btns-prof">
+              <q-item-section>
+                <q-avatar
+                  style="cursor: pointer; font-size: 2em"
+                  icon="fa-solid fa-pencil"
+                  color="primary"
+                  text-color="white"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-avatar
+                  style="cursor: pointer; font-size: 2em"
+                  @click="
+                    openBorrarExamen = true;
+                    this.nombreExam = item.titulo;
+                  "
+                  icon="fa-solid fa-trash-can"
+                  color="negative"
+                  text-color="white"
+                />
+              </q-item-section>
+              <q-item-section
+                class="novisibleaalumnos"
+                v-if="item.visible === 'false' || item.visible == false"
+              >
+                <q-icon
+                  style="font-size: 1.1em"
+                  class="icon-drawer"
+                  color="grey-8"
+                  name="fa-solid fa-eye-slash"
+                />
+              </q-item-section>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -89,6 +205,9 @@ export default defineComponent({
       material: {},
       //server: "http://localhost:3000/public/",
       uid: "",
+      cursoSelected: true,
+      openBorrarExamen: false,
+      nombreExam: "",
     };
   },
   setup() {
@@ -111,6 +230,14 @@ export default defineComponent({
     };
   },
   methods: {
+    moveMats() {
+      this.cursoSelected = true;
+      document.getElementsByClassName("brd")[0].style.left = "0";
+    },
+    moveExams() {
+      this.cursoSelected = false;
+      document.getElementsByClassName("brd")[0].style.left = "100px";
+    },
     goBack() {
       this.$router.push("/curso/");
     },
@@ -334,5 +461,153 @@ input {
   margin-bottom: -20px;
   margin-top: 20px;
   padding: 25px;
+}
+
+.btn-swap {
+  display: inline-block;
+  padding: 10px;
+  color: rgba(1, 1, 1, 0.7);
+  cursor: pointer;
+  font-size: 1.1em;
+  width: 100px;
+  height: fit-content;
+}
+
+.border-move {
+  position: relative;
+  height: fit-content;
+}
+
+.brd {
+  position: absolute;
+  width: 90px;
+  bottom: 0;
+  left: 0;
+  border-bottom: 3px solid rgb(95, 155, 201);
+  transition: 0.4s ease;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-none {
+  display: none;
+}
+
+.title-inside {
+  margin-bottom: 25px;
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+}
+
+.title-inside .q-icon {
+  margin-right: 10px;
+}
+
+.no-hay-mats-exams {
+  font-size: 1.1em;
+  margin-top: 80px;
+  margin-left: 30px;
+}
+
+.exam-list {
+  border: 2px solid #e8e8e8;
+  padding: 15px;
+  padding-bottom: 40px;
+  padding-top: 40px;
+  margin: 5px 0;
+}
+
+.exam-item {
+  border: 2px solid #e8e8e8;
+  padding: 5px 15px;
+  margin-top: 20px;
+}
+
+.exam-item:first-of-type {
+  margin-top: 0 !important;
+}
+
+.titulo-examen-inner {
+  margin: 0;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.titulo-examen-inner:hover {
+  text-decoration: underline;
+}
+
+.btns-prof {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0;
+  align-items: center;
+  position: relative;
+}
+
+.btns-prof::before {
+  content: "";
+  position: absolute;
+  height: calc(100% + 12px);
+  width: 2px;
+  background-color: #e8e8e8;
+  left: -20px;
+}
+
+.btns-prof > div {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  margin: 0 8px;
+}
+
+.background-myblue {
+  background-color: #226294;
+}
+
+.logoutModal-margins {
+  margin: 20px 0;
+  border-radius: 0 !important;
+  padding: 0;
+}
+
+.logout-btn-no,
+.logout-btn-yes {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
+.logout-btn-no {
+  background-color: #d42c2c;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes {
+  background-color: #21ba45;
+  transition: 0.2s ease;
+}
+
+.logout-btn-no:hover {
+  background-color: #f24141;
+}
+
+.logout-btn-yes:hover {
+  background-color: #30c954;
+}
+
+.novisibleaalumnos {
+  position: absolute;
+  top: -10px;
+  right: 110px;
 }
 </style>

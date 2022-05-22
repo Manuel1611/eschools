@@ -325,7 +325,6 @@ export default defineComponent({
         });
     },
   },
-
   mounted() {
     this.checkUserLogged();
     this.id = this.$router.currentRoute._value.params.id;
