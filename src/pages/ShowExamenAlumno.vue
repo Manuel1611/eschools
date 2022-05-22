@@ -204,6 +204,7 @@ export default defineComponent({
   },
   methods: {
     loadExamen() {
+      console.log("loading examen");
       let examen3;
       console.log("/examen/" + this.cursoid + this.examenid);
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
@@ -250,25 +251,26 @@ export default defineComponent({
             console.log(examen);
             this.examenNuevo = examen;
             console.log(this.examenNuevo);
-            if (examen == "" || examen == undefined) {
+            if (examen == "" || examen == "undefined" || examen == undefined) {
               this.examenNuevo = JSON.parse(JSON.stringify(examen2));
+              console.log("examen nuevo loaded");
+              console.log(this.examenNuevo);
               console.log(this.examenNuevo.preguntas.length);
               for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
                 this.examenNuevo.preguntas[i].respuesta = "";
                 this.examenNuevo.preguntas[i].solucion = -1;
               }
             }
+            console.log("original");
+            console.log(this.examen);
+            console.log("nuevo");
+            console.log(this.examenNuevo);
           }
         })
         .catch((e) => {
           console.log("error de conexion");
           console.log(e);
         });
-
-      console.log("original");
-      console.log(this.examen);
-      console.log("nuevo");
-      console.log(this.examenNuevo);
     },
 
     checkRealizado() {
@@ -314,13 +316,19 @@ export default defineComponent({
     },
 
     onChange($event, indicePregunta, indiceRespuesta) {
-      var seleccionado = event.target.value;
+      console.log("indicepregunta:" + indicePregunta);
+      console.log("indiceRespuesta:" + indiceRespuesta);
+      console.log("this examne nuevo");
+      console.log(this.examenNuevo);
+      var seleccionado = $event.target.value;
       this.examenNuevo.preguntas[indicePregunta].solucion = seleccionado;
       this.examenNuevo.preguntas[indicePregunta].respuesta =
         this.examen.preguntas[indicePregunta].respuesta[indiceRespuesta].value;
     },
 
     submitForm() {
+      console.log("submitting form");
+
       console.log(this.examenNuevo);
       let data = {
         preguntasNuevas: this.examenNuevo.preguntas,
