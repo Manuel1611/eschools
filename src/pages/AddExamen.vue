@@ -41,6 +41,7 @@
               </label>
             </div>
             <div
+              id="listaRecarga"
               v-for="(find, index) in examen.preguntas"
               :key="index"
               class="pregunta-container"
@@ -65,6 +66,8 @@
                     type="radio"
                     :name="'respuestas' + index"
                     :value="index2"
+                    :key="index.solucion"
+                    :id="'respuestas-' + index + '-' + index2"
                     @change="onChange($event, index)"
                   />
                   <input
@@ -203,13 +206,53 @@ export default defineComponent({
           1
         );
       }
+      let resultado = this.examen.preguntas[indicePregunta].solucion;
+      console.log(resultado);
+      if (resultado > indiceRespuesta) {
+        this.examen.preguntas[indicePregunta].solucion = resultado - 1;
+        const $id = document.getElementById(
+          "respuestas-" +
+            indicePregunta +
+            "-" +
+            this.examen.preguntas[indicePregunta].solucion
+        );
+        $id.checked = true;
+      } else if (resultado == indiceRespuesta) {
+        console.log("pepe");
+        this.examen.preguntas[indicePregunta].solucion = "";
+        console.log(this.examen.preguntas[indicePregunta].solucion);
+        const $id = document.getElementById(
+          "respuestas-" + indicePregunta + "-" + indiceRespuesta
+        );
+        $id.checked = false;
+      }
     },
 
     submitForm() {
+      let valuePreguntas = true;
+      for (let i = 0; i < this.examen.preguntas.length; i++) {
+        console.log(this.examen.preguntas[i]);
+        if (this.examen.preguntas[i].pregunta == "") {
+          valuePreguntas = false;
+        } else if (this.examen.preguntas[i].solucion == "") {
+          valuePreguntas = false;
+        } else {
+          for (let j = 0; j < this.examen.preguntas[i].respuesta.length; j++) {
+            if (this.examen.preguntas[i].respuesta[j].value == "") {
+              valuePreguntas = false;
+            }
+          }
+        }
+      }
+      let valueVisible = "";
+      if (this.examen.visible == true || this.examen.visible == false) {
+        valueVisible = true;
+      }
       if (
         this.examen.titulo != "" &&
         this.examen.preguntas != "" &&
-        this.examen.visible != "" &&
+        valuePreguntas != false &&
+        valueVisible != false &&
         this.id != ""
       ) {
         let data = {
@@ -234,6 +277,15 @@ export default defineComponent({
             this.registerError("No se ha podido añadir el examen");
           });
       } else {
+        console.log(
+          this.examen.titulo +
+            "-" +
+            valuePreguntas +
+            "-" +
+            valueVisible +
+            "-" +
+            this.id
+        );
         this.registerError("No se ha podido añadir el examen");
       }
     },
