@@ -91,6 +91,11 @@ const routes = [
         component: () => import("pages/ShowTarea.vue"),
       },
 
+      {
+        path: "examen/:idcurso/:idexamen",
+        component: () => import("pages/ShowExamen.vue"),
+      },
+
       { path: ":id", component: () => import("pages/ShowCurso.vue") },
       {
         path: ":id/material/add",
@@ -102,7 +107,7 @@ const routes = [
       },
       {
         path: ":idcurso/examen/:idexamen",
-        component: () => import("pages/ShowExamen.vue"),
+        component: () => import("pages/EditExamen.vue"),
       },
       {
         path: ":id/material/:idmaterial/edit",

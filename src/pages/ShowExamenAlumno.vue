@@ -204,7 +204,7 @@ export default defineComponent({
   },
   methods: {
     loadExamen() {
-      console.log('loading examen')
+      console.log("loading examen");
       let examen3;
       console.log("/examen/" + this.cursoid + this.examenid);
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
@@ -253,8 +253,8 @@ export default defineComponent({
             console.log(this.examenNuevo);
             if (examen == "" || examen == "undefined" || examen == undefined) {
               this.examenNuevo = JSON.parse(JSON.stringify(examen2));
-              console.log('examen nuevo loaded')
-              console.log(this.examenNuevo)
+              console.log("examen nuevo loaded");
+              console.log(this.examenNuevo);
               console.log(this.examenNuevo.preguntas.length);
               for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
                 this.examenNuevo.preguntas[i].respuesta = "";
@@ -316,10 +316,10 @@ export default defineComponent({
     },
 
     onChange($event, indicePregunta, indiceRespuesta) {
-      console.log('indicepregunta:' + indicePregunta)
-      console.log('indiceRespuesta:' + indiceRespuesta)
-      console.log('this examne nuevo')
-    console.log(this.examenNuevo)
+      console.log("indicepregunta:" + indicePregunta);
+      console.log("indiceRespuesta:" + indiceRespuesta);
+      console.log("this examne nuevo");
+      console.log(this.examenNuevo);
       var seleccionado = $event.target.value;
       this.examenNuevo.preguntas[indicePregunta].solucion = seleccionado;
       this.examenNuevo.preguntas[indicePregunta].respuesta =
@@ -327,7 +327,7 @@ export default defineComponent({
     },
 
     submitForm() {
-      console.log('submitting form')
+      console.log("submitting form");
 
       console.log(this.examenNuevo);
       let data = {
