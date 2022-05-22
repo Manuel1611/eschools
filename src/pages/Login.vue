@@ -115,7 +115,7 @@ export default defineComponent({
               if (response.data.rol == "Administrador") {
                 this.$router.push("/admin");
               } else {
-                this.$router.push("/curso");
+                this.$router.push("/curso/miscursos");
               }
             } else {
               this.loginError(response.data.message);
