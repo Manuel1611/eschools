@@ -250,6 +250,14 @@ export default defineComponent({
             console.log(examen);
             this.examenNuevo = examen;
             console.log(this.examenNuevo);
+            if (examen == "" || examen == undefined) {
+              this.examenNuevo = JSON.parse(JSON.stringify(examen2));
+              console.log(this.examenNuevo.preguntas.length);
+              for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
+                this.examenNuevo.preguntas[i].respuesta = "";
+                this.examenNuevo.preguntas[i].solucion = -1;
+              }
+            }
           }
         })
         .catch((e) => {
@@ -257,14 +265,6 @@ export default defineComponent({
           console.log(e);
         });
 
-      if (examen == "" || examen == "undefined") {
-        this.examenNuevo = JSON.parse(JSON.stringify(examen2));
-        console.log(this.examenNuevo.preguntas.length);
-        for (let i = 0; i < this.examenNuevo.preguntas.length; i++) {
-          this.examenNuevo.preguntas[i].respuesta = "";
-          this.examenNuevo.preguntas[i].solucion = -1;
-        }
-      }
       console.log("original");
       console.log(this.examen);
       console.log("nuevo");

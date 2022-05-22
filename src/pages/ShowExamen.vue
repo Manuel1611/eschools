@@ -1,121 +1,189 @@
 <template>
   <q-page class="auth-container">
-    <h3>Show Examen</h3>
-    <div>
-      <input
-        type="text"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
-        v-model="this.examen.titulo"
-      />
-    </div>
-    <div v-for="(find, index) in examen.preguntas" :key="index">
-      <label>Pregunta</label>
-      <input
-        v-model="find.pregunta"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
-      />
-      <input
-        v-if="Object.values(find.respuesta).length < 5"
-        class="form-btn"
-        type="button"
-        name="button"
-        @click="añadirRespuesta(index)"
-        value="Añadir respuesta"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
-      />
-      <div v-for="(find2, index2) in find.respuesta" :key="index2">
-        <input
-          v-if="find.solucion == index2"
-          type="radio"
-          :name="'respuestas' + index"
-          :value="index2"
-          checked
-          @change="onChange($event, index)"
-          :class="this.show ? 'isShow' : 'isEdit'"
-          :disabled="this.isDisabled"
-        />
-        <input
-          v-else
-          type="radio"
-          :name="'respuestas' + index"
-          :value="index2"
-          @change="onChange($event, index)"
-          :class="this.show ? 'isShow' : 'isEdit'"
-          :disabled="this.isDisabled"
-        />
-        <input
-          type="text"
-          v-model="this.examen.preguntas[index].respuesta[index2].value"
-          :class="this.show ? 'isShow' : 'isEdit'"
-          :disabled="this.isDisabled"
-        />
-        <input
-          v-if="Object.values(find.respuesta).length > 1"
-          class="form-btn"
-          type="button"
-          name="button"
-          @click="eliminarRespuesta(index, index2)"
-          value="Eliminar respuesta"
-          :class="this.show ? 'isShow' : 'isEdit'"
-          :disabled="this.isDisabled"
-        />
-      </div>
+    <q-dialog
+      v-model="openCalificarDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">
+            Añadir comentario de
+            {{ this.calificacion.nombre + " " + this.calificacion.apellidos }}
+          </div>
+          <div>{{ this.calificacion.email }}</div>
+        </q-card-section>
 
-      <input
-        v-if="Object.values(this.examen.preguntas).length > 1"
-        class="form-btn"
-        type="button"
-        name="button"
-        @click="eliminarPregunta(index)"
-        value="Eliminar Pregunta"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
+        <q-card-section
+          style="font-size: 1.1em"
+          class="input-container q-pt-none"
+        >
+          <label>Nota: {{ this.calificacion.nota }}</label>
+        </q-card-section>
+        <q-card-section
+          style="font-size: 1.1em"
+          class="input-container q-pt-none"
+        >
+          <label>Comentario</label>
+          <textarea v-model="this.calificacion.comentario"></textarea>
+        </q-card-section>
+
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-no" v-close-popup>Cancelar</div>
+          <div class="logout-btn-yes" @click="submitForm()">Aceptar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog
+      v-model="openCommentDialog"
+      persistent
+      transition-show="scale"
+      transition-hide="scale"
+    >
+      <q-card class="background-myblue text-white" style="width: 400px">
+        <q-card-section>
+          <div class="text-h6">Comentario</div>
+        </q-card-section>
+
+        <q-card-section
+          style="font-size: 1.1em"
+          class="input-container q-pt-none"
+        >
+          {{ comment }}
+        </q-card-section>
+        <q-card-actions
+          align="right"
+          class="bg-white text-teal logoutModal-margins"
+        >
+          <div class="logout-btn-no" v-close-popup>Cerrar</div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <div class="title">
+      <q-icon
+        class="icon-drawer"
+        color="black"
+        name="fa-solid fa-angle-right"
       />
+      <div>{{ this.examen.titulo }}</div>
     </div>
-    <div>
-      <input
-        class="form-btn"
-        type="button"
-        name="button"
-        @click="añadirPregunta()"
-        value="Añadir pregunta"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
-      />
+    <div class="top-info">
+      <div class="query-found">
+        <q-icon
+          class="icon-drawer"
+          color="white"
+          name="fa-solid fa-angle-right"
+        />
+        <div>
+          Han realizado el examen
+          {{ Object.values(this.realizados).length }} de
+          {{
+            Object.values(this.realizados).length +
+            Object.values(this.noRealizados).length
+          }}
+        </div>
+      </div>
+      <div class="btn-addnew" @click="goBack">Volver</div>
     </div>
-    <div>
-      <label for="">Visible</label>
-      <input
-        v-model="examen.visible"
-        type="checkbox"
-        :class="this.show ? 'isShow' : 'isEdit'"
-        :disabled="this.isDisabled"
-      />
-    </div>
-    <div class="btns-container">
-      <span class="volverbtn display-block" @click="goBack">Volver</span>
-      <br /><br />
-      <span
-        :class="!this.show ? 'editbtn display-none' : 'editbtn display-block'"
-        @click="changeEditStyles"
-        >Editar</span
+    <q-list class="list">
+      <h6>Usuarios que han realizado el examen</h6>
+      <q-item
+        v-for="(item, index) in this.realizados"
+        :key="index"
+        class="item"
       >
-      <span
-        :class="
-          this.show ? 'cancelbtn display-none' : 'cancelbtn display-block'
-        "
-        @click="cancelEdit"
-        >Cancelar</span
+        <div class="user-container">
+          <div class="icon-user">
+            <q-icon
+              class="icon-drawer"
+              color="grey-8"
+              name="fa-solid fa-user"
+            />
+          </div>
+          <div class="user-inner">
+            <div style="font-size: 1.1em">
+              {{ item[1].nombre + " " + item[1].apellidos }}
+            </div>
+            <div style="font-size: 1em">
+              {{ item[1].email }}
+            </div>
+          </div>
+        </div>
+        <div
+          class="div-calif"
+          v-if="
+            item[1].realizado[idexamen].nota != undefined &&
+            item[1].realizado[idexamen].nota > -1
+          "
+        >
+          <div class="nota-calif">
+            <q-icon
+              v-if="item[1].realizado[idexamen].comentario != ''"
+              @click="
+                openCommentDialog = true;
+                comment = item[1].realizado[idexamen].comentario;
+              "
+              class="activate-bubble cursor-pointer"
+              name="fa-solid fa-comment"
+              color="white"
+            />
+            <div v-else>
+              <div
+                class="btn-addnew"
+                @click="calificarDialog(item[0], item[1])"
+              >
+                Escribir comentario
+              </div>
+              <q-icon
+                class="activate-bubble cursor-null"
+                name="fa-solid fa-comment"
+                color="white"
+              />
+            </div>
+            <span
+              :class="
+                item[1].realizado[idexamen].nota < 5 ? 'suspenso' : 'aprobado'
+              "
+              >{{ item[1].realizado[idexamen].nota }}</span
+            >
+            / 10
+          </div>
+        </div>
+        <div v-else>Examen sin calificar</div>
+      </q-item>
+    </q-list>
+
+    <q-list class="list">
+      <h6>Usuarios que no han realizado el examen</h6>
+      <q-item
+        v-for="(item, index) in this.noRealizados"
+        :key="index"
+        class="item"
       >
-      <span
-        :class="this.show ? 'savebtn display-none' : 'savebtn display-block'"
-        @click="updateExamen"
-        >Guardar</span
-      >
-    </div>
+        <div class="user-container">
+          <div class="icon-user">
+            <q-icon
+              class="icon-drawer"
+              color="grey-8"
+              name="fa-solid fa-user"
+            />
+          </div>
+          <div class="user-inner">
+            <div style="font-size: 1.1em">
+              {{ item[1].nombre + " " + item[1].apellidos }}
+            </div>
+            <div style="font-size: 1em">
+              {{ item[1].email }}
+            </div>
+          </div>
+        </div>
+        <div>Examen sin realizar</div>
+      </q-item>
+    </q-list>
   </q-page>
 </template>
 
@@ -128,118 +196,95 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      idcurso: "-N06WwcGqQ7WhnMwaCP6",
+      realizados: {},
+      noRealizados: {},
+      idcurso: "",
       idexamen: "",
-      examen: {},
-      show: true,
-      isDisabled: true,
-      defaultValues: {
-        titulo: "",
-        preguntas: [],
-        visible: true,
+      //server: "http://localhost:3000/public/",
+      calificacion: {
+        nombre: "",
+        apellidos: "",
+        email: "",
+        id: "",
+        nota: "",
+        comentario: "",
       },
+      openCalificarDialog: false,
+      bloqueid: "",
+      examen: {},
+      openCommentDialog: false,
+      comment: "",
     };
   },
   setup() {
     const $q = useQuasar();
 
-    return {
-      emailSent(msg) {
-        $q.notify({
-          message: msg,
-          color: "green",
-          badgeStyle: "opacity: 0",
-        });
-      },
-      emailError(msg) {
-        $q.notify({
-          message: msg,
-          color: "red",
-          badgeStyle: "opacity: 0",
-        });
-      },
-    };
+    return {};
   },
   methods: {
-    changeEditStyles() {
-      this.defaultValues.titulo = this.examen.titulo;
-      this.defaultValues.preguntas = this.examen.preguntas;
-      this.defaultValues.visible = this.examen.visible;
-      this.show = !this.show;
-      this.isDisabled = !this.isDisabled;
+    goBack() {
+      this.$router.push("/curso/" + this.idcurso);
     },
-    cancelEdit() {
-      this.examen.titulo = this.defaultValues.titulo;
-      this.examen.preguntas = this.defaultValues.preguntas;
-      this.examen.visible = this.defaultValues.visible;
-      this.show = !this.show;
-      this.isDisabled = !this.isDisabled;
-    },
-
-    onChange($event, indicePregunta) {
-      var seleccionado = event.target.value;
-      this.examen.preguntas[indicePregunta].solucion = seleccionado;
-      console.log(this.examen.preguntas);
-    },
-
-    añadirPregunta() {
-      console.log(this.examen.preguntas);
-      this.examen.preguntas.push({ pregunta: "", respuesta: [], solucion: "" });
-      var indice = Object.values(this.examen.preguntas).length - 1;
-      this.examen.preguntas[indice].respuesta.push({ value: "" });
-    },
-
-    eliminarPregunta(indicePregunta) {
-      if (indicePregunta != -1) {
-        this.examen.preguntas.splice(indicePregunta, 1);
-      }
-    },
-
-    añadirRespuesta(indicePregunta) {
-      this.examen.preguntas[indicePregunta].respuesta.push({ value: "" });
-    },
-
-    eliminarRespuesta(indicePregunta, indiceRespuesta) {
-      if (indiceRespuesta != -1) {
-        this.examen.preguntas[indicePregunta].respuesta.splice(
-          indiceRespuesta,
-          1
-        );
-      }
-    },
-    updateExamen() {
-      let data = {
-        titulo: this.examen.titulo,
-        preguntas: this.examen.preguntas,
-        visible: this.examen.visible,
-        idexamen: this.idexamen,
-      };
+    loadRealizados() {
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      console.log(token);
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
+
+      console.log("/examen/getExamenesRealizado/" + this.idexamen);
       api
-        .put("/curso/" + this.idcurso + "/examen/" + this.idexamen, data, config)
+        .get("/examen/getExamenesRealizado/" + this.idexamen, config)
         .then((response) => {
-          console.log("edit OK");
-          this.show = !this.show;
-          this.isDisabled = !this.isDisabled;
-        })
-        .catch(() => {
-          console.log("edit MAL");
+          console.log("conexion correcta3");
+          if (response.status == 200) {
+            console.log("conexion correcta4");
+            console.log(response.data);
+            this.realizados = response.data.usuarios;
+          }
         });
     },
+    loadNoRealizados() {
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      console.log(token);
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+
+      console.log(
+        "/examen/getExamenesNoRealizado/" + this.idcurso + "/" + this.idexamen
+      );
+      api
+        .get(
+          "/examen/getExamenesNoRealizado/" +
+            this.idcurso +
+            "/" +
+            this.idexamen,
+          config
+        )
+        .then((response) => {
+          console.log("conexion correcta3");
+          if (response.status == 200) {
+            console.log("conexion correcta4");
+            console.log(response.data);
+            this.noRealizados = response.data.usuarios;
+          }
+        });
+    },
+
     loadExamen() {
       let examenes;
       console.log("/curso/" + this.idcurso + "/examen/" + this.idexamen);
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/curso/" + this.idcurso + "/examen/" + this.idexamen, config)
         .then((response) => {
@@ -258,8 +303,14 @@ export default defineComponent({
         });
     },
 
-    goBack() {
-      this.$router.push("/admin/cursos/");
+    calificarDialog(id, user) {
+      this.calificacion.nombre = user.nombre;
+      this.calificacion.apellidos = user.apellidos;
+      this.calificacion.email = user.email;
+      this.calificacion.id = id;
+      this.calificacion.nota = user.realizado[this.idexamen].nota;
+      this.calificacion.comentario = "";
+      this.openCalificarDialog = true;
     },
 
     checkUserLogged() {
@@ -267,9 +318,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -278,115 +329,350 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
     },
-  },
 
+    submitForm() {
+      let data = {
+        comentario: this.calificacion.comentario,
+        examen: this.idexamen,
+        iduser: this.calificacion.id,
+      };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .post("/examen/uploadComentario", data, config)
+        .then((response) => {
+          if (response.status == 200) {
+            console.log("Enviado el comentario");
+            console.log(response);
+            window.location.reload();
+          } else {
+            console.log("NO SE HA ENVIADO");
+            this.emailError("No se ha podido enviar el comentario");
+          }
+        })
+        .catch((error) => {
+          console.log("erro de load comentario");
+          console.log(error);
+          this.emailError("No se ha podido enviar el comentario");
+        });
+    },
+  },
   mounted() {
-    this.checkUserLogged()
+    this.checkUserLogged();
+    if (this.$route.query.bloqueid != "") {
+      console.log(" a v c");
+      console.log(this.$route);
+      this.bloqueid = this.$route.query.bloqueid;
+    }
     this.idexamen = this.$router.currentRoute._value.params.idexamen;
+    this.idcurso = this.$router.currentRoute._value.params.idcurso;
     this.loadExamen();
+    this.loadRealizados();
+    this.loadNoRealizados();
   },
 });
 </script>
 
 <style scoped>
-.btns-container {
-  margin-top: 10px;
+.q-page {
+  padding: 20px;
 }
-.volverbtn {
-  background-color: #1c5785;
-  padding: 5px;
-  margin-top: 10px;
+
+.title {
+  margin-top: 20px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+}
+
+.icon-drawer {
+  margin: 15px 0;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.each-item {
+  margin: 25px 0;
+  padding: 16px 0;
+  border-bottom: 1px solid #ebebeb;
+  padding-bottom: 40px;
+}
+
+.background-myblue {
+  background-color: #226294;
+}
+
+.logoutModal-margins {
+  margin: 20px 0;
+  border-radius: 0 !important;
+  padding: 0;
+}
+
+.logout-btn-no,
+.logout-btn-yes {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
   color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
+.logout-btn-no {
+  background-color: #d42c2c;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes {
+  background-color: #21ba45;
+  transition: 0.2s ease;
+}
+
+.logout-btn-no:hover {
+  background-color: #f24141;
+}
+
+.logout-btn-yes:hover {
+  background-color: #30c954;
+}
+
+.activate-bubble {
   cursor: pointer;
 }
 
-.editbtn {
-  background-color: green;
-  padding: 5px;
-  margin-top: 10px;
+.top-info {
+  background-color: #525252;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.query-found {
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  font-size: 1.1em;
   color: white;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
-.cancelbtn {
-  background-color: red;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.savebtn {
-  background-color: green;
-  padding: 5px;
-  margin-top: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.display-none {
-  display: none;
-}
-
-.display-block {
-  display: inline;
-}
-
-input {
-  margin: 10px;
-}
-
-.isShow {
-  cursor: default !important;
-  background-color: transparent;
-  border: none;
+.search-input {
+  margin-right: 20px;
+  padding: 10px 5px;
+  width: 250px;
   outline: none;
-  opacity: 1 !important;
-  border: 2px solid transparent;
-}
-
-.isEdit {
-  background-color: transparent;
-  border: 2px solid green;
-  outline: none;
-  opacity: 1 !important;
-}
-
-.isShowSelect {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-indent: 1px;
-  text-overflow: "";
   border: 0;
-  border: 2px solid transparent;
-  margin: 10px;
-  cursor: default !important;
-  opacity: 1 !important;
-  outline: none;
+  font-size: 1.1em;
+  border-radius: 3px;
 }
 
-.isEditSelect {
-  margin: 10px;
-  border: 2px solid green;
+.precio-container {
+  width: 160px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  color: #c92804;
+  position: relative;
+}
+
+.precio-container::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  bottom: -10px;
+  width: 15px;
+  height: 2px;
+  background-color: #c92804;
+}
+
+.list {
+  margin-top: 30px;
+}
+
+.item {
+  margin-top: 25px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon-user {
+  margin-right: 15px;
+}
+
+.icon-user i {
+  font-size: 1.5em;
+}
+
+.realizado-container {
+  position: relative;
+  margin-left: 50px;
+}
+
+.realizado-container:before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  background-color: #f5f5f5;
+  top: -33px;
+  left: -20px;
+}
+
+.realizado-container a {
+  text-decoration: none;
+  color: black;
+}
+
+.realizado-container a:hover {
+  text-decoration: underline;
+}
+
+.btn-evaluar {
+  background-color: #21ba45;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 10px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.btn-evaluar:hover {
+  background-color: #30c954;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+textarea {
+  resize: none;
+  border: 0;
   outline: none;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.input-nota {
+  border: 0;
+  outline: none;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+.top-info {
+  background-color: #525252;
+  margin-left: -20px;
+  margin-right: -20px;
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.query-found {
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  color: white;
+}
+
+.btn-addnew {
+  background-color: #05beed;
+  display: inline-block;
+  padding: 10px 20px;
+  color: black;
+  margin: 25px 0;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 1.1em;
+  transition: 0.2s ease;
+  margin-right: 25px;
+  text-align: center;
+}
+
+.btn-addnew:hover {
+  background-color: #12ccfc;
+}
+
+.user-inner {
+  width: 275px;
+}
+
+.nota-calif {
+  font-size: 1.3em;
+}
+
+.suspenso {
+  color: #eb4034;
+}
+
+.aprobado {
+  color: #21ba45;
+}
+
+.activate-bubble {
+  margin-right: 10px;
+  font-size: 0.65em;
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #03b1fc;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-null {
+  cursor: not-allowed;
 }
 </style>
