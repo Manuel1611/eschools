@@ -81,41 +81,6 @@
         :cursoid="this.id"
         :uid="this.uid"
       />
-      <div class="items-list">
-        <h4>Examenes</h4>
-        <q-list bordered>
-          <q-item
-            v-for="(item, index) in curso.examen"
-            :key="index"
-            clickable
-            v-ripple
-          >
-            <q-item-section>
-              <a @click="goExamen(index)">{{ item.titulo }}</a>
-            </q-item-section>
-            <q-item-section>
-              <q-avatar
-                style="cursor: pointer; font-size: 2em"
-                @click="goEditExamen(index)"
-                icon="fa-solid fa-pencil"
-                color="primary"
-                text-color="white"
-              />
-            </q-item-section>
-
-            <q-item-section
-              class="novisibleaalumnos"
-              v-if="item.visible === 'false' || item.visible == false"
-            >
-              <q-icon
-                class="icon-drawer"
-                color="grey-8"
-                name="fa-solid fa-eye-slash"
-              />
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
     </div>
     <div
       class="no-hay-mats-exams"
@@ -141,7 +106,9 @@
             :key="index"
           >
             <q-item-section>
-              <p class="titulo-examen-inner">{{ item.titulo }}</p>
+              <p @click="goExamen(index)" class="titulo-examen-inner">
+                {{ item.titulo }}
+              </p>
             </q-item-section>
             <q-item-section side class="btns-prof">
               <q-item-section>
@@ -149,6 +116,7 @@
                   style="cursor: pointer; font-size: 2em"
                   icon="fa-solid fa-pencil"
                   color="primary"
+                  @click="goEditExamen(index)"
                   text-color="white"
                 />
               </q-item-section>

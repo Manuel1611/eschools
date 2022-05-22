@@ -66,17 +66,17 @@
           <div>Exámenes</div>
         </div>
         <q-list class="exam-list">
-          <q-item
-            class="exam-item"
+          <div
             v-for="(item, index) in curso.examen"
             :key="index"
-            clickable
-            v-ripple
+            class="exam-item-1"
           >
-            <q-item-section>
-              <a @click="goExamen(index, item)">{{ item.titulo }}</a>
-            </q-item-section>
-          </q-item>
+            <q-item v-if="item.visible" class="exam-item" clickable v-ripple>
+              <q-item-section>
+                <a @click="goExamen(index, item)">{{ item.titulo }}</a>
+              </q-item-section>
+            </q-item>
+          </div>
         </q-list>
       </div>
     </div>
@@ -498,5 +498,14 @@ input {
   font-size: 1.1em;
   margin-top: 50px;
   margin-left: 30px;
+}
+
+.exam-item-1 {
+  margin-top: 20px;
+}
+
+.exam-item-1:first-of-type,
+.exam-item-1:last-of-type {
+  margin-top: 0;
 }
 </style>
