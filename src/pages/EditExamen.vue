@@ -30,6 +30,7 @@
         <input
           v-if="find.solucion == index2"
           type="radio"
+          :id="'respuestas-' + index + '-' + index2"
           :name="'respuestas' + index"
           :value="index2"
           checked
@@ -39,6 +40,7 @@
         />
         <input
           v-else
+          :id="'respuestas-' + index + '-' + index2"
           type="radio"
           :name="'respuestas' + index"
           :value="index2"
@@ -144,17 +146,17 @@ export default defineComponent({
     const $q = useQuasar();
 
     return {
-      emailSent(msg) {
-        $q.notify({
-          message: msg,
-          color: "green",
-          badgeStyle: "opacity: 0",
-        });
-      },
-      emailError(msg) {
+      registerError(msg) {
         $q.notify({
           message: msg,
           color: "red",
+          badgeStyle: "opacity: 0",
+        });
+      },
+      registerOk(msg) {
+        $q.notify({
+          message: msg,
+          color: "green",
           badgeStyle: "opacity: 0",
         });
       },
@@ -163,14 +165,19 @@ export default defineComponent({
   methods: {
     changeEditStyles() {
       this.defaultValues.titulo = this.examen.titulo;
-      this.defaultValues.preguntas = this.examen.preguntas;
+      this.defaultValues.preguntas = JSON.parse(
+        JSON.stringify(this.examen.preguntas)
+      );
       this.defaultValues.visible = this.examen.visible;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
     },
+
     cancelEdit() {
       this.examen.titulo = this.defaultValues.titulo;
-      this.examen.preguntas = this.defaultValues.preguntas;
+      this.examen.preguntas = JSON.parse(
+        JSON.stringify(this.defaultValues.preguntas)
+      );
       this.examen.visible = this.defaultValues.visible;
       this.show = !this.show;
       this.isDisabled = !this.isDisabled;
@@ -206,40 +213,112 @@ export default defineComponent({
           1
         );
       }
-    },
-    updateExamen() {
-      let data = {
-        titulo: this.examen.titulo,
-        preguntas: this.examen.preguntas,
-        visible: this.examen.visible,
-        idexamen: this.idexamen,
-      };
-      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
-      let config = {
-        headers: {
-          'x-access-token' : token
+      let resultado = this.examen.preguntas[indicePregunta].solucion;
+      console.log(resultado);
+      if (resultado > indiceRespuesta) {
+        this.examen.preguntas[indicePregunta].solucion = resultado - 1;
+        const $id = document.getElementById(
+          "respuestas-" +
+            indicePregunta +
+            "-" +
+            this.examen.preguntas[indicePregunta].solucion
+        );
+        $id.checked = true;
+      } else if (resultado == indiceRespuesta) {
+        console.log("pepe");
+        this.examen.preguntas[indicePregunta].solucion = "";
+        console.log(this.examen.preguntas[indicePregunta].solucion);
+
+        for (
+          let i = 0;
+          i < this.examen.preguntas[indicePregunta].respuesta.length;
+          i++
+        ) {
+          const $id = document.getElementById(
+            "respuestas-" + indicePregunta + "-" + i
+          );
+          console.log($id);
+          $id.selected = false;
         }
       }
-      api
-        .put("/curso/" + this.idcurso + "/examen/" + this.idexamen, data, config)
-        .then((response) => {
-          console.log("edit OK");
-          this.show = !this.show;
-          this.isDisabled = !this.isDisabled;
-        })
-        .catch(() => {
-          console.log("edit MAL");
-        });
+      console.log(this.examen);
     },
+
+    updateExamen() {
+      let valuePreguntas = true;
+      for (let i = 0; i < this.examen.preguntas.length; i++) {
+        console.log(this.examen.preguntas[i]);
+        if (this.examen.preguntas[i].pregunta == "") {
+          valuePreguntas = false;
+        } else if (this.examen.preguntas[i].solucion == "") {
+          valuePreguntas = false;
+        } else {
+          for (let j = 0; j < this.examen.preguntas[i].respuesta.length; j++) {
+            if (this.examen.preguntas[i].respuesta[j].value == "") {
+              valuePreguntas = false;
+            }
+          }
+        }
+      }
+      let valueVisible = "";
+      if (this.examen.visible == true || this.examen.visible == false) {
+        valueVisible = true;
+      }
+      console.log(
+        this.examen.titulo +
+          "-" +
+          valuePreguntas +
+          "-" +
+          valueVisible +
+          "-" +
+          this.idexamen
+      );
+      if (
+        this.examen.titulo != "" &&
+        valuePreguntas != false &&
+        valueVisible != false &&
+        this.idexamen != ""
+      ) {
+        let data = {
+          titulo: this.examen.titulo,
+          preguntas: this.examen.preguntas,
+          visible: this.examen.visible,
+          idexamen: this.idexamen,
+        };
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            "x-access-token": token,
+          },
+        };
+        api
+          .put(
+            "/curso/" + this.idcurso + "/examen/" + this.idexamen,
+            data,
+            config
+          )
+          .then((response) => {
+            console.log("edit OK");
+            this.show = !this.show;
+            this.isDisabled = !this.isDisabled;
+          })
+          .catch(() => {
+            console.log("edit MAL");
+          });
+      } else {
+        this.registerError("No se ha podido editar el examen");
+      }
+    },
+
     loadExamen() {
       let examenes;
       console.log("/curso/" + this.idcurso + "/examen/" + this.idexamen);
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/curso/" + this.idcurso + "/examen/" + this.idexamen, config)
         .then((response) => {
@@ -267,9 +346,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -278,21 +357,21 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
@@ -300,7 +379,7 @@ export default defineComponent({
   },
 
   mounted() {
-    this.checkUserLogged()
+    this.checkUserLogged();
     this.idexamen = this.$router.currentRoute._value.params.idexamen;
     this.loadExamen();
   },
