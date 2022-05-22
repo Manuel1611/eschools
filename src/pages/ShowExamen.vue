@@ -9,7 +9,7 @@
       <q-card class="background-myblue text-white" style="width: 400px">
         <q-card-section>
           <div class="text-h6">
-            Añadir comentario de
+            Añadir un comentario al axamen de<br />
             {{ this.calificacion.nombre + " " + this.calificacion.apellidos }}
           </div>
           <div>{{ this.calificacion.email }}</div>
@@ -19,7 +19,15 @@
           style="font-size: 1.1em"
           class="input-container q-pt-none"
         >
-          <label>Nota: {{ this.calificacion.nota }}</label>
+          <label
+            >Nota:
+            <span
+              :class="
+                this.calificacion.nota < 5 ? 'suspenso shad' : 'aprobado shad'
+              "
+              >{{ Math.round(this.calificacion.nota * 10) / 10 }}</span
+            ></label
+          >
         </q-card-section>
         <q-card-section
           style="font-size: 1.1em"
@@ -72,117 +80,132 @@
       <div>{{ this.examen.titulo }}</div>
     </div>
     <div class="top-info">
-      <div class="query-found">
-        <q-icon
-          class="icon-drawer"
-          color="white"
-          name="fa-solid fa-angle-right"
-        />
-        <div>
-          Han realizado el examen
-          {{ Object.values(this.realizados).length }} de
-          {{
-            Object.values(this.realizados).length +
-            Object.values(this.noRealizados).length
-          }}
-        </div>
-      </div>
       <div class="btn-addnew" @click="goBack">Volver</div>
     </div>
+    <div class="lohanrealizado">
+      El examen lo han realizado
+      {{ Object.values(this.realizados).length }} de
+      {{
+        Object.values(this.realizados).length +
+        Object.values(this.noRealizados).length
+      }}
+      alumnos
+    </div>
     <q-list class="list">
-      <h6>Usuarios que han realizado el examen</h6>
-      <q-item
-        v-for="(item, index) in this.realizados"
-        :key="index"
-        class="item"
-      >
-        <div class="user-container">
-          <div class="icon-user">
-            <q-icon
-              class="icon-drawer"
-              color="grey-8"
-              name="fa-solid fa-user"
-            />
-          </div>
-          <div class="user-inner">
-            <div style="font-size: 1.1em">
-              {{ item[1].nombre + " " + item[1].apellidos }}
-            </div>
-            <div style="font-size: 1em">
-              {{ item[1].email }}
-            </div>
-          </div>
-        </div>
-        <div
-          class="div-calif"
-          v-if="
-            item[1].realizado[idexamen].nota != undefined &&
-            item[1].realizado[idexamen].nota > -1
-          "
+      <div class="title-uno">
+        <q-icon
+          class="icon-drawer chg-icon"
+          color="white"
+          name="fa-solid fa-check"
+        />
+        <div class="al">Alumnos que han hecho el examen</div>
+      </div>
+      <div class="borders-mios-outer">
+        <q-item
+          v-for="(item, index) in this.realizados"
+          :key="index"
+          class="item borders-mios"
         >
-          <div class="nota-calif">
-            <q-icon
-              v-if="item[1].realizado[idexamen].comentario != ''"
-              @click="
-                openCommentDialog = true;
-                comment = item[1].realizado[idexamen].comentario;
-              "
-              class="activate-bubble cursor-pointer"
-              name="fa-solid fa-comment"
-              color="white"
-            />
-            <div v-else>
-              <div
-                class="btn-addnew"
-                @click="calificarDialog(item[0], item[1])"
-              >
-                Escribir comentario
-              </div>
+          <div class="user-container">
+            <div class="icon-user">
               <q-icon
+                class="icon-drawer"
+                color="grey-8"
+                name="fa-solid fa-user"
+              />
+            </div>
+            <div class="user-inner">
+              <div style="font-size: 1.1em">
+                {{ item[1].nombre + " " + item[1].apellidos }}
+              </div>
+              <div style="font-size: 1em; color: rgba(1, 1, 1, 0.6)">
+                {{ item[1].email }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="div-calif"
+            v-if="
+              item[1].realizado[idexamen].nota != undefined &&
+              item[1].realizado[idexamen].nota > -1
+            "
+          >
+            <div class="nota-calif">
+              <q-icon
+                v-if="item[1].realizado[idexamen].comentario != ''"
+                @click="
+                  openCommentDialog = true;
+                  comment = item[1].realizado[idexamen].comentario;
+                "
+                class="activate-bubble cursor-pointer"
+                name="fa-solid fa-comment"
+                color="white"
+              />
+              <q-icon
+                v-else
                 class="activate-bubble cursor-null"
                 name="fa-solid fa-comment"
                 color="white"
               />
+              <span
+                :class="
+                  item[1].realizado[idexamen].nota < 5 ? 'suspenso' : 'aprobado'
+                "
+                >{{
+                  Math.round(item[1].realizado[idexamen].nota * 10) / 10
+                }}</span
+              >
+              / 10
             </div>
-            <span
-              :class="
-                item[1].realizado[idexamen].nota < 5 ? 'suspenso' : 'aprobado'
-              "
-              >{{ item[1].realizado[idexamen].nota }}</span
-            >
-            / 10
           </div>
-        </div>
-        <div v-else>Examen sin calificar</div>
-      </q-item>
+          <div v-else>Examen sin calificar</div>
+          <div
+            v-if="item[1].realizado[idexamen].comentario == ''"
+            class="btn-evaluar"
+            @click="calificarDialog(item[0], item[1])"
+          >
+            Comentar
+          </div>
+          <div v-else class="btn-evaluar2"></div>
+        </q-item>
+      </div>
     </q-list>
 
     <q-list class="list">
-      <h6>Usuarios que no han realizado el examen</h6>
-      <q-item
-        v-for="(item, index) in this.noRealizados"
-        :key="index"
-        class="item"
-      >
-        <div class="user-container">
-          <div class="icon-user">
-            <q-icon
-              class="icon-drawer"
-              color="grey-8"
-              name="fa-solid fa-user"
-            />
-          </div>
-          <div class="user-inner">
-            <div style="font-size: 1.1em">
-              {{ item[1].nombre + " " + item[1].apellidos }}
+      <div class="title-uno">
+        <q-icon
+          class="icon-drawer chg-icon2"
+          color="white"
+          name="fa-solid fa-xmark"
+        />
+        <div class="al">Alumnos que no han hecho el examen</div>
+      </div>
+      <div class="borders-mios-outer">
+        <q-item
+          v-for="(item, index) in this.noRealizados"
+          :key="index"
+          class="item borders-mios"
+        >
+          <div class="user-container">
+            <div class="icon-user">
+              <q-icon
+                class="icon-drawer"
+                color="grey-8"
+                name="fa-solid fa-user"
+              />
             </div>
-            <div style="font-size: 1em">
-              {{ item[1].email }}
+            <div class="user-inner">
+              <div style="font-size: 1.1em">
+                {{ item[1].nombre + " " + item[1].apellidos }}
+              </div>
+              <div style="font-size: 1em; color: rgba(1, 1, 1, 0.6)">
+                {{ item[1].email }}
+              </div>
             </div>
           </div>
-        </div>
-        <div>Examen sin realizar</div>
-      </q-item>
+          <div>Examen sin realizar</div>
+        </q-item>
+      </div>
     </q-list>
   </q-page>
 </template>
@@ -350,34 +373,36 @@ export default defineComponent({
     },
 
     submitForm() {
-      let data = {
-        comentario: this.calificacion.comentario,
-        examen: this.idexamen,
-        iduser: this.calificacion.id,
-      };
-      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
-      let config = {
-        headers: {
-          "x-access-token": token,
-        },
-      };
-      api
-        .post("/examen/uploadComentario", data, config)
-        .then((response) => {
-          if (response.status == 200) {
-            console.log("Enviado el comentario");
-            console.log(response);
-            window.location.reload();
-          } else {
-            console.log("NO SE HA ENVIADO");
+      if (this.calificacion.comentario != "") {
+        let data = {
+          comentario: this.calificacion.comentario,
+          examen: this.idexamen,
+          iduser: this.calificacion.id,
+        };
+        let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+        let config = {
+          headers: {
+            "x-access-token": token,
+          },
+        };
+        api
+          .post("/examen/uploadComentario", data, config)
+          .then((response) => {
+            if (response.status == 200) {
+              console.log("Enviado el comentario");
+              console.log(response);
+              window.location.reload();
+            } else {
+              console.log("NO SE HA ENVIADO");
+              this.emailError("No se ha podido enviar el comentario");
+            }
+          })
+          .catch((error) => {
+            console.log("erro de load comentario");
+            console.log(error);
             this.emailError("No se ha podido enviar el comentario");
-          }
-        })
-        .catch((error) => {
-          console.log("erro de load comentario");
-          console.log(error);
-          this.emailError("No se ha podido enviar el comentario");
-        });
+          });
+      }
     },
   },
   mounted() {
@@ -580,6 +605,18 @@ export default defineComponent({
   text-align: center;
 }
 
+.btn-evaluar2 {
+  background-color: transparent;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  border-radius: 3px;
+  font-size: 1.1em;
+  margin-right: 10px;
+  min-width: 90px;
+  text-align: center;
+}
+
 .btn-evaluar:hover {
   background-color: #30c954;
 }
@@ -674,5 +711,52 @@ textarea {
 
 .cursor-null {
   cursor: not-allowed;
+}
+
+.shad {
+  text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.5);
+  font-size: 1.5em;
+}
+
+.lohanrealizado {
+  font-size: 1.1em;
+  margin-top: 35px;
+}
+
+.title-uno {
+  font-size: 1.3em;
+  display: flex;
+  align-items: center;
+  margin-bottom: -23px;
+}
+
+.title-uno .q-icon {
+  margin-right: 10px;
+}
+
+.borders-mios-outer {
+  border-top: 2px solid #bdbcbb;
+  border-left: 2px solid #bdbcbb;
+  margin-top: 10px;
+}
+
+.chg-icon {
+  padding: 20px;
+  background-color: #21ba45;
+  margin-bottom: 11px;
+}
+
+.chg-icon2 {
+  padding: 20px;
+  background-color: #eb4034;
+  margin-bottom: 11px;
+}
+
+.al {
+  background-color: #e3e3e3;
+  padding: 15px;
+  margin-top: 4px;
+  margin-left: -10px;
+  padding-top: 14px;
 }
 </style>
