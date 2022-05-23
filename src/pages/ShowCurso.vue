@@ -21,7 +21,9 @@
         class="bg-white text-teal logoutModal-margins"
       >
         <div class="logout-btn-no" v-close-popup>Cancelar</div>
-        <div class="logout-btn-yes" v-close-popup>Aceptar</div>
+        <div class="logout-btn-yes" v-close-popup @click="eliminarExamen()">
+          Aceptar
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -126,6 +128,7 @@
                   @click="
                     openBorrarExamen = true;
                     this.nombreExam = item.titulo;
+                    this.idExam = index;
                   "
                   icon="fa-solid fa-trash-can"
                   color="negative"
@@ -176,6 +179,7 @@ export default defineComponent({
       cursoSelected: true,
       openBorrarExamen: false,
       nombreExam: "",
+      idExam: "",
     };
   },
   setup() {
@@ -253,6 +257,37 @@ export default defineComponent({
       this.$router.push({
         path: "/curso/examen/" + this.id + "/" + index,
       });
+    },
+    eliminarExamen() {
+      console.log(this.idExam);
+      console.log(this.id);
+      let data = {
+        curso: this.id,
+        examenid: this.idExam,
+      };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      console.log("token load curso");
+      console.log(token);
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      console.log(token);
+      api
+        .post("/examen/deleteexamen", data, config)
+        .then((response) => {
+          console.log("conexion correcta3");
+          if (response.status == 200) {
+            console.log("conexion correcta2");
+            console.log(response.data);
+            window.location.reload();
+          }
+        })
+        .catch((e) => {
+          console.log("error de conexion");
+          console.log(e);
+        });
     },
 
     checkUserLogged() {
