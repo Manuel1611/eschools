@@ -504,8 +504,7 @@ input {
   margin-top: 20px;
 }
 
-.exam-item-1:first-of-type,
-.exam-item-1:last-of-type {
+.exam-item-1:first-of-type {
   margin-top: 0;
 }
 </style>
