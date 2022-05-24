@@ -165,7 +165,7 @@ export default defineComponent({
   name: "RegisterPage",
   data() {
     return {
-      idcurso: "-N06WwcGqQ7WhnMwaCP6",
+      idcurso: "",
       idexamen: "",
       examen: {},
       show: true,
@@ -395,6 +395,7 @@ export default defineComponent({
   mounted() {
     this.checkUserLogged();
     this.idexamen = this.$router.currentRoute._value.params.idexamen;
+    this.idcurso = this.$router.currentRoute._value.params.idcurso;
     this.loadExamen();
   },
 });
