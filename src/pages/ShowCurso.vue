@@ -1,4 +1,5 @@
 <template>
+  <!---->
   <q-dialog
     v-model="openBorrarExamen"
     persistent

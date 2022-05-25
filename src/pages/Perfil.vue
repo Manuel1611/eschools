@@ -250,10 +250,9 @@ export default defineComponent({
         .then((response) => {
           console.log("conexion correcta token");
           if (response.status == 200) {
-            console.log(response.data.user)
+            console.log(response.data.user);
             console.log("conexion correcta token 22222");
-            this.user = response.data.user
-
+            this.user = response.data.user;
           } else {
             q.notify({
               color: "negative",
@@ -278,7 +277,6 @@ export default defineComponent({
   },
 
   mounted() {
-
     this.checkUserLogged();
   },
 });
@@ -520,5 +518,18 @@ label {
 
 .logout-btn-yes:hover {
   background-color: #30c954;
+}
+
+@media (max-width: 1079px) {
+  .top-info {
+    flex-direction: column;
+  }
+
+  .btn-addnew {
+    margin-bottom: 50px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
 }
 </style>

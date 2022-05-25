@@ -13,14 +13,12 @@
         <q-icon class="icon-drawer" color="white" name="fa-solid fa-hashtag" />
         <div>{{ Object.values(this.matriculas).length }} resultados</div>
       </div>
-      <div class="btn-addnew" @click="goAddmatricula">Añadir nuevo</div>
-      <div class="search-container">
-        <input
-          type="text"
-          class="search-input"
-          v-model="search"
-          placeholder="Buscar..."
-        />
+      <div
+        class="btn-addnew"
+        style="margin-right: 20px"
+        @click="goAddmatricula"
+      >
+        Añadir nuevo
       </div>
     </div>
 
@@ -81,9 +79,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/matricula/index", config)
         .then((response) => {
@@ -126,9 +124,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/user/" + userId, config)
         .then((response) => {
@@ -152,11 +150,11 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
-        .get("/curso/" + cursoId. config)
+        .get("/curso/" + cursoId.config)
         .then((response) => {
           if (response.status == 200) {
             //console.log(response.data);
@@ -176,9 +174,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -187,21 +185,21 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
@@ -209,7 +207,7 @@ export default defineComponent({
   },
 
   mounted() {
-    this.checkUserLogged()
+    this.checkUserLogged();
     console.log("mounted");
     this.loadmatriculas();
   },
@@ -365,5 +363,23 @@ export default defineComponent({
   border: 0;
   font-size: 1.1em;
   border-radius: 3px;
+}
+
+@media (max-width: 1079px) {
+  .top-info {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .search-input {
+    margin-bottom: 25px;
+  }
+
+  .btn-addnew {
+    margin-right: 20px;
+    width: 250px;
+    text-align: center;
+  }
 }
 </style>

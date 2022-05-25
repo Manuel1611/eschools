@@ -13,6 +13,7 @@
     </p>
     <div class="btn-addnew" @click="goBack">Vuelve a tus cursos</div>
   </q-page>
+  <!---->
 </template>
 
 <script>

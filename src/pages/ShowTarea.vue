@@ -124,43 +124,59 @@
           </div>
         </div>
 
-        <div
-          class="div-calif"
-          v-if="
-            item[1].entrega[idtarea].nota != undefined &&
-            item[1].entrega[idtarea].nota > -1
-          "
-        >
-          <div class="nota-calif">
-            <q-icon
-              v-if="item[1].entrega[idtarea].comentario != ''"
-              @click="
-                openCommentDialog = true;
-                comment = item[1].entrega[idtarea].comentario;
-              "
-              class="activate-bubble cursor-pointer"
-              name="fa-solid fa-comment"
-              color="white"
-            />
-            <q-icon
-              v-else
-              class="activate-bubble cursor-null"
-              name="fa-solid fa-comment"
-              color="white"
-            />
-            <span
-              :class="
-                item[1].entrega[idtarea].nota < 5 ? 'suspenso' : 'aprobado'
-              "
-              >{{ item[1].entrega[idtarea].nota }}</span
-            >
-            / 10
+        <div class="div-calif-outer">
+          <div
+            class="div-calif"
+            v-if="
+              item[1].entrega[idtarea].nota != undefined &&
+              item[1].entrega[idtarea].nota > -1
+            "
+          >
+            <div class="nota-calif">
+              <q-icon
+                v-if="item[1].entrega[idtarea].comentario != ''"
+                @click="
+                  openCommentDialog = true;
+                  comment = item[1].entrega[idtarea].comentario;
+                "
+                class="activate-bubble cursor-pointer"
+                name="fa-solid fa-comment"
+                color="white"
+              />
+              <q-icon
+                v-else
+                class="activate-bubble cursor-null"
+                name="fa-solid fa-comment"
+                color="white"
+              />
+              <span
+                :class="
+                  item[1].entrega[idtarea].nota < 5 ? 'suspenso' : 'aprobado'
+                "
+                >{{ item[1].entrega[idtarea].nota }}</span
+              >
+              / 10
+            </div>
           </div>
-        </div>
-        <div v-else>Tarea sin calificar</div>
+          <div v-else>Tarea sin calificar</div>
 
-        <div class="btn-evaluar" @click="calificarDialog(item[0], item[1])">
-          Evaluar
+          <div class="btn-evaluar" @click="calificarDialog(item[0], item[1])">
+            Evaluar
+          </div>
+          <a
+            class="ver-entrega-mq"
+            :href="
+              this.$serverapi +
+              '/usuarios/' +
+              item[0] +
+              '/' +
+              idtarea +
+              '/' +
+              item[1].entrega[idtarea].file
+            "
+            target="_blank"
+            >Ver entrega</a
+          >
         </div>
       </q-item>
     </q-list>
@@ -269,13 +285,13 @@ export default defineComponent({
     sendCalification() {
       if (this.calificacion.nota != "" && this.calificacion.nota != null) {
         console.log("Enviando calificacion al servidor");
-        console.log(this.idcurso)
+        console.log(this.idcurso);
         let data = {
           idtarea: this.idtarea,
           iduser: this.calificacion.id,
           nota: this.calificacion.nota,
           comentario: this.calificacion.comentario,
-          curso: this.idcurso
+          curso: this.idcurso,
         };
         let token = this.$q.localStorage.getItem("eschoolssessiontoken");
         let config = {
@@ -629,5 +645,71 @@ textarea {
 
 .cursor-null {
   cursor: not-allowed;
+}
+
+.div-calif-outer {
+  display: flex;
+  align-items: center;
+}
+
+.btn-evaluar {
+  margin-left: 20px;
+}
+
+.ver-entrega-mq {
+  display: none;
+}
+
+@media (max-width: 1079px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  .q-uploader {
+    width: 90%;
+  }
+
+  .div-calif-outer {
+    flex-direction: column;
+  }
+
+  .btn-evaluar {
+    margin-left: 10px;
+  }
+
+  .btn-evaluar {
+    margin-top: 10px;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .query-found {
+    margin-bottom: 13px;
+  }
+
+  .btn-addnew {
+    margin-bottom: 70px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
+
+  .entrega-container {
+    display: none;
+  }
+
+  .ver-entrega-mq {
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: black;
+  }
+
+  .ver-entrega-mq:hover {
+    text-decoration: underline;
+  }
 }
 </style>

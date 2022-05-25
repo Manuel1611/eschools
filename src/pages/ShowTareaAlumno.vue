@@ -475,4 +475,30 @@ export default defineComponent({
     left: 100%;
   }
 }
+
+@media (max-width: 1079px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  .q-uploader {
+    width: 90%;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .query-found {
+    margin-bottom: 13px;
+  }
+
+  .btn-addnew {
+    margin-bottom: 70px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
+}
 </style>

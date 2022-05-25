@@ -520,7 +520,7 @@ export default defineComponent({
     },
 
     invitarUsuario() {
-      let data = {}
+      let data = {};
       if (this.invitedUser == "") {
         this.openAddDialog = true;
       } else {
@@ -868,5 +868,23 @@ export default defineComponent({
   margin-top: 20px;
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 1079px) {
+  .top-info {
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .search-input {
+    margin-bottom: 25px;
+  }
+
+  .btn-addnew {
+    margin-right: 20px;
+    width: 250px;
+    text-align: center;
+  }
 }
 </style>

@@ -1,5 +1,46 @@
 <template>
   <q-dialog
+    v-model="openAuxEditDelete"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card class="background-myblue text-white" style="width: 400px">
+      <q-card-section>
+        <div class="text-h6">Has seleccionado un material</div>
+      </q-card-section>
+
+      <q-card-section style="font-size: 1.1em" class="q-pt-none">
+        {{ this.nombreMatAux }}
+      </q-card-section>
+
+      <q-card-actions
+        align="right"
+        class="bg-white text-teal logoutModal-margins"
+      >
+        <div class="logout-btn-no-cerrar" v-close-popup>Cerrar</div>
+        <div
+          class="logout-btn-yes-edit"
+          v-close-popup
+          @click="goEdit(this.indexToDeleteAux)"
+        >
+          Editar
+        </div>
+        <div
+          class="logout-btn-yes-delete"
+          v-close-popup
+          @click="
+            openBorrarMaterial = true;
+            this.nombreMat = this.nombreMatAux;
+            this.indexToDelete = this.indexToDeleteAux;
+          "
+        >
+          Borrar
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <q-dialog
     v-model="openBorrarMaterial"
     persistent
     transition-show="scale"
@@ -70,7 +111,7 @@
       <q-item class="bloque-container" v-else-if="item.tipo == 'bloque'">
         <q-item-section class="nombre-bloque-container">
           <q-icon
-            class="icon-drawer"
+            class="icon-drawer toShow"
             color="black"
             name="fa-solid fa-angle-right"
           />
@@ -146,6 +187,18 @@
           />
         </q-item-section>
       </q-item-section>
+      <q-item-section side v-if="this.profesor == true" class="btns-prof2">
+        <q-icon
+          class="activate-bubble"
+          @click="
+            openAuxEditDelete = true;
+            this.nombreMatAux = item.nombre;
+            this.indexToDeleteAux = index;
+          "
+          name="info"
+          color="primary"
+        />
+      </q-item-section>
     </q-item>
   </q-list>
 </template>
@@ -162,6 +215,9 @@ export default {
       openBorrarMaterial: false,
       indexToDelete: 0,
       nombreMat: "",
+      openAuxEditDelete: false,
+      nombreMatAux: "",
+      indexToDeleteAux: 0,
     };
   },
   props: {
@@ -377,8 +433,25 @@ export default {
   font-size: 1.1em;
 }
 
+.logout-btn-no-cerrar,
+.logout-btn-yes-edit,
+.logout-btn-yes-delete {
+  margin: 0 !important;
+  width: 100px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
 .logout-btn-no {
   background-color: #d42c2c;
+  transition: 0.2s ease;
+}
+
+.logout-btn-no-cerrar {
+  background-color: #8f8f8f;
   transition: 0.2s ease;
 }
 
@@ -387,12 +460,34 @@ export default {
   transition: 0.2s ease;
 }
 
+.logout-btn-yes-edit {
+  background-color: #1976d2;
+  transition: 0.2s ease;
+}
+
+.logout-btn-yes-delete {
+  background-color: #c10015;
+  transition: 0.2s ease;
+}
+
 .logout-btn-no:hover {
   background-color: #f24141;
 }
 
+.logout-btn-no-cerrar:hover {
+  background-color: #a6a4a4;
+}
+
 .logout-btn-yes:hover {
   background-color: #30c954;
+}
+
+.logout-btn-yes-edit:hover {
+  background-color: #2785e3;
+}
+
+.logout-btn-yes-delete:hover {
+  background-color: #d90f25;
 }
 
 .dentro-bloque .q-list {
@@ -403,5 +498,52 @@ export default {
   position: absolute;
   top: -25px;
   right: -5px;
+}
+
+.btns-prof2 {
+  display: none;
+}
+
+.activate-bubble {
+  cursor: pointer;
+}
+
+@media (max-width: 1500px) {
+  .toShow {
+    display: none;
+  }
+}
+
+@media (max-width: 1250px) {
+  .btns-prof {
+    display: none;
+  }
+
+  .btns-prof2 {
+    display: block;
+    position: absolute;
+    right: -8px;
+    top: 7px;
+  }
+}
+
+@media (max-width: 1079px) {
+  .bloque-container {
+    width: 100%;
+    padding: 0;
+  }
+
+  .dentro-bloque-flecha {
+    margin-left: -20px;
+  }
+
+  .logo-item::before {
+    left: 15px;
+  }
+
+  .q-list {
+    margin-left: -20px;
+    margin-right: -10px;
+  }
 }
 </style>

@@ -11,6 +11,7 @@
     />
     <div class="title">E-Schools - Desarrollado por GG, MG y CG</div>
   </q-page>
+  <!---->
 </template>
 
 <script>

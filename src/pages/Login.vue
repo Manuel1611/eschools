@@ -312,4 +312,24 @@ input[type="button"]:hover {
   justify-content: center;
   align-items: center;
 }
+
+@media (max-width: 1079px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .form-container,
+  .no-form-container {
+    padding: 50px 20px;
+  }
+
+  .auth-img-container {
+    width: 400px;
+    height: 300px;
+  }
+
+  .no-form-container p {
+    font-size: 3.5em;
+  }
+}
 </style>

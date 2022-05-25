@@ -113,11 +113,12 @@
           }}</q-item-label>
         </q-item-section>
         <div
+          class="solo-alum"
           style="display: flex; align-items: center"
           v-if="this.rol == 'alumno'"
         >
           <div class="yaestoymat" v-if="checkMatricula(item[0])">
-            Ya estás en este curso
+            Ya estás en<br />este curso
           </div>
           <div v-else style="display: flex; align-items: center">
             <div class="btnMatricularse" @click="matriculacionDialog(item)">
@@ -594,5 +595,18 @@ export default defineComponent({
 .yaestoymat {
   display: flex;
   align-items: center;
+  width: 100px;
+  justify-content: center;
+  text-align: center;
+}
+
+.solo-alum {
+  margin-left: 20px;
+}
+
+@media (max-width: 1079px) {
+  .precio-container {
+    width: 100px;
+  }
 }
 </style>

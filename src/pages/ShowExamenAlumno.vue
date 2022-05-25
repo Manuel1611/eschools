@@ -22,8 +22,7 @@
           name="fa-solid fa-angle-right"
         />
         <div v-if="this.realizado == 'false' || this.realizado == false">
-          No has realizado el examen aún. Pulsa el botón de abajo para
-          hacerlo...
+          No has realizado el examen aún...
         </div>
         <div v-else>{{ this.examen.descripcion }}</div>
       </div>
@@ -839,5 +838,12 @@ input[type="radio"] {
 
 .sin-contestar {
   color: rgba(1, 1, 1, 0.5);
+}
+
+@media (max-width: 1079px) {
+  .pregunta-container {
+    margin-right: 10px;
+    margin-left: 20px;
+  }
 }
 </style>

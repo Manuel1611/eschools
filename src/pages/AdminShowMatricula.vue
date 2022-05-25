@@ -637,4 +637,24 @@ label {
 .logout-btn-yes:hover {
   background-color: #30c954;
 }
+
+@media (max-width: 1079px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  select {
+    width: 90%;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .btn-addnew {
+    margin-bottom: 50px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
+}
 </style>

@@ -1,5 +1,6 @@
 <template>
   <q-page class="auth-container"> </q-page>
+  <!---->
 </template>
 
 <script>
@@ -12,7 +13,7 @@ export default defineComponent({
     return {};
   },
   setup() {
-        return {
+    return {
       registerError(msg) {
         $q.notify({
           message: msg,
@@ -38,9 +39,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -49,21 +50,21 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

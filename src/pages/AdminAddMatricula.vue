@@ -144,9 +144,9 @@ export default defineComponent({
         let token = this.$q.localStorage.getItem("eschoolssessiontoken");
         let config = {
           headers: {
-            'x-access-token' : token
-          }
-        }
+            "x-access-token": token,
+          },
+        };
         api
           .post("/matricula/store", data, config)
           .then((response) => {
@@ -169,9 +169,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/user/alumnos", config)
         .then((response) => {
@@ -207,9 +207,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .get("/curso/index", config)
         .then((response) => {
@@ -243,9 +243,9 @@ export default defineComponent({
       let token = $q.localStorage.getItem("eschoolssessiontoken");
       let config = {
         headers: {
-          'x-access-token' : token
-        }
-      }
+          "x-access-token": token,
+        },
+      };
       api
         .post("/auth/checksessiontoken", {}, config)
         .then((response) => {
@@ -254,21 +254,21 @@ export default defineComponent({
             console.log("conexion correcta token 22222");
           } else {
             q.notify({
-              color: 'negative',
-              position: 'top',
-              message: 'Sesión caducada.',
-              icon: 'report_problem'
-            })
+              color: "negative",
+              position: "top",
+              message: "Sesión caducada.",
+              icon: "report_problem",
+            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
           $q.notify({
-            color: 'negative',
-            position: 'top',
+            color: "negative",
+            position: "top",
             message: e,
-            icon: 'report_problem'
-          })
+            icon: "report_problem",
+          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });
@@ -276,7 +276,7 @@ export default defineComponent({
   },
 
   mounted() {
-    this.checkUserLogged()
+    this.checkUserLogged();
     this.loadCourses();
     this.loadStudents();
   },
@@ -408,5 +408,26 @@ label {
 
 .btn-register:hover {
   background-color: #30c954;
+}
+
+@media (max-width: 1079px) {
+  select {
+    width: 90% !important;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .query-found {
+    margin-bottom: 13px;
+  }
+
+  .btn-addnew {
+    margin-bottom: 70px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
 }
 </style>

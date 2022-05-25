@@ -71,6 +71,7 @@
                     @change="onChange($event, index)"
                   />
                   <input
+                    class="res-in"
                     type="text"
                     v-model="
                       this.examen.preguntas[index].respuesta[index2].value
@@ -633,5 +634,47 @@ input[type="radio"] {
 
 .no-margins3 {
   margin: 0;
+}
+
+@media (max-width: 1079px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  textarea {
+    width: 90%;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .btn-addnew {
+    margin-bottom: 50px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
+}
+
+@media (max-width: 859px) {
+  .pregunta-container {
+    margin-left: 0;
+  }
+
+  .respuesta-container {
+    margin-left: 10px;
+  }
+
+  .res-in {
+    width: 80% !important;
+  }
+}
+
+@media (max-width: 524px) {
+  .res-in {
+    width: 270px !important;
+    min-width: 250px !important;
+  }
 }
 </style>

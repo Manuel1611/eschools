@@ -318,4 +318,29 @@ input[type="button"]:hover {
   cursor: pointer;
   text-decoration: underline;
 }
+
+@media (max-width: 1079px) {
+  .auth-container {
+    flex-direction: column;
+  }
+
+  .form-container,
+  .no-form-container {
+    padding: 50px 20px;
+  }
+
+  .auth-img-container {
+    width: 400px;
+    height: 300px;
+  }
+
+  .no-form-container p {
+    font-size: 3.5em;
+  }
+
+  .login-img {
+    width: 250px;
+    height: 250px;
+  }
+}
 </style>

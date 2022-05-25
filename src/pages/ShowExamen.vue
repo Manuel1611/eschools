@@ -123,50 +123,54 @@
               </div>
             </div>
           </div>
-          <div
-            class="div-calif"
-            v-if="
-              item[1].realizado[idexamen].nota != undefined &&
-              item[1].realizado[idexamen].nota > -1
-            "
-          >
-            <div class="nota-calif">
-              <q-icon
-                v-if="item[1].realizado[idexamen].comentario != ''"
-                @click="
-                  openCommentDialog = true;
-                  comment = item[1].realizado[idexamen].comentario;
-                "
-                class="activate-bubble cursor-pointer"
-                name="fa-solid fa-comment"
-                color="white"
-              />
-              <q-icon
-                v-else
-                class="activate-bubble cursor-null"
-                name="fa-solid fa-comment"
-                color="white"
-              />
-              <span
-                :class="
-                  item[1].realizado[idexamen].nota < 5 ? 'suspenso' : 'aprobado'
-                "
-                >{{
-                  Math.round(item[1].realizado[idexamen].nota * 10) / 10
-                }}</span
-              >
-              / 10
+          <div class="div-calif-outer">
+            <div
+              class="div-calif"
+              v-if="
+                item[1].realizado[idexamen].nota != undefined &&
+                item[1].realizado[idexamen].nota > -1
+              "
+            >
+              <div class="nota-calif">
+                <q-icon
+                  v-if="item[1].realizado[idexamen].comentario != ''"
+                  @click="
+                    openCommentDialog = true;
+                    comment = item[1].realizado[idexamen].comentario;
+                  "
+                  class="activate-bubble cursor-pointer"
+                  name="fa-solid fa-comment"
+                  color="white"
+                />
+                <q-icon
+                  v-else
+                  class="activate-bubble cursor-null"
+                  name="fa-solid fa-comment"
+                  color="white"
+                />
+                <span
+                  :class="
+                    item[1].realizado[idexamen].nota < 5
+                      ? 'suspenso'
+                      : 'aprobado'
+                  "
+                  >{{
+                    Math.round(item[1].realizado[idexamen].nota * 10) / 10
+                  }}</span
+                >
+                / 10
+              </div>
             </div>
+            <div v-else>Examen sin calificar</div>
+            <div
+              v-if="item[1].realizado[idexamen].comentario == ''"
+              class="btn-evaluar"
+              @click="calificarDialog(item[0], item[1])"
+            >
+              Comentar
+            </div>
+            <div v-else class="btn-evaluar2"></div>
           </div>
-          <div v-else>Examen sin calificar</div>
-          <div
-            v-if="item[1].realizado[idexamen].comentario == ''"
-            class="btn-evaluar"
-            @click="calificarDialog(item[0], item[1])"
-          >
-            Comentar
-          </div>
-          <div v-else class="btn-evaluar2"></div>
         </q-item>
       </div>
     </q-list>
@@ -203,7 +207,7 @@
               </div>
             </div>
           </div>
-          <div>Examen sin realizar</div>
+          <div class="examen-sin-realizar">Examen sin realizar</div>
         </q-item>
       </div>
     </q-list>
@@ -758,5 +762,28 @@ textarea {
   margin-top: 4px;
   margin-left: -10px;
   padding-top: 14px;
+}
+
+.div-calif-outer {
+  display: flex;
+  align-items: center;
+}
+
+.div-calif {
+  margin-right: 20px;
+}
+
+@media (max-width: 709px) {
+  .div-calif-outer {
+    flex-direction: column;
+  }
+
+  .div-calif {
+    margin-bottom: 10px;
+  }
+
+  .examen-sin-realizar {
+    text-align: center;
+  }
 }
 </style>

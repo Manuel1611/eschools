@@ -434,4 +434,30 @@ select {
   width: fit-content;
   margin: 0;
 }
+
+@media (max-width: 1079px) {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  select {
+    width: 90% !important;
+  }
+
+  .top-info {
+    flex-direction: column;
+  }
+
+  .btn-addnew {
+    margin-bottom: 50px;
+    align-self: flex-start;
+    margin-right: 0;
+    margin-left: 25px;
+  }
+
+  .q-uploader {
+    width: 90% !important;
+  }
+}
 </style>
