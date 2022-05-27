@@ -501,4 +501,14 @@ export default defineComponent({
     margin-left: 25px;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    margin-bottom: 85px;
+  }
+
+  .query-found {
+    margin-bottom: 15px;
+  }
+}
 </style>

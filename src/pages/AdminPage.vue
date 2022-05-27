@@ -1,6 +1,7 @@
 <template>
   <q-page class="auth-container"> </q-page>
   <!---->
+  <!---->
 </template>
 
 <script>

@@ -100,18 +100,21 @@
         :key="index"
         @click="goCurso(index)"
       >
-        <q-item-section side class="precio-container">
-          <div class="precio">{{ item[1].precio }}</div>
-          <div class="euros">€</div>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label lines="1" style="font-size: 1.1em">{{
-            item[1].nombre
-          }}</q-item-label>
-          <q-item-label style="font-size: 1em" caption>{{
-            item[1].descripcion
-          }}</q-item-label>
-        </q-item-section>
+        <div class="no-solo-alum">
+          <q-item-section side class="precio-container">
+            <div class="precio">{{ item[1].precio }}</div>
+            <div class="euros">€</div>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label lines="1" style="font-size: 1.1em">{{
+              item[1].nombre
+            }}</q-item-label>
+            <q-item-label style="font-size: 1em" caption>{{
+              item[1].descripcion
+            }}</q-item-label>
+          </q-item-section>
+        </div>
+
         <div
           class="solo-alum"
           style="display: flex; align-items: center"
@@ -119,6 +122,10 @@
         >
           <div class="yaestoymat" v-if="checkMatricula(item[0])">
             Ya estás en<br />este curso
+          </div>
+
+          <div class="yaestoymat2" v-if="checkMatricula(item[0])">
+            Ya estás en este curso
           </div>
           <div v-else style="display: flex; align-items: center">
             <div class="btnMatricularse" @click="matriculacionDialog(item)">
@@ -477,6 +484,10 @@ export default defineComponent({
   background-color: #30c954;
 }
 
+.no-solo-alum {
+  display: flex;
+}
+
 .bubble {
   position: absolute;
   top: -15px;
@@ -580,6 +591,11 @@ export default defineComponent({
   text-shadow: 1px 1px 1px rgba(1, 1, 1, 0.3);
 }
 
+.each-item {
+  display: flex;
+  justify-content: space-between;
+}
+
 .btnMatricularse {
   background-color: #05beed;
   padding: 10px;
@@ -600,6 +616,14 @@ export default defineComponent({
   text-align: center;
 }
 
+.yaestoymat2 {
+  display: none;
+  align-items: center;
+  width: 200px;
+  justify-content: center;
+  text-align: center;
+}
+
 .solo-alum {
   margin-left: 20px;
 }
@@ -607,6 +631,39 @@ export default defineComponent({
 @media (max-width: 1079px) {
   .precio-container {
     width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input {
+    width: 160px;
+  }
+
+  .precio-container {
+    width: 80px;
+  }
+
+  .each-item {
+    flex-direction: column;
+  }
+
+  .no-solo-alum {
+    order: 2;
+  }
+
+  .solo-alum {
+    order: 1;
+    margin-bottom: 20px;
+    margin-left: 0;
+  }
+
+  .yaestoymat {
+    display: none;
+  }
+
+  .yaestoymat2 {
+    display: flex;
+    margin-left: -25px;
   }
 }
 </style>

@@ -712,4 +712,23 @@ textarea {
     text-decoration: underline;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    margin-bottom: 85px;
+  }
+
+  .query-found {
+    margin-bottom: 15px;
+  }
+
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-container {
+    margin-bottom: 20px;
+  }
+}
 </style>

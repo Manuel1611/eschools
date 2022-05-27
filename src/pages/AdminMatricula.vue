@@ -382,4 +382,10 @@ export default defineComponent({
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    width: 160px;
+  }
+}
 </style>

@@ -29,3 +29,11 @@ export default defineComponent({
   name: "ErrorNotFound",
 });
 </script>
+
+<style scoped>
+@media (max-width: 480px) {
+  .text-h2 {
+    font-size: 2em;
+  }
+}
+</style>

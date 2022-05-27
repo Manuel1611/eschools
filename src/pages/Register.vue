@@ -313,4 +313,24 @@ input[type="button"]:hover {
     height: 250px;
   }
 }
+
+@media (max-width: 480px) {
+  input {
+    width: 100%;
+  }
+
+  .no-form-container {
+    font-size: 0.8em;
+  }
+
+  .auth-img-container,
+  .login-img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .login-img {
+    margin-top: 20px;
+  }
+}
 </style>

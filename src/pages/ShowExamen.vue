@@ -786,4 +786,20 @@ textarea {
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .al {
+    padding: 17px 5px;
+    font-size: 0.8em;
+  }
+
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-container {
+    margin-bottom: 20px;
+  }
+}
 </style>

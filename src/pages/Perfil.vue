@@ -532,4 +532,14 @@ label {
     margin-left: 25px;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    margin-bottom: 75px;
+  }
+
+  .query-found {
+    margin-bottom: 10px;
+  }
+}
 </style>

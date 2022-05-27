@@ -615,4 +615,10 @@ input {
   transform: translateY(-50%);
   right: 110px;
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    font-size: 0.95em;
+  }
+}
 </style>

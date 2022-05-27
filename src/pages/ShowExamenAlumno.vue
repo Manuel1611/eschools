@@ -501,6 +501,7 @@ export default defineComponent({
   border: 1px solid #038a24;
   width: 15px;
   height: 15px;
+  min-width: 15px !important;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -510,6 +511,7 @@ export default defineComponent({
   border: 1px solid #038a24;
   width: 15px;
   height: 15px;
+  min-width: 15px !important;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -519,6 +521,7 @@ export default defineComponent({
   border: 1px solid #db1512;
   width: 15px;
   height: 15px;
+  min-width: 15px !important;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -528,6 +531,7 @@ export default defineComponent({
   border: 1px solid grey;
   width: 15px;
   height: 15px;
+  min-width: 15px !important;
   border-radius: 50%;
   margin-right: 10px;
 }
@@ -844,6 +848,27 @@ input[type="radio"] {
   .pregunta-container {
     margin-right: 10px;
     margin-left: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .respuesta-container {
+    margin-left: 0 !important;
+  }
+
+  .question-icon-mio {
+    width: 30px;
+    height: 30px;
+    top: -16px;
+    left: -16px;
+  }
+
+  .question-icon-mio2,
+  .question-icon-mio3 {
+    width: 30px;
+    height: 30px;
+    top: 17px;
+    left: -31px;
   }
 }
 </style>

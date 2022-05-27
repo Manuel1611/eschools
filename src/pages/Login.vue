@@ -332,4 +332,20 @@ input[type="button"]:hover {
     font-size: 3.5em;
   }
 }
+
+@media (max-width: 480px) {
+  input {
+    width: 100%;
+  }
+
+  .no-form-container {
+    font-size: 0.8em;
+  }
+
+  .auth-img-container,
+  .login-img {
+    width: 300px;
+    height: 200px;
+  }
+}
 </style>

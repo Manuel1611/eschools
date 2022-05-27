@@ -194,112 +194,116 @@
         v-for="(item, index) in filteredUsers"
         :key="index"
       >
-        <q-item-section avatar top>
-          <q-avatar
-            style="cursor: pointer"
-            v-if="item[1].activo"
-            @click="
-              openBajaDialog = true;
-              correoBajaAlta = item[1].email;
-              idBajaAlta = item[0];
-            "
-            icon="fa-solid fa-arrow-down"
-            color="negative"
-            text-color="white"
-          />
-          <q-avatar
-            style="cursor: pointer"
-            v-else
-            @click="
-              openAltaDialog = true;
-              correoBajaAlta = item[1].email;
-              idBajaAlta = item[0];
-            "
-            icon="fa-solid fa-arrow-up"
-            color="positive"
-            text-color="white"
-          />
-        </q-item-section>
+        <div class="no-contenedor-btns">
+          <q-item-section avatar top>
+            <q-avatar
+              style="cursor: pointer"
+              v-if="item[1].activo"
+              @click="
+                openBajaDialog = true;
+                correoBajaAlta = item[1].email;
+                idBajaAlta = item[0];
+              "
+              icon="fa-solid fa-arrow-down"
+              color="negative"
+              text-color="white"
+            />
+            <q-avatar
+              style="cursor: pointer"
+              v-else
+              @click="
+                openAltaDialog = true;
+                correoBajaAlta = item[1].email;
+                idBajaAlta = item[0];
+              "
+              icon="fa-solid fa-arrow-up"
+              color="positive"
+              text-color="white"
+            />
+          </q-item-section>
 
-        <q-item-section>
-          <q-item-label lines="1" style="font-size: 1.1em">{{
-            item[1].nombre + " " + item[1].apellidos
-          }}</q-item-label>
-          <q-item-label style="font-size: 1em" caption>{{
-            item[1].email
-          }}</q-item-label>
+          <q-item-section>
+            <q-item-label lines="1" style="font-size: 1.1em">{{
+              item[1].nombre + " " + item[1].apellidos
+            }}</q-item-label>
+            <q-item-label style="font-size: 1em" caption>{{
+              item[1].email
+            }}</q-item-label>
 
-          <q-item-label
-            class="cursosParaProfesores"
-            v-if="item[1].cursos != null"
-            style="font-size: 1em"
-            caption
-          >
-            <div class="cursos-prof-container">
+            <q-item-label
+              class="cursosParaProfesores"
+              v-if="item[1].cursos != null"
+              style="font-size: 1em"
+              caption
+            >
+              <div class="cursos-prof-container">
+                <q-icon
+                  class="icon-drawer"
+                  color="black"
+                  name="fa-solid fa-angle-right"
+                />Cursos:
+                <p>
+                  <q-list class="listaCursos">
+                    <q-item-label
+                      v-for="(item2, index2) in item[1].cursos"
+                      :key="index2"
+                      style="font-size: 1em"
+                      caption
+                    >
+                      {{ loadCourseName(item2.curso) }}
+                    </q-item-label>
+                  </q-list>
+                </p>
+              </div>
+            </q-item-label>
+            <q-item-label
+              class="cursosParaProfesores"
+              v-else
+              style="font-size: 1em"
+              caption
+            >
               <q-icon
                 class="icon-drawer"
                 color="black"
                 name="fa-solid fa-angle-right"
-              />Cursos:
-              <p>
-                <q-list class="listaCursos">
-                  <q-item-label
-                    v-for="(item2, index2) in item[1].cursos"
-                    :key="index2"
-                    style="font-size: 1em"
-                    caption
-                  >
-                    {{ loadCourseName(item2.curso) }}
-                  </q-item-label>
-                </q-list>
-              </p>
-            </div>
-          </q-item-label>
-          <q-item-label
-            class="cursosParaProfesores"
-            v-else
-            style="font-size: 1em"
-            caption
-          >
-            <q-icon
-              class="icon-drawer"
-              color="black"
-              name="fa-solid fa-angle-right"
+              />
+              <p>En ningún curso todavía...</p>
+            </q-item-label>
+          </q-item-section>
+        </div>
+
+        <div class="contenedor-btns">
+          <q-item-section side>
+            <q-icon class="activate-bubble" name="info" color="green" />
+            <div v-if="item[1].activo" class="bubble">Activo</div>
+            <div v-else class="bubble">Inactivo</div>
+          </q-item-section>
+
+          <q-item-section side>
+            <q-avatar
+              style="cursor: pointer"
+              icon="fa-solid fa-folder-plus"
+              color="info"
+              @click="
+                openAddCursoProfesor = true;
+                correoParaCurso = item[1].email;
+                nombreParaCurso = item[1].nombre + ' ' + item[1].apellidos;
+                idProfesorParaCurso = item[0];
+                nombreProfesor = item[1].nombre;
+              "
+              text-color="white"
             />
-            <p>En ningún curso todavía...</p>
-          </q-item-label>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon class="activate-bubble" name="info" color="green" />
-          <div v-if="item[1].activo" class="bubble">Activo</div>
-          <div v-else class="bubble">Inactivo</div>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-avatar
-            style="cursor: pointer"
-            icon="fa-solid fa-folder-plus"
-            color="info"
-            @click="
-              openAddCursoProfesor = true;
-              correoParaCurso = item[1].email;
-              nombreParaCurso = item[1].nombre + ' ' + item[1].apellidos;
-              idProfesorParaCurso = item[0];
-              nombreProfesor = item[1].nombre;
-            "
-            text-color="white"
-          />
-        </q-item-section>
-        <q-item-section side>
-          <q-avatar
-            style="cursor: pointer"
-            @click="goUser(item[0])"
-            icon="fa-solid fa-pencil"
-            color="primary"
-            text-color="white"
-          />
-        </q-item-section>
+          </q-item-section>
+          <q-item-section side>
+            <q-avatar
+              style="cursor: pointer"
+              @click="goUser(item[0])"
+              icon="fa-solid fa-pencil"
+              color="primary"
+              text-color="white"
+            />
+          </q-item-section>
+        </div>
       </q-item>
     </q-list>
     <div class="q-pa-lg flex flex-center">
@@ -645,6 +649,10 @@ export default defineComponent({
   margin-right: 5px;
 }
 
+.contenedor-btns {
+  display: flex;
+}
+
 .btn-addnew {
   background-color: #21ba45;
   display: inline-block;
@@ -667,6 +675,8 @@ export default defineComponent({
   padding: 16px 0;
   border-bottom: 1px solid #ebebeb;
   padding-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .background-myblue {
@@ -698,6 +708,10 @@ export default defineComponent({
 .logout-btn-yes {
   background-color: #21ba45;
   transition: 0.2s ease;
+}
+
+.no-contenedor-btns {
+  display: flex;
 }
 
 .logout-btn-yes-disabled {
@@ -885,6 +899,35 @@ export default defineComponent({
     margin-right: 20px;
     width: 250px;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-addnew,
+  .search-input {
+    width: 160px;
+  }
+
+  .title {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .invitarprof-btn {
+    margin-top: 10px;
+  }
+
+  .each-item {
+    flex-direction: column;
+  }
+
+  .contenedor-btns {
+    order: 1;
+    margin-bottom: 20px;
+  }
+
+  .no-contenedor-btns {
+    order: 2;
   }
 }
 </style>

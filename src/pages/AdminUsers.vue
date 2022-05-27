@@ -511,4 +511,11 @@ export default defineComponent({
     text-align: center;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew,
+  .search-input {
+    width: 160px;
+  }
+}
 </style>

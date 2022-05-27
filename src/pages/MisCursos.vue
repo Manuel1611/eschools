@@ -1,6 +1,7 @@
 <template>
   <q-page class="auth-container">
     <!---->
+    <!---->
     <div class="title">
       <q-icon
         class="icon-drawer"

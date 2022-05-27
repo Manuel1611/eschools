@@ -746,4 +746,24 @@ input[type="radio"] {
     min-width: 250px !important;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    margin-bottom: 75px;
+  }
+
+  .query-found {
+    margin-bottom: 10px;
+  }
+
+  .pregunta-input,
+  .res-in {
+    min-width: 225px !important;
+  }
+
+  .res-in {
+    min-width: 180px !important;
+    width: 180px !important;
+  }
+}
 </style>

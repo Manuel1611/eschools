@@ -460,4 +460,14 @@ select {
     width: 90% !important;
   }
 }
+
+@media (max-width: 480px) {
+  .btn-addnew {
+    margin-bottom: 75px;
+  }
+
+  .query-found {
+    margin-bottom: 10px;
+  }
+}
 </style>
