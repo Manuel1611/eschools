@@ -153,6 +153,25 @@
     </q-drawer>
 
     <q-page-container>
+      <q-footer class="m-footer">
+        <div class="btn-footer" @click="openCloseFooter">
+          <q-icon
+            class="icon-drawer"
+            color="white"
+            name="fa-solid fa-angle-up"
+            id="m-angle"
+          />
+        </div>
+        <div class="footer-inner">
+          <div class="footer-inner2">
+            <div class="link-footer">Política de Cookies</div>
+            <div class="link-footer">Política de Privacidad</div>
+          </div>
+          <div class="cop">
+            {{ new Date().getFullYear() }} © Copyright · E-Schools
+          </div>
+        </div>
+      </q-footer>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -177,6 +196,7 @@ export default defineComponent({
         nombre: "No has iniciado sesión",
         email: "No has iniciado sesión",
       },
+      footerdown: true,
     };
   },
   setup() {
@@ -195,6 +215,20 @@ export default defineComponent({
     };
   },
   methods: {
+    openCloseFooter() {
+      var foo = document.getElementsByClassName("m-footer")[0];
+      var m_angle = document.getElementById("m-angle");
+
+      if (this.footerdown) {
+        foo.style.bottom = "0";
+        m_angle.style.transform = "rotate(180deg)";
+        this.footerdown = false;
+      } else {
+        foo.style.bottom = "-60px";
+        m_angle.style.transform = "rotate(0deg)";
+        this.footerdown = true;
+      }
+    },
     goPerfil() {
       this.$router.push("/perfil");
     },
@@ -441,5 +475,68 @@ export default defineComponent({
   position: absolute;
   bottom: 64px;
   width: 100%;
+}
+
+.m-footer {
+  position: fixed;
+  height: 60px;
+  bottom: -60px;
+  background-color: #cfcfcf;
+  box-shadow: 0 0 2px rgba(1, 1, 1, 0.7);
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease;
+  z-index: 100;
+}
+
+.cop {
+  font-size: 0.8em;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.btn-footer {
+  position: absolute;
+  width: 40px;
+  height: 35px;
+  background-color: #787878;
+  border-right: 5px solid #cfcfcf;
+  border-left: 5px solid #cfcfcf;
+  border-top: 5px solid #cfcfcf;
+  right: 20px;
+  bottom: 60px;
+  box-shadow: 10px 0px 6px -3px rgba(1, 1, 1, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#m-angle {
+  transition: all 0.5s ease;
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-inner2 {
+  display: flex;
+  margin-bottom: 1px;
+  justify-content: space-between;
+  width: 300px;
+  margin-top: 8px;
+}
+
+.link-footer {
+  cursor: pointer;
+}
+
+.link-footer:hover {
+  text-decoration: underline;
 }
 </style>
