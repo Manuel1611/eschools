@@ -187,6 +187,11 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Tarea",
+};
 
 export default defineComponent({
   name: "RegisterPage",
@@ -212,6 +217,7 @@ export default defineComponent({
     };
   },
   setup() {
+    useMeta(metaData);
     const $q = useQuasar();
 
     return {};

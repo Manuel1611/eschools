@@ -198,13 +198,21 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Política de Privacidad",
+};
 
 export default defineComponent({
   name: "PoliticaPrivPage",
   data() {
     return {};
   },
-  setup() {},
+  setup() {
+    useMeta(metaData);
+    return {};
+  },
   methods: {
     goBack() {
       this.$router.push("/curso/miscursos");

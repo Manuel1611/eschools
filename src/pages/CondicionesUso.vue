@@ -117,13 +117,21 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Condiciones de uso",
+};
 
 export default defineComponent({
   name: "PoliticaPrivPage",
   data() {
     return {};
   },
-  setup() {},
+  setup() {
+    useMeta(metaData);
+    return {};
+  },
   methods: {
     goBack() {
       this.$router.push("/curso/miscursos");

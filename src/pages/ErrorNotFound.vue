@@ -24,9 +24,18 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - 404",
+};
 
 export default defineComponent({
   name: "ErrorNotFound",
+  setup() {
+    useMeta(metaData);
+    return {};
+  },
 });
 </script>
 

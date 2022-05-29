@@ -91,6 +91,11 @@ import { api } from "boot/axios";
 import { useQuasar } from "quasar";
 
 import ListaIterable from "../components/ListaIterable.vue";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Curso",
+};
 
 export default defineComponent({
   components: { ListaIterable },
@@ -113,6 +118,7 @@ export default defineComponent({
     };
   },
   setup() {
+    useMeta(metaData);
     const $q = useQuasar();
     return {
       emailSent(msg) {

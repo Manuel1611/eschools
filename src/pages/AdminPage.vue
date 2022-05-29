@@ -8,12 +8,19 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Administrador",
+};
+
 export default defineComponent({
   name: "RegisterPage",
   data() {
     return {};
   },
   setup() {
+    useMeta(metaData);
     return {
       registerError(msg) {
         $q.notify({

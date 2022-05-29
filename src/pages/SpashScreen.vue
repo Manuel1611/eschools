@@ -16,8 +16,18 @@
 </template>
 
 <script>
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools",
+};
+
 export default {
   name: "SplashScreenPage",
+  setup() {
+    useMeta(metaData);
+    return {};
+  },
   mounted() {
     setTimeout(() => this.$router.push({ name: "/login" }), 2500);
   },
