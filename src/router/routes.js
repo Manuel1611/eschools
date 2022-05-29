@@ -17,6 +17,20 @@ const routes = [
     ],
   },
   {
+    path: "/legal",
+    component: () => import("layouts/LegalLayout.vue"),
+    children: [
+      {
+        path: "condiciones-de-uso",
+        component: () => import("pages/CondicionesUso.vue"),
+      },
+      {
+        path: "politica-privacidad",
+        component: () => import("pages/PoliticaPriv.vue"),
+      },
+    ],
+  },
+  {
     path: "/",
     component: () => import("layouts/SplashLayout.vue"),
     children: [{ path: "", component: () => import("pages/SpashScreen.vue") }],

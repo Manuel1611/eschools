@@ -151,8 +151,12 @@
         </div>
         <div class="footer-inner">
           <div class="footer-inner2">
-            <div class="link-footer">Política de Cookies</div>
-            <div class="link-footer">Política de Privacidad</div>
+            <div class="link-footer" @click="goCondiciones">
+              Condiciones de uso
+            </div>
+            <div class="link-footer" @click="goPoliticaPriv">
+              Política de Privacidad
+            </div>
           </div>
           <div class="cop">
             {{ new Date().getFullYear() }} © Copyright · E-Schools
@@ -204,6 +208,12 @@ export default defineComponent({
     };
   },
   methods: {
+    goCondiciones() {
+      this.$router.push("/legal/condiciones-de-uso");
+    },
+    goPoliticaPriv() {
+      this.$router.push("/legal/politica-privacidad");
+    },
     openCloseFooter() {
       var foo = document.getElementsByClassName("m-footer")[0];
       var m_angle = document.getElementById("m-angle");

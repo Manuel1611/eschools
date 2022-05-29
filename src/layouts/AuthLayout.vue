@@ -2,8 +2,12 @@
   <q-layout view="lHh Lpr lFf" class="lay">
     <div class="m-footer">
       <div class="m-footer-inner">
-        <div class="link-footer">Política de Cookies</div>
-        <div class="link-footer" style="margin-left: 20px">
+        <div class="link-footer" @click="goCondiciones">Condiciones de uso</div>
+        <div
+          class="link-footer"
+          @click="goPoliticaPriv"
+          style="margin-left: 20px"
+        >
           Política de Privacidad
         </div>
       </div>
@@ -27,6 +31,12 @@ import { useQuasar } from "quasar";
 export default defineComponent({
   name: "AuthLayout",
   methods: {
+    goCondiciones() {
+      this.$router.push("/legal/condiciones-de-uso");
+    },
+    goPoliticaPriv() {
+      this.$router.push("/legal/politica-privacidad");
+    },
     checkLoggedUser() {
       const $q = useQuasar();
       let token = $q.localStorage.getItem("eschoolssessiontoken");
