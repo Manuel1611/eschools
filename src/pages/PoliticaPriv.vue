@@ -206,7 +206,9 @@ export default defineComponent({
   },
   setup() {},
   methods: {
-    goBack() {},
+    goBack() {
+      this.$router.push("/curso/miscursos");
+    },
     goOtro() {
       this.$router.push("/legal/condiciones-de-uso");
     },

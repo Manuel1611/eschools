@@ -267,22 +267,10 @@ export default defineComponent({
             this.userid = response.data.uid;
             this.checkEntregada();
           } else {
-            q.notify({
-              color: "negative",
-              position: "top",
-              message: "Sesión caducada.",
-              icon: "report_problem",
-            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
-          $q.notify({
-            color: "negative",
-            position: "top",
-            message: e,
-            icon: "report_problem",
-          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

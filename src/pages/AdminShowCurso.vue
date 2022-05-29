@@ -333,22 +333,10 @@ export default defineComponent({
           if (response.status == 200) {
             console.log("conexion correcta token 22222");
           } else {
-            q.notify({
-              color: "negative",
-              position: "top",
-              message: "Sesión caducada.",
-              icon: "report_problem",
-            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
-          $q.notify({
-            color: "negative",
-            position: "top",
-            message: e,
-            icon: "report_problem",
-          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

@@ -306,22 +306,10 @@ export default defineComponent({
               response.data.user.nombre + " " + response.data.user.apellidos;
             this.user.email = response.data.user.email;
           } else {
-            q.notify({
-              color: "negative",
-              position: "top",
-              message: "Sesión caducada.",
-              icon: "report_problem",
-            });
             this.$router.push("/auth");
           }
         })
         .catch(() => {
-          $q.notify({
-            color: "negative",
-            position: "top",
-            message: "Sesión caducada.",
-            icon: "report_problem",
-          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

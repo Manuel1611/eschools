@@ -298,22 +298,10 @@ export default defineComponent({
             this.user.rol = response.data.user.rol;
             this.user.id = response.data.user.uid;
           } else {
-            q.notify({
-              color: "negative",
-              position: "top",
-              message: "Sesión caducada.",
-              icon: "report_problem",
-            });
             this.$router.push("/auth");
           }
         })
         .catch(() => {
-          $q.notify({
-            color: "negative",
-            position: "top",
-            message: "Sesión caducada.",
-            icon: "report_problem",
-          });
           this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

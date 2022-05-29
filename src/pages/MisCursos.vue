@@ -256,22 +256,10 @@ export default defineComponent({
               console.log("no soy nada " + this.rol);
             }
           } else {
-            q.notify({
-              color: "negative",
-              position: "top",
-              message: "Sesión caducada.",
-              icon: "report_problem",
-            });
             this.$router.push("/auth");
           }
         })
         .catch((e) => {
-          $q.notify({
-            color: "negative",
-            position: "top",
-            message: e,
-            icon: "report_problem",
-          });
           //this.$router.push("/auth");
           console.log("error de conexion sesion");
         });

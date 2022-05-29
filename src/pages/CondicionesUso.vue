@@ -125,7 +125,9 @@ export default defineComponent({
   },
   setup() {},
   methods: {
-    goBack() {},
+    goBack() {
+      this.$router.push("/curso/miscursos");
+    },
     goOtro() {
       this.$router.push("/legal/politica-privacidad");
     },
