@@ -165,7 +165,7 @@
                     </div>
                     <div
                       v-if="
-                        item2.solucion != this.examen.preguntas[index2].solucion
+                        item2.solucion != this.examen.preguntas[index2].solucion && this.examen.preguntas[index2].respuesta[item2.solucion] != undefined
                       "
                       class="question-icon-mio3"
                     >
@@ -175,11 +175,19 @@
                         name="fa-solid fa-xmark"
                       />
                     </div>
+                    <div v-if="
+                        this.examen.preguntas[index2].respuesta[item2.solucion] != undefined
+                      ">
+                      
                     <div class="sin-contestar">(Respuesta del alumno)</div>
                     {{
-                      this.examen.preguntas[index2].respuesta[item2.solucion]
-                        .value
+                      this.examen.preguntas[index2].respuesta[item2.solucion].value
                     }}
+                    </div>
+                    <div v-else>
+
+                      NO HA SIDO RESPONDIDA
+                    </div>
                   </div>
                 </div>
               </div>
