@@ -104,7 +104,7 @@
         <q-item
           v-for="(item, index) in this.realizados"
           :key="index"
-          class="item borders-mios"
+          class="item borders-mios aux"
         >
           <div class="user-container">
             <div class="user-container2">
@@ -124,16 +124,7 @@
                 </div>
               </div>
             </div>
-            <div
-              v-if="
-                this.mostrar[index] == false || this.mostrar[index] == undefined
-              "
-              class="btn-register2"
-              style="margin-left: 20px"
-              @click="mostrarExamen(index)"
-            >
-              Ver examen
-            </div>
+
             <div
               v-if="
                 this.mostrar[index] == 'true' || this.mostrar[index] == true
@@ -184,6 +175,7 @@
                         name="fa-solid fa-xmark"
                       />
                     </div>
+                    <div class="sin-contestar">(Respuesta del alumno)</div>
                     {{
                       this.examen.preguntas[index2].respuesta[item2.solucion]
                         .value
@@ -244,6 +236,15 @@
             Comentar
           </div>
           <div v-else class="btn-evaluar2"></div>
+          <div
+            v-if="
+              this.mostrar[index] == false || this.mostrar[index] == undefined
+            "
+            class="btn-register2"
+            @click="mostrarExamen(index)"
+          >
+            Ver examen
+          </div>
         </q-item>
       </div>
     </q-list>
@@ -263,7 +264,7 @@
           :key="index"
           class="item borders-mios"
         >
-          <div class="user-container">
+          <div class="user-container2">
             <div class="icon-user">
               <q-icon
                 class="icon-drawer"
@@ -325,9 +326,27 @@ export default defineComponent({
   methods: {
     ocultarExamen(usuario) {
       this.mostrar[usuario] = false;
+      var a = document.getElementsByClassName("aux")[usuario];
+      a.classList.add("aux3");
+      a.classList.remove("aux2");
+
+      var uno = document.getElementsByClassName("div-calif")[usuario];
+      uno.classList.remove("mb-otro");
+
+      var dos = document.getElementsByClassName("user-container")[usuario];
+      dos.classList.remove("w100");
     },
     mostrarExamen(usuario) {
       this.mostrar[usuario] = true;
+      var a = document.getElementsByClassName("aux")[usuario];
+      a.classList.add("aux2");
+      a.classList.remove("aux3");
+
+      var uno = document.getElementsByClassName("div-calif")[usuario];
+      uno.classList.add("mb-otro");
+
+      var dos = document.getElementsByClassName("user-container")[usuario];
+      dos.classList.add("w100");
     },
     goBack() {
       this.$router.push("/curso/" + this.idcurso);
@@ -514,6 +533,10 @@ export default defineComponent({
   margin: 0;
 }
 
+.d-none {
+  display: none !important;
+}
+
 .btn-register2 {
   background-color: #4287f5;
   display: inline-block;
@@ -587,13 +610,13 @@ export default defineComponent({
 .question-icon-mio {
   position: absolute;
   background-color: rgb(95, 155, 201);
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 16px;
-  left: -24px;
+  top: -18px;
+  left: -18px;
   transform: rotate(45deg);
 }
 
@@ -607,26 +630,26 @@ export default defineComponent({
 .question-icon-mio2 {
   position: absolute;
   background-color: #038a24;
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -2px;
-  left: -47px;
+  top: -35px;
+  left: -48px;
   transform: rotate(45deg);
 }
 
 .question-icon-mio3 {
   position: absolute;
   background-color: #db1512;
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -2px;
-  left: -47px;
+  top: -35px;
+  left: -48px;
   transform: rotate(45deg);
 }
 .title {
@@ -760,7 +783,7 @@ export default defineComponent({
   display: column;
   align-items: flex-start;
 }
-.user-container2{
+.user-container2 {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
@@ -965,5 +988,42 @@ textarea {
   margin-top: 4px;
   margin-left: -10px;
   padding-top: 14px;
+}
+
+.aux2 {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+.aux3 {
+  flex-direction: row !important;
+}
+
+.order0 {
+  order: 0 !important;
+}
+
+.order1 {
+  order: 1 !important;
+}
+
+.order2 {
+  order: 2 !important;
+}
+
+.mb-otro {
+  margin-bottom: 25px;
+}
+
+.w100 {
+  width: 100% !important;
+}
+
+.pregunta-respuesta {
+  margin-left: 15px !important;
+}
+
+.sin-contestar {
+  color: rgba(1, 1, 1, 0.5);
 }
 </style>
