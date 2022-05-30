@@ -185,65 +185,69 @@
               </div>
               <div
                 class="btn-register2"
-                style="margin-left: 20px"
+                style="margin-left: 10px !important"
                 @click="ocultarExamen(index)"
               >
                 Ocultar examen
               </div>
             </div>
           </div>
-          <div
-            class="div-calif"
-            v-if="
-              item[1].realizado[idexamen].nota != undefined &&
-              item[1].realizado[idexamen].nota > -1
-            "
-          >
-            <div class="nota-calif">
-              <q-icon
-                v-if="item[1].realizado[idexamen].comentario != ''"
-                @click="
-                  openCommentDialog = true;
-                  comment = item[1].realizado[idexamen].comentario;
-                "
-                class="activate-bubble cursor-pointer"
-                name="fa-solid fa-comment"
-                color="white"
-              />
-              <q-icon
-                v-else
-                class="activate-bubble cursor-null"
-                name="fa-solid fa-comment"
-                color="white"
-              />
-              <span
-                :class="
-                  item[1].realizado[idexamen].nota < 5 ? 'suspenso' : 'aprobado'
-                "
-                >{{
-                  Math.round(item[1].realizado[idexamen].nota * 10) / 10
-                }}</span
-              >
-              / 10
+          <div class="div-calif-outer">
+            <div
+              class="div-calif"
+              v-if="
+                item[1].realizado[idexamen].nota != undefined &&
+                item[1].realizado[idexamen].nota > -1
+              "
+            >
+              <div class="nota-calif">
+                <q-icon
+                  v-if="item[1].realizado[idexamen].comentario != ''"
+                  @click="
+                    openCommentDialog = true;
+                    comment = item[1].realizado[idexamen].comentario;
+                  "
+                  class="activate-bubble cursor-pointer"
+                  name="fa-solid fa-comment"
+                  color="white"
+                />
+                <q-icon
+                  v-else
+                  class="activate-bubble cursor-null"
+                  name="fa-solid fa-comment"
+                  color="white"
+                />
+                <span
+                  :class="
+                    item[1].realizado[idexamen].nota < 5
+                      ? 'suspenso'
+                      : 'aprobado'
+                  "
+                  >{{
+                    Math.round(item[1].realizado[idexamen].nota * 10) / 10
+                  }}</span
+                >
+                / 10
+              </div>
             </div>
-          </div>
-          <div v-else>Examen sin calificar</div>
-          <div
-            v-if="item[1].realizado[idexamen].comentario == ''"
-            class="btn-evaluar"
-            @click="calificarDialog(item[0], item[1])"
-          >
-            Comentar
-          </div>
-          <div v-else class="btn-evaluar2"></div>
-          <div
-            v-if="
-              this.mostrar[index] == false || this.mostrar[index] == undefined
-            "
-            class="btn-register2"
-            @click="mostrarExamen(index)"
-          >
-            Ver examen
+            <div v-else>Examen sin calificar</div>
+            <div
+              v-if="item[1].realizado[idexamen].comentario == ''"
+              class="btn-evaluar"
+              @click="calificarDialog(item[0], item[1])"
+            >
+              Comentar
+            </div>
+            <div v-else class="btn-evaluar2"></div>
+            <div
+              v-if="
+                this.mostrar[index] == false || this.mostrar[index] == undefined
+              "
+              class="btn-register2"
+              @click="mostrarExamen(index)"
+            >
+              Ver examen
+            </div>
           </div>
         </q-item>
       </div>
@@ -281,7 +285,7 @@
               </div>
             </div>
           </div>
-          <div>Examen sin realizar</div>
+          <div style="text-align: center">Examen sin realizar</div>
         </q-item>
       </div>
     </q-list>
@@ -292,6 +296,11 @@
 import { defineComponent } from "vue";
 import { api } from "boot/axios";
 import { useQuasar } from "quasar";
+import { useMeta } from "quasar";
+
+const metaData = {
+  title: "E-Schools - Examen",
+};
 
 export default defineComponent({
   name: "RegisterPage",
@@ -319,6 +328,7 @@ export default defineComponent({
     };
   },
   setup() {
+    useMeta(metaData);
     const $q = useQuasar();
 
     return {};
@@ -335,6 +345,9 @@ export default defineComponent({
 
       var dos = document.getElementsByClassName("user-container")[usuario];
       dos.classList.remove("w100");
+
+      var tres = document.getElementsByClassName("div-calif-outer")[usuario];
+      tres.classList.remove("f-col");
     },
     mostrarExamen(usuario) {
       this.mostrar[usuario] = true;
@@ -347,6 +360,9 @@ export default defineComponent({
 
       var dos = document.getElementsByClassName("user-container")[usuario];
       dos.classList.add("w100");
+
+      var tres = document.getElementsByClassName("div-calif-outer")[usuario];
+      tres.classList.add("f-col");
     },
     goBack() {
       this.$router.push("/curso/" + this.idcurso);
@@ -540,7 +556,7 @@ export default defineComponent({
 .btn-register2 {
   background-color: #4287f5;
   display: inline-block;
-  padding: 10px 20px;
+  padding: 10px 0;
   color: white;
   margin: 25px 0;
   cursor: pointer;
@@ -555,6 +571,8 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 117px;
+  justify-content: center;
 }
 
 .btn-register2:hover {
@@ -847,6 +865,12 @@ export default defineComponent({
   text-align: center;
 }
 
+.div-calif-outer {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
 .btn-evaluar:hover {
   background-color: #30c954;
 }
@@ -1025,5 +1049,52 @@ textarea {
 
 .sin-contestar {
   color: rgba(1, 1, 1, 0.5);
+}
+
+.div-calif {
+  margin-right: 60px;
+}
+
+.f-col {
+  flex-direction: column !important;
+  align-items: flex-start;
+}
+
+.f-col > div {
+  margin-left: 0 !important;
+}
+
+@media (max-width: 1079px) {
+  .div-calif-outer {
+    flex-direction: column;
+  }
+
+  .btn-evaluar {
+    margin-left: 10px;
+  }
+
+  .btn-evaluar {
+    margin-top: 10px;
+  }
+
+  .div-calif {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .pregunta-container {
+    margin-right: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-container {
+    margin-bottom: 20px;
+  }
 }
 </style>
