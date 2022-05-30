@@ -639,7 +639,6 @@ export default defineComponent({
 .icon-drawer {
   margin: 15px 0;
   font-size: 0.9em;
-  margin-right: 5px;
 }
 
 .each-item {
