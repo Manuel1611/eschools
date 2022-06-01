@@ -92,11 +92,11 @@ const routes = [
         component: () => import("pages/ShowExamenAlumno.vue"),
       },
       {
-        path: "matriculapagada",
+        path: "matriculapagada/:paymenttoken",
         component: () => import("pages/MatriculaPagada.vue"),
       },
       {
-        path: "pagocancelado",
+        path: "pagocancelado/:paymenttoken",
         component: () => import("pages/PagoCancelado.vue"),
       },
 
