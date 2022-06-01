@@ -29,7 +29,7 @@
           <div
             class="logout-btn-yes"
             v-close-popup
-            @click="matriculav2(this.cursoSeleccionado[1].priceid)"
+            @click="matriculav2(this.cursoSeleccionado[1].priceid, this.cursoSeleccionado[0] )"
           >
             Aceptar
           </div>
@@ -265,9 +265,13 @@ export default defineComponent({
       }
     },
 
-    matriculav2(priceid) {
+    matriculav2(priceid, cursoid) {
       let data = {
         cursopriceid: priceid,
+        cursoid: cursoid,
+        alumnoid: this.userid,
+        nombrecurso: this.username,
+        nombrealumno: this.cursoSeleccionado[1].nombre,
       };
       let token = this.$q.localStorage.getItem("eschoolssessiontoken");
       let config = {
