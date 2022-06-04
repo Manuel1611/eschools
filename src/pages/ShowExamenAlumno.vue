@@ -201,8 +201,8 @@
     <div v-else style="margin-top: 50px">
       <q-section>
         <div
-          v-for="(find, index) in examen.preguntas"
-          :key="index"
+          v-for="find in arrayAletorio"
+          :key="find[0]"
           class="pregunta-container"
         >
           <div class="pregunta-title">
@@ -214,21 +214,21 @@
               />
             </div>
 
-            <div>{{ find.pregunta }}</div>
+            <div>{{ examen.preguntas[find[0]].pregunta }}</div>
           </div>
           <div
-            v-for="(find2, index2) in find.respuesta"
-            :key="index2"
+            v-for="find2 in find[1]"
+            :key="find2"
             class="respuesta-container"
           >
             <input
               type="radio"
-              :name="'respuestas' + index"
-              :value="index2"
-              @change="onChange($event, index, index2)"
+              :name="'respuestas' + find[0]"
+              :value="find2"
+              @change="onChange($event, find[0], find2)"
             />
             <div>
-              {{ this.examen.preguntas[index].respuesta[index2].value }}
+              {{ this.examen.preguntas[find[0]].respuesta[find2].value }}
             </div>
           </div>
         </div>
@@ -257,6 +257,7 @@ export default defineComponent({
       userid: "",
       examen: {},
       examenNuevo: {},
+      arrayAletorio: {},
       file: "",
       server: "http://localhost:3000/public/",
       error: "no carga",
@@ -311,6 +312,10 @@ export default defineComponent({
             examen3 = response.data.examen;
             console.log(examen3);
             this.examen = examen3;
+            console.log(
+              "aessejbnwfkdeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            );
+            this.aleatorioExamen(examen3);
             this.newExamen(examen3);
           }
         })
@@ -358,6 +363,58 @@ export default defineComponent({
           console.log("error de conexion");
           console.log(e);
         });
+    },
+
+    aleatorioExamen(examen2) {
+      let arrayNuevo = [];
+      let pregunta = "";
+      let respuesta = "";
+      for (let i = 0; i < examen2.preguntas.length; i++) {
+        pregunta = String(Math.floor(Math.random() * examen2.preguntas.length));
+        if (arrayNuevo[0] != undefined) {
+          while (arrayNuevo.toString().includes(pregunta) == true) {
+            pregunta = String(
+              Math.floor(Math.random() * examen2.preguntas.length)
+            );
+          }
+        }
+        arrayNuevo[i] = [];
+        arrayNuevo[i][0] = pregunta;
+        arrayNuevo[i][1] = [];
+      }
+      console.log(arrayNuevo);
+      for (let j = 0; j < arrayNuevo.length; j++) {
+        for (
+          let k = 0;
+          k < examen2.preguntas[arrayNuevo[j][0]].respuesta.length;
+          k++
+        ) {
+          respuesta = String(
+            Math.floor(
+              Math.random() *
+                examen2.preguntas[arrayNuevo[j][0]].respuesta.length
+            )
+          );
+          if (arrayNuevo[j][1][0] != undefined) {
+            while (arrayNuevo[j][1].toString().includes(respuesta) == true) {
+              respuesta = String(
+                Math.floor(
+                  Math.random() *
+                    examen2.preguntas[arrayNuevo[j][0]].respuesta.length
+                )
+              );
+            }
+          }
+          arrayNuevo[j][1][k] = respuesta;
+        }
+      }
+      this.arrayAletorio = arrayNuevo;
+
+      console.log(
+        "----------------------------------------------------------------------"
+      );
+      console.log(examen2);
+      console.log(this.arrayAletorio);
     },
 
     checkRealizado() {
