@@ -31,7 +31,9 @@ const metaData = {
 export default defineComponent({
   name: "RegisterPage",
   data() {
-    return {};
+    return {
+      paymenttoken : '',
+    };
   },
   setup() {
     useMeta(metaData);
@@ -42,8 +44,35 @@ export default defineComponent({
     goBack() {
       this.$router.push("/curso/miscursos");
     },
+
+    cancelPago(){
+      let data = {
+        paymentid: this.paymenttoken,
+      };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .post("/matricula/cancel-payment", data, config)
+        .then((response) => {
+          console.log("conexion correcta createcheckout");
+          console.log(response);
+          if (response.status != 200) {
+            this.$router.push("/curso/miscursos");
+          }
+        })
+        .catch((e) => {
+          this.$router.push("/curso/miscursos");
+        })
+    }
   },
-  mounted() {},
+  mounted() {
+    this.paymenttoken = this.$router.currentRoute._value.params.paymenttoken;
+    this.cancelPago()
+  },
 });
 </script>
 

@@ -41,8 +41,35 @@ export default defineComponent({
     goBack() {
       this.$router.push("/curso/miscursos");
     },
+
+    matricular(){
+      let data = {
+        paymenttoken: this.paymenttoken,
+      };
+      let token = this.$q.localStorage.getItem("eschoolssessiontoken");
+      let config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      api
+        .post("/matricula/confirm-payment", data, config)
+        .then((response) => {
+          console.log("conexion correcta createcheckout");
+          console.log(response);
+          if (response.status != 200) {
+            //this.$router.push("/curso/miscursos");
+          }
+        })
+        .catch((e) => {
+          //this.$router.push("/curso/miscursos");
+        })
+    }
   },
-  mounted() {},
+  mounted() {
+    this.paymenttoken = this.$router.currentRoute._value.params.paymenttoken;
+    this.matricular()
+  },
 });
 </script>
 
